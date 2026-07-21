@@ -1,0 +1,58 @@
+# Environment files
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.vite/
+
+# Python / API
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+ingestion-api/.venv/
+ingestion-api/.pytest_cache/
+ingestion-api/.mypy_cache/
+ingestion-api/.ruff_cache/
+
+# Build and cache output
+dist/
+build/
+coverage/
+.cache/
+.tmp/
+tmp/
+
+# Local pipeline runtime data
+runtime-data/
+.docker-data/
+infrastructure/data/
+kafka-data/
+minio-data/
+influxdb-data/
+spark-checkpoints/
+stream-processing/checkpoints/
+stream-processing/.checkpoint/
+
+# Logs and reports
+*.log
+reports/tmp/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
