@@ -787,8 +787,8 @@ Added root tracking, split coding rules, frontend test tooling baseline, API tes
 
 ### Task tiếp theo
 
-* `phase0-task002-shared-telemetry-schema-contract`
-* `phase0-task003-api-contract-fixtures`
+* `phase0-task003-shared-telemetry-schema-contract`
+* `phase0-task004-api-contract-fixtures`
 
 ### Commit message gợi ý
 

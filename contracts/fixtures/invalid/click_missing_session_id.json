@@ -1,0 +1,11 @@
+{
+  "eventId": "missing-session-0001",
+  "eventType": "click",
+  "eventTime": 1784498400456,
+  "sequence": 11,
+  "x": 100,
+  "y": 100,
+  "targetId": "target-1",
+  "targetHit": false,
+  "reactionTimeMs": 200
+}

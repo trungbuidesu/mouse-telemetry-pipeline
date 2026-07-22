@@ -9,12 +9,13 @@
 | Status | `PLANNED` |
 | Cập nhật lần cuối | `2026-07-22` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
+| Tracking tasks | `T3.0`, `T3.1`, `T3.2` |
 
 ---
 
 ## 2. Mục tiêu
 
-Tạo local streaming infrastructure cần cho end-to-end demo: Kafka, topic bootstrap, MinIO, InfluxDB và Spark runtime wiring.
+Tạo local streaming infrastructure cần cho end-to-end demo: Docker Compose runtime foundation, Kafka, topic bootstrap, MinIO, InfluxDB và Spark runtime wiring.
 
 ---
 

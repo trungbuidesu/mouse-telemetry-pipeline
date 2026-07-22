@@ -1,0 +1,13 @@
+{
+  "eventId": "162fe0da-0000-4000-8000-000000000001",
+  "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+  "eventType": "session_start",
+  "eventTime": 1784498400000,
+  "sequence": 0,
+  "durationSeconds": 60,
+  "canvasWidth": 1200,
+  "canvasHeight": 700,
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "devicePixelRatio": 1
+}

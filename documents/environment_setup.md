@@ -90,6 +90,17 @@ npm ci
 
 Các thư mục sinh ra trong quá trình chạy như `node_modules/`, `dist/`, `coverage/`, `playwright-report/` và `test-results/` phải không được track bởi Git.
 
+### Biến môi trường frontend
+
+Sao chép file mẫu:
+
+```powershell
+cd frontend
+Copy-Item .env.example .env
+```
+
+`VITE_API_BASE_URL` trỏ tới ingestion API local (mặc định `http://127.0.0.1:8001`). Không commit file `.env` thật.
+
 ## 4. Tái lập môi trường API
 
 Chạy từ root của repository:
@@ -121,6 +132,17 @@ ingestion-api/.venv/
 ```
 
 Nếu executable trỏ ra Python cài sẵn của hệ thống, môi trường chưa đạt yêu cầu tái lập.
+
+### Biến môi trường API
+
+Sao chép file mẫu:
+
+```powershell
+cd ingestion-api
+Copy-Item .env.example .env
+```
+
+Settings đọc biến với prefix `MOUSE_TELEMETRY_` (xem `app/core/config.py`). Kafka-related keys trong `.env.example` chỉ là placeholder deferred đến phase2/phase3.
 
 ### Lệnh API
 

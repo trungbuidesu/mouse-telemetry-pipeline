@@ -42,7 +42,7 @@ Phase 3 biến telemetry stream thành dữ liệu có thể lưu trữ và phâ
 
 | Plan | Vai trò | Output chính |
 |---|---|---|
-| [plan001-kafka-topics-and-local-infrastructure](../../plans/phase3/plan001-kafka-topics-and-local-infrastructure.md) | Chuẩn bị hạ tầng stream local | Docker Compose service, topic bootstrap |
+| [plan001-kafka-topics-and-local-infrastructure](../../plans/phase3/plan001-kafka-topics-and-local-infrastructure.md) | Chuẩn bị hạ tầng stream local | T3.0 Docker Compose runtime foundation, topic bootstrap |
 | [plan002-spark-streaming-to-minio-influxdb](../../plans/phase3/plan002-spark-streaming-to-minio-influxdb.md) | Xử lý và lưu stream | Spark job, Parquet raw, Influx metrics |
 
 ---

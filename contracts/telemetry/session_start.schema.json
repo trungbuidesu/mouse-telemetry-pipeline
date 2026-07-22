@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouse-telemetry.local/contracts/telemetry/session_start.schema.json",
+  "title": "SessionStartEvent",
+  "type": "object",
+  "required": [
+    "eventId",
+    "sessionId",
+    "eventType",
+    "eventTime",
+    "sequence",
+    "durationSeconds",
+    "canvasWidth",
+    "canvasHeight",
+    "viewportWidth",
+    "viewportHeight",
+    "devicePixelRatio"
+  ],
+  "properties": {
+    "eventId": { "type": "string", "minLength": 1 },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "eventType": { "const": "session_start" },
+    "eventTime": { "type": "integer", "minimum": 0 },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "durationSeconds": { "type": "integer", "enum": [30, 60] },
+    "canvasWidth": { "type": "number", "exclusiveMinimum": 0 },
+    "canvasHeight": { "type": "number", "exclusiveMinimum": 0 },
+    "viewportWidth": { "type": "number", "exclusiveMinimum": 0 },
+    "viewportHeight": { "type": "number", "exclusiveMinimum": 0 },
+    "devicePixelRatio": { "type": "number", "exclusiveMinimum": 0 }
+  },
+  "additionalProperties": false
+}

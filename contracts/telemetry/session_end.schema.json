@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouse-telemetry.local/contracts/telemetry/session_end.schema.json",
+  "title": "SessionEndEvent",
+  "type": "object",
+  "required": [
+    "eventId",
+    "sessionId",
+    "eventType",
+    "eventTime",
+    "sequence",
+    "score",
+    "hitCount",
+    "missCount",
+    "totalEvents"
+  ],
+  "properties": {
+    "eventId": { "type": "string", "minLength": 1 },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "eventType": { "const": "session_end" },
+    "eventTime": { "type": "integer", "minimum": 0 },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "score": { "type": "integer", "minimum": 0 },
+    "hitCount": { "type": "integer", "minimum": 0 },
+    "missCount": { "type": "integer", "minimum": 0 },
+    "totalEvents": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

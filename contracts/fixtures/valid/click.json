@@ -1,0 +1,14 @@
+{
+  "eventId": "4b571558-0000-4000-8000-000000000003",
+  "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+  "eventType": "click",
+  "eventTime": 1784498400456,
+  "sequence": 1025,
+  "x": 845,
+  "y": 425,
+  "normalizedX": 0.7041666667,
+  "normalizedY": 0.6071428571,
+  "targetId": "target-18",
+  "targetHit": true,
+  "reactionTimeMs": 328
+}

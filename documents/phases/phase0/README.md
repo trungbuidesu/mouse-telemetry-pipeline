@@ -21,7 +21,7 @@ Phase này bảo vệ dự án khỏi hai rủi ro lớn:
 * uv-managed Python foundation cho FastAPI ingestion API.
 * Schema logic cho `session_start`, `mousemove`, `click`, `session_end`.
 * API contract sơ bộ cho session và telemetry batch.
-* Chính sách local-first bằng Docker Compose.
+* Ghi nhận quyết định local-first; Docker Compose runtime triển khai ở phase3.
 * Tiêu chuẩn performance ban đầu cho frontend telemetry.
 
 ### Ngoài scope
@@ -61,7 +61,7 @@ Phase 0 không phụ thuộc phase trước.
 |---|---|---|
 | [DEC-001: Canvas-relative telemetry schema](../../decisions/decision001-canvas-relative-telemetry-schema.md) | phase0, phase1, phase2, phase3 | Tránh lệch tọa độ và giúp analytics so sánh session |
 | [DEC-004: HTTP ingestion before Kafka](../../decisions/decision004-http-ingestion-before-kafka.md) | phase0, phase2 | Giữ browser đơn giản, backend kiểm soát Kafka |
-| [DEC-010: Local-first Docker Compose stack](../../decisions/decision010-local-first-docker-compose-stack.md) | phase0, phase5 | Đảm bảo demo chạy được trên máy local |
+| [DEC-010: Local-first Docker Compose stack](../../decisions/decision010-local-first-docker-compose-stack.md) | phase0 (decision), phase3, phase5 | Đảm bảo demo chạy được trên máy local |
 | [DEC-011: Vite React shadcn frontend stack](../../decisions/decision011-vite-react-shadcn-frontend-stack.md) | phase0, phase1 | Chốt UI stack nhưng giữ hot path ngoài React/UI component layer |
 | [DEC-012: uv-managed Python API environment](../../decisions/decision012-uv-managed-python-api-environment.md) | phase0, phase2 | Tránh phụ thuộc Python hệ thống |
 | [DEC-013: FastAPI performance-oriented API stack](../../decisions/decision013-fastapi-performance-oriented-api-stack.md) | phase2 | Chốt API stack nhẹ và không làm analytics trong request path |
@@ -103,5 +103,10 @@ Phase 0 hoàn thành khi:
 
 * Phase index và plan index đã có liên kết chéo.
 * Tối thiểu các decision DEC-001 đến DEC-013 đã được tạo.
-* Plan phase0 có thể dẫn trực tiếp đến task implementation.
+* Clean Vite/shadcn frontend foundation và uv-managed API foundation đã có validation evidence.
+* Shared telemetry schema contract files đã tồn tại và được link từ tracking/plan.
+* API contract fixtures đã tồn tại để frontend/API dùng chung khi viết test.
+* `.env.example` cho frontend/API đã có hoặc được ghi rõ trong gate review nếu deferred.
+* Frontend/API stack review package ghi rõ performance boundaries.
+* P0 gate review package ghi pass/fail và known limitations.
 * Không còn contract quan trọng nào chỉ nằm trong hội thoại.

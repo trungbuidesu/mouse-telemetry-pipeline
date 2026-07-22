@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouse-telemetry.local/contracts/telemetry/telemetry_batch.schema.json",
+  "title": "TelemetryBatch",
+  "type": "object",
+  "required": ["sessionId", "sentAt", "batchSequence", "events"],
+  "properties": {
+    "sessionId": { "type": "string", "minLength": 1 },
+    "sentAt": { "type": "integer", "minimum": 0 },
+    "batchSequence": { "type": "integer", "minimum": 0 },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "oneOf": [
+          { "$ref": "session_start.schema.json" },
+          { "$ref": "mousemove.schema.json" },
+          { "$ref": "click.schema.json" },
+          { "$ref": "session_end.schema.json" }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

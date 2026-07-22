@@ -1,0 +1,11 @@
+{
+  "eventId": "bad-mousemove-0001",
+  "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+  "eventType": "mousemove",
+  "eventTime": 1784498400123,
+  "sequence": 10,
+  "x": 842,
+  "y": 421,
+  "normalizedX": 1.5,
+  "normalizedY": 0.5
+}

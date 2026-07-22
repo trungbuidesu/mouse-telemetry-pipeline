@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouse-telemetry.local/contracts/telemetry/mousemove.schema.json",
+  "title": "MouseMoveEvent",
+  "type": "object",
+  "required": [
+    "eventId",
+    "sessionId",
+    "eventType",
+    "eventTime",
+    "sequence",
+    "x",
+    "y"
+  ],
+  "properties": {
+    "eventId": { "type": "string", "minLength": 1 },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "eventType": { "const": "mousemove" },
+    "eventTime": { "type": "integer", "minimum": 0 },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "x": { "type": "number" },
+    "y": { "type": "number" },
+    "normalizedX": { "type": "number", "minimum": 0, "maximum": 1 },
+    "normalizedY": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": false
+}

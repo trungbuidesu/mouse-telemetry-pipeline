@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouse-telemetry.local/contracts/telemetry/defs.schema.json",
+  "title": "TelemetrySharedDefs",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "epochMillis": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "nonNegativeInt": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "positiveNumber": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "canvasCoordinate": {
+      "type": "number"
+    },
+    "normalizedCoordinate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "durationSeconds": {
+      "type": "integer",
+      "enum": [30, 60]
+    },
+    "baseEvent": {
+      "type": "object",
+      "required": [
+        "eventId",
+        "sessionId",
+        "eventType",
+        "eventTime",
+        "sequence"
+      ],
+      "properties": {
+        "eventId": { "$ref": "#/$defs/nonEmptyString" },
+        "sessionId": { "$ref": "#/$defs/nonEmptyString" },
+        "eventType": {
+          "type": "string",
+          "enum": ["session_start", "mousemove", "click", "session_end"]
+        },
+        "eventTime": { "$ref": "#/$defs/epochMillis" },
+        "sequence": { "$ref": "#/$defs/nonNegativeInt" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

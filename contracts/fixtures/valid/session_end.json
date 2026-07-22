@@ -1,0 +1,11 @@
+{
+  "eventId": "5ffc1758-0000-4000-8000-000000000004",
+  "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+  "eventType": "session_end",
+  "eventTime": 1784498460000,
+  "sequence": 6218,
+  "score": 42,
+  "hitCount": 42,
+  "missCount": 8,
+  "totalEvents": 6218
+}

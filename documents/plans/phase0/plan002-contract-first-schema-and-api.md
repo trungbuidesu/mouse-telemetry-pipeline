@@ -6,7 +6,7 @@
 |---|---|
 | Plan ID | `phase0-plan002` |
 | Phase | [phase0](../../phases/phase0/README.md) |
-| Status | `PLANNED` |
+| Status | `DONE` |
 | Cập nhật lần cuối | `2026-07-22` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
@@ -91,11 +91,11 @@
 
 ## 7. Acceptance criteria
 
-* [ ] Tất cả MVP event types có documented required fields.
-* [ ] Batch payload có documented limits và examples.
-* [ ] API status codes phân biệt schema errors và retryable ingestion errors.
-* [ ] Frontend, API và Spark dùng được cùng event semantics.
-* [ ] Future schema changes có decision/update path.
+* [x] Tất cả MVP event types có documented required fields.
+* [x] Batch payload có documented limits và examples.
+* [x] API status codes phân biệt schema errors và retryable ingestion errors.
+* [x] Frontend, API và Spark dùng được cùng event semantics.
+* [x] Future schema changes có decision/update path.
 
 ---
 

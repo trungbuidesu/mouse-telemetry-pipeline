@@ -1,0 +1,28 @@
+{
+  "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+  "sentAt": 1784498400500,
+  "batchSequence": 12,
+  "events": [
+    {
+      "eventId": "8d8eab4e-0000-4000-8000-000000000002",
+      "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+      "eventType": "mousemove",
+      "eventTime": 1784498400450,
+      "sequence": 1021,
+      "x": 820,
+      "y": 410
+    },
+    {
+      "eventId": "4b571558-0000-4000-8000-000000000003",
+      "sessionId": "9243f3b4-0000-4000-8000-0000000000aa",
+      "eventType": "click",
+      "eventTime": 1784498400456,
+      "sequence": 1022,
+      "x": 845,
+      "y": 425,
+      "targetId": "target-18",
+      "targetHit": true,
+      "reactionTimeMs": 328
+    }
+  ]
+}
