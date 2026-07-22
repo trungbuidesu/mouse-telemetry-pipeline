@@ -1,0 +1,19 @@
+# Keep text line endings stable across Windows, macOS and Linux.
+* text=auto eol=lf
+
+# Windows command scripts conventionally use CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary artifacts should never be line-ending normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.parquet binary
+*.avro binary
+*.woff2 binary
