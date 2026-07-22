@@ -1,6 +1,6 @@
-# Agent Development Protocol
+# Quy trình phát triển cho Agent
 
-## 1. Task files are the source of truth
+## 1. Task file là nguồn sự thật
 
 Mọi công việc phải được thực hiện thông qua một task file riêng.
 
@@ -119,7 +119,7 @@ Trước khi lập implementation plan, phải điền:
 
 * Task metadata.
 * Original request.
-* Objective.
+* Mục tiêu.
 * Initial project state.
 * Existing task context.
 * Related tasks.
@@ -236,7 +236,7 @@ Inspect
 → Update task file
 → Make minimal change
 → Review diff
-→ Run focused validation
+→ Chạy focused validation
 → Update task file
 ```
 

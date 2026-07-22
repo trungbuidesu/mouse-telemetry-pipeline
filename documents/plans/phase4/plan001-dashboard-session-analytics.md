@@ -1,108 +1,108 @@
-# Plan: Dashboard and Session Analytics
+# Plan: Dashboard và session analytics
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase4-plan001` |
 | Phase | [phase4](../../phases/phase4/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Provide visible analytics for the demo: system-level throughput/latency in Grafana and session-level metrics or visualizations for individual Aim Trainer sessions.
+Cung cấp analytics nhìn thấy được cho demo: throughput/latency cấp hệ thống trong Grafana và session-level metrics hoặc visualizations cho từng Aim Trainer session.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
-| Dependency | Type | Notes |
+| Dependency | Loại | Ghi chú |
 |---|---|---|
-| [phase3-plan002](../phase3/plan002-spark-streaming-to-minio-influxdb.md) | Data source | InfluxDB metrics and raw Parquet |
-| [DEC-006](../../decisions/decision006-raw-parquet-and-timeseries-metrics.md) | Storage | Dashboard reads aggregate store |
-| [DEC-009](../../decisions/decision009-session-analytics-event-time-watermark.md) | Processing state | Dashboard must handle metrics delay |
+| [phase3-plan002](../phase3/plan002-spark-streaming-to-minio-influxdb.md) | Data source | InfluxDB metrics và raw Parquet |
+| [DEC-006](../../decisions/decision006-raw-parquet-and-timeseries-metrics.md) | Storage | Dashboard đọc aggregate store |
+| [DEC-009](../../decisions/decision009-session-analytics-event-time-watermark.md) | Processing state | Dashboard phải xử lý metrics delay |
 
 ---
 
-## 4. Planned Outputs
+## 4. Output dự kiến
 
-- Grafana dashboard JSON under `dashboards/grafana/`.
-- Dashboard panels:
-  - Events per second.
-  - Click throughput.
-  - Total events.
-  - Average processing latency.
-  - Recent sessions table.
-- Session detail endpoint or frontend view if needed.
-- Basic heatmap or trajectory view for MVP.
+* Grafana dashboard JSON dưới `dashboards/grafana/`.
+* Dashboard panels:
+  * Events per second.
+  * Click throughput.
+  * Total events.
+  * Average processing latency.
+  * Recent sessions table.
+* Session detail endpoint hoặc frontend view nếu cần.
+* Heatmap hoặc trajectory view cơ bản cho MVP.
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Define dashboard queries
+### Step 1: Định nghĩa dashboard queries
 
-- Map each KPI to InfluxDB measurement/field.
-- Keep tag cardinality low.
-- Handle empty data gracefully.
+* Map từng KPI vào InfluxDB measurement/field.
+* Giữ tag cardinality thấp.
+* Xử lý empty data nhẹ nhàng.
 
-### Step 2: Build Grafana dashboard
+### Step 2: Xây Grafana dashboard
 
-- Add panels for throughput and latency.
-- Add recent session table.
-- Add variables only if they improve demo clarity.
+* Thêm panels cho throughput và latency.
+* Thêm recent session table.
+* Chỉ thêm variables nếu giúp demo rõ hơn.
 
-### Step 3: Add session analytics surface
+### Step 3: Thêm session analytics surface
 
-- Use backend metrics endpoint for session summary.
-- Use raw or derived data for heatmap/trajectory only at MVP scale.
-- Avoid loading a full large raw session into the browser without sampling.
+* Dùng backend metrics endpoint cho session summary.
+* Dùng raw hoặc derived data cho heatmap/trajectory chỉ ở quy mô MVP.
+* Tránh load full raw session lớn vào browser nếu chưa sampling.
 
 ### Step 4: Document evidence path
 
-- For each panel, document where the data came from:
-  - Frontend event.
-  - API batch.
-  - Kafka topic.
-  - Spark metric.
-  - InfluxDB query.
+Với mỗi panel, document dữ liệu đến từ đâu:
+
+* Frontend event.
+* API batch.
+* Kafka topic.
+* Spark metric.
+* InfluxDB query.
 
 ---
 
-## 6. Performance Notes
+## 6. Ghi chú performance
 
-- Dashboard should query aggregate data, not raw telemetry.
-- Heatmap/trajectory should use sampled or bounded data.
-- Grafana refresh interval should be demo-friendly but not overload InfluxDB.
-- Session list should limit recent rows.
+* Dashboard nên query aggregate data, không query raw telemetry.
+* Heatmap/trajectory nên dùng sampled hoặc bounded data.
+* Grafana refresh interval nên phù hợp demo nhưng không overload InfluxDB.
+* Session list phải limit recent rows.
 
 ---
 
-## 7. Acceptance Criteria
+## 7. Acceptance criteria
 
-- [ ] Dashboard shows events per second from real pipeline data.
-- [ ] Dashboard shows at least one session-level metric.
-- [ ] Session detail or result page can show processed metrics when available.
-- [ ] Empty/processing states are clear.
-- [ ] Dashboard JSON is committed, runtime Grafana data is not.
+* [ ] Dashboard hiển thị events per second từ real pipeline data.
+* [ ] Dashboard hiển thị ít nhất một session-level metric.
+* [ ] Session detail hoặc result page hiển thị processed metrics khi có.
+* [ ] Empty/processing states rõ ràng.
+* [ ] Dashboard JSON được commit, runtime Grafana data thì không.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| Run one session | Dashboard updates |
-| Run load generator | Throughput panel increases |
-| Query review | Panels use aggregate measurements |
+| Chạy một session | Dashboard cập nhật |
+| Chạy load generator | Throughput panel tăng |
+| Query review | Panels dùng aggregate measurements |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan supports [phase4-plan002](plan002-demo-scenarios-and-load-generation.md) and final runbooks in [phase5-plan002](../phase5/plan002-packaging-runbooks-and-final-report.md).
-
+Plan này hỗ trợ [phase4-plan002](plan002-demo-scenarios-and-load-generation.md) và final runbooks trong [phase5-plan002](../phase5/plan002-packaging-runbooks-and-final-report.md).

@@ -6,29 +6,29 @@ Phase 3 biến telemetry stream thành dữ liệu có thể lưu trữ và phâ
 
 ---
 
-## 2. Scope
+## 2. Phạm vi
 
-### In scope
+### Trong scope
 
-- Kafka topics cho telemetry và session lifecycle.
-- Local infrastructure cho Kafka, MinIO, InfluxDB và Spark.
-- Spark job đọc event từ Kafka.
-- Parse và validate schema ở streaming layer.
-- Ghi raw event partitioned vào MinIO.
-- Tính metrics session/time-window cơ bản.
-- Ghi metrics time-series vào InfluxDB.
-- Checkpoint Spark trong volume riêng, không commit vào Git.
+* Kafka topics cho telemetry và session lifecycle.
+* Local infrastructure cho Kafka, MinIO, InfluxDB và Spark.
+* Spark job đọc event từ Kafka.
+* Parse và validate schema ở streaming layer.
+* Ghi raw event partitioned vào MinIO.
+* Tính metrics session/time-window cơ bản.
+* Ghi metrics time-series vào InfluxDB.
+* Checkpoint Spark trong volume riêng, không commit vào Git.
 
-### Out of scope
+### Ngoài scope
 
-- Dashboard Grafana hoàn chỉnh.
-- Machine learning hoặc bot detection.
-- Exactly-once end-to-end tuyệt đối.
-- Distributed production deployment.
+* Dashboard Grafana hoàn chỉnh.
+* Machine learning hoặc bot detection.
+* Exactly-once end-to-end tuyệt đối.
+* Distributed production deployment.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
 | Dependency | Từ phase | Ghi chú |
 |---|---|---|
@@ -57,17 +57,17 @@ Phase 3 biến telemetry stream thành dữ liệu có thể lưu trữ và phâ
 
 ---
 
-## 6. Performance Requirements
+## 6. Performance requirements
 
-- Kafka partitioning phải giữ được ordering tương đối theo `sessionId`.
-- Spark dùng micro-batch hợp lý cho demo local, tránh batch quá nhỏ gây overhead.
-- Raw writes dùng Parquet để giảm dung lượng và hỗ trợ phân tích sau demo.
-- Metrics writes vào InfluxDB phải aggregate trước, không ghi mọi `mousemove` vào Influx.
-- Checkpoint và data volume không được commit vào Git.
+* Kafka partitioning phải giữ được ordering tương đối theo `sessionId`.
+* Spark dùng micro-batch hợp lý cho demo local, tránh batch quá nhỏ gây overhead.
+* Raw writes dùng Parquet để giảm dung lượng và hỗ trợ phân tích sau demo.
+* Metrics writes vào InfluxDB phải aggregate trước, không ghi mọi `mousemove` vào Influx.
+* Checkpoint và data volume không được commit vào Git.
 
 ---
 
-## 7. Completion Gate
+## 7. Completion gate
 
 Phase 3 hoàn thành khi:
 
@@ -76,4 +76,3 @@ Phase 3 hoàn thành khi:
 3. Raw event được ghi vào MinIO theo partition dễ truy vết.
 4. Metrics session hoặc throughput được ghi vào InfluxDB.
 5. Có validation cho ít nhất một session demo end-to-end từ API đến storage.
-

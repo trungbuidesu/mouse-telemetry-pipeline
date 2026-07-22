@@ -1,109 +1,108 @@
-# Plan: Performance Validation and Observability
+# Plan: Performance validation và observability
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase5-plan001` |
 | Phase | [phase5](../../phases/phase5/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Validate that the pipeline meets the performance expectations needed for a reliable local demo and add observability signals that explain where data is flowing or stuck.
+Kiểm tra pipeline đáp ứng kỳ vọng performance cần cho local demo đáng tin cậy, đồng thời thêm observability signals để giải thích dữ liệu đang chảy hoặc đang kẹt ở đâu.
 
 ---
 
-## 3. Related Decisions
+## 3. Decisions liên quan
 
-| Decision | Why needed |
+| Decision | Vì sao cần |
 |---|---|
-| [DEC-002](../../decisions/decision002-client-side-batching-and-sampling.md) | Frontend event rate and batch policy |
+| [DEC-002](../../decisions/decision002-client-side-batching-and-sampling.md) | Frontend event rate và batch policy |
 | [DEC-007](../../decisions/decision007-memory-bounded-retry-policy.md) | Failure behavior |
 | [DEC-010](../../decisions/decision010-local-first-docker-compose-stack.md) | Local performance target |
 
 ---
 
-## 4. Validation Areas
+## 4. Khu vực validation
 
-| Area | What to measure |
+| Area | Cần đo gì |
 |---|---|
 | Frontend | Render stability, batch counts, dropped event count |
 | API | Request latency, accepted/rejected batches, producer failures |
 | Kafka | Topic lag, message throughput |
 | Spark | Micro-batch duration, input rows per second, processing latency |
 | Storage | Raw Parquet writes, Influx metrics writes |
-| Dashboard | Refresh behavior and query load |
+| Dashboard | Refresh behavior và query load |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Define performance budgets
+### Step 1: Định nghĩa performance budgets
 
-- Frontend remains responsive during a 60 second session.
-- Batch interval and size match defaults unless overridden.
-- API handles load generator defaults without request errors.
-- Spark keeps up with demo throughput on local machine.
+* Frontend vẫn responsive trong session 60 giây.
+* Batch interval và size khớp defaults trừ khi override.
+* API xử lý load generator defaults mà không có request errors.
+* Spark theo kịp demo throughput trên máy local.
 
-### Step 2: Add observability counters
+### Step 2: Thêm observability counters
 
-- Frontend: generated events, sent batches, failed batches, dropped events.
-- API: accepted batches, rejected batches, Kafka produce errors.
-- Spark: parsed events, malformed events, written rows.
+* Frontend: generated events, sent batches, failed batches, dropped events.
+* API: accepted batches, rejected batches, Kafka produce errors.
+* Spark: parsed events, malformed events, written rows.
 
-### Step 3: Run focused benchmarks
+### Step 3: Chạy focused benchmarks
 
-- Manual single session.
-- Multiple synthetic sessions.
-- Backend unavailable then restored.
-- Spark restart with checkpoint.
+* Manual single session.
+* Multiple synthetic sessions.
+* Backend unavailable rồi restored.
+* Spark restart với checkpoint.
 
-### Step 4: Record results
+### Step 4: Ghi lại kết quả
 
-- Record commands.
-- Record environment assumptions.
-- Record pass/fail and limitations.
-- Add follow-up tasks for bottlenecks.
-
----
-
-## 6. Performance Notes
-
-- Do not optimize blindly; tie optimization to measured bottleneck.
-- Keep benchmark defaults realistic for a student/demo laptop.
-- Prefer aggregate metrics over verbose logs in hot paths.
-- Treat dropped events as visible telemetry health data, not silent failure.
+* Ghi commands.
+* Ghi environment assumptions.
+* Ghi pass/fail và limitations.
+* Thêm follow-up tasks cho bottlenecks.
 
 ---
 
-## 7. Acceptance Criteria
+## 6. Ghi chú performance
 
-- [ ] Frontend session can run without obvious UI degradation.
-- [ ] Request count is batch-level, not event-level.
-- [ ] API exposes meaningful accepted/rejected counters or logs.
-- [ ] Spark processing latency is visible.
-- [ ] Failure-mode behavior is documented.
-- [ ] Validation results are recorded in docs or task files.
+* Không optimize mù; gắn optimization với bottleneck đã đo.
+* Giữ benchmark defaults thực tế cho laptop đồ án/demo.
+* Ưu tiên aggregate metrics hơn verbose logs trong hot paths.
+* Xem dropped events là telemetry health data nhìn thấy được, không phải silent failure.
+
+---
+
+## 7. Acceptance criteria
+
+* [ ] Frontend session chạy không có UI degradation rõ rệt.
+* [ ] Request count ở mức batch, không phải event.
+* [ ] API expose accepted/rejected counters hoặc logs có ý nghĩa.
+* [ ] Spark processing latency nhìn thấy được.
+* [ ] Failure-mode behavior được document.
+* [ ] Validation results được ghi trong docs hoặc task files.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| Manual 60 second session | No lost final flush |
-| Load generator default run | Pipeline remains responsive |
-| Backend outage test | Frontend moves to offline/buffering and recovers within policy |
-| Spark restart test | Checkpoint resumes stream |
+| Manual session 60 giây | Không mất final flush |
+| Load generator default run | Pipeline vẫn responsive |
+| Backend outage test | Frontend chuyển sang offline/buffering và recover theo policy |
+| Spark restart test | Checkpoint resume stream |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan feeds [phase5-plan002](plan002-packaging-runbooks-and-final-report.md) with measured results and known limitations.
-
+Plan này feed [phase5-plan002](plan002-packaging-runbooks-and-final-report.md) với measured results và known limitations.

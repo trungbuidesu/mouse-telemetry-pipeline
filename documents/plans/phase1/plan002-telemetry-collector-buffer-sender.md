@@ -1,121 +1,121 @@
-# Plan: Telemetry Collector, Buffer and Sender
+# Plan: Telemetry collector, buffer và sender
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase1-plan002` |
 | Phase | [phase1](../../phases/phase1/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Implement the frontend telemetry path that captures high-frequency input, normalizes events, stores them in a bounded memory buffer, sends batches to the ingestion API and retries safely when the backend is slow or unavailable.
+Triển khai frontend telemetry path: capture input tần suất cao, normalize events, lưu trong bounded memory buffer, gửi batches đến ingestion API và retry an toàn khi backend chậm hoặc unavailable.
 
 ---
 
-## 3. Related Decisions
+## 3. Decisions liên quan
 
-| Decision | Why needed |
+| Decision | Vì sao cần |
 |---|---|
-| [DEC-001](../../decisions/decision001-canvas-relative-telemetry-schema.md) | Event coordinate and field contract |
-| [DEC-002](../../decisions/decision002-client-side-batching-and-sampling.md) | Sampling and flush policy |
-| [DEC-003](../../decisions/decision003-react-state-vs-ref-boundary.md) | React state/ref boundary |
-| [DEC-007](../../decisions/decision007-memory-bounded-retry-policy.md) | Retry and buffer limit |
-| [DEC-011](../../decisions/decision011-vite-react-shadcn-frontend-stack.md) | Prevents UI stack from owning telemetry hot path |
+| [DEC-001](../../decisions/decision001-canvas-relative-telemetry-schema.md) | Event coordinate và field contract |
+| [DEC-002](../../decisions/decision002-client-side-batching-and-sampling.md) | Sampling và flush policy |
+| [DEC-003](../../decisions/decision003-react-state-vs-ref-boundary.md) | Boundary giữa React state/ref |
+| [DEC-007](../../decisions/decision007-memory-bounded-retry-policy.md) | Retry và buffer limit |
+| [DEC-011](../../decisions/decision011-vite-react-shadcn-frontend-stack.md) | Ngăn UI stack sở hữu telemetry hot path |
 
 ---
 
-## 4. Planned Modules
+## 4. Module dự kiến
 
 | Module | Responsibility |
 |---|---|
-| `frontend/src/telemetry/telemetryTypes.ts` | Event and batch types |
+| `frontend/src/telemetry/telemetryTypes.ts` | Event và batch types |
 | `frontend/src/telemetry/telemetryConfig.ts` | Batch size, flush interval, sampling interval, buffer limit |
-| `frontend/src/telemetry/eventCollector.ts` | Create normalized events and sequence numbers |
-| `frontend/src/telemetry/eventBuffer.ts` | Append, flush and drop policy |
-| `frontend/src/telemetry/batchSender.ts` | HTTP sending, retry and status |
+| `frontend/src/telemetry/eventCollector.ts` | Tạo normalized events và sequence numbers |
+| `frontend/src/telemetry/eventBuffer.ts` | Append, flush và drop policy |
+| `frontend/src/telemetry/batchSender.ts` | HTTP sending, retry và status |
 | `frontend/src/api/telemetryApi.ts` | API request boundary |
-| `frontend/src/hooks/useTelemetry.ts` | Wire collector/buffer/sender into UI lifecycle |
+| `frontend/src/hooks/useTelemetry.ts` | Wire collector/buffer/sender vào UI lifecycle |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Define telemetry types
+### Step 1: Định nghĩa telemetry types
 
-- Add discriminated event types for `session_start`, `mousemove`, `click`, `session_end`.
-- Add `TelemetryBatch` with `sessionId`, `batchSequence`, `sentAt` and `events`.
-- Keep type names aligned with API contract.
+* Thêm discriminated event types cho `session_start`, `mousemove`, `click`, `session_end`.
+* Thêm `TelemetryBatch` với `sessionId`, `batchSequence`, `sentAt` và `events`.
+* Giữ type names khớp API contract.
 
-### Step 2: Implement collector
+### Step 2: Triển khai collector
 
-- Generate `eventId` for each event.
-- Attach `sessionId`, `eventTime` and monotonic `sequence`.
-- Convert coordinates to canvas-relative and normalized forms.
-- Compute `targetHit` and `reactionTimeMs` for click events.
+* Sinh `eventId` cho từng event.
+* Gắn `sessionId`, `eventTime` và `sequence` tăng đơn điệu.
+* Convert coordinates sang canvas-relative và normalized forms.
+* Tính `targetHit` và `reactionTimeMs` cho click events.
 
-### Step 3: Implement sampling
+### Step 3: Triển khai sampling
 
-- Record at most one `mousemove` every 16 ms by default.
-- Never sample away `click`, `session_start` or `session_end`.
-- Track skipped mousemove count separately if useful for debugging.
+* Ghi tối đa một `mousemove` mỗi 16 ms theo default.
+* Không bao giờ sample bỏ `click`, `session_start` hoặc `session_end`.
+* Track skipped mousemove count riêng nếu hữu ích cho debugging.
 
-### Step 4: Implement buffer and flush policy
+### Step 4: Triển khai buffer và flush policy
 
-- Flush when buffer reaches 100 events.
-- Flush every 250 ms while running.
-- Flush all remaining events during finishing.
-- Enforce `MAX_BUFFERED_EVENTS = 20000`.
+* Flush khi buffer đạt 100 events.
+* Flush mỗi 250 ms khi running.
+* Flush toàn bộ events còn lại trong finishing.
+* Enforce `MAX_BUFFERED_EVENTS = 20000`.
 
-### Step 5: Implement sender and retry
+### Step 5: Triển khai sender và retry
 
-- Send batches to `POST /api/v1/events/batch`.
-- Retry retryable failures with 500 ms, 1 s and 2 s backoff.
-- Keep failed batch until success or max retry outcome is recorded.
-- Expose stream status for UI.
-
----
-
-## 6. Performance Notes
-
-- The hot path must avoid allocation-heavy transformations where possible.
-- React state may show counters, but buffer data lives in refs or plain objects outside render state.
-- TanStack Query must not own telemetry events or buffer state.
-- shadcn components may display stream status but must not process raw events.
-- Sender should avoid unbounded parallel HTTP requests; one in-flight batch per sender is the safest MVP default.
-- Batch payload size should stay small enough for local FastAPI parsing and Kafka produce.
+* Gửi batches đến `POST /api/v1/events/batch`.
+* Retry retryable failures với backoff 500 ms, 1 s và 2 s.
+* Giữ failed batch đến khi success hoặc max retry outcome được ghi nhận.
+* Expose stream status cho UI.
 
 ---
 
-## 7. Acceptance Criteria
+## 6. Ghi chú performance
 
-- [ ] `mousemove` and `click` events are collected with required fields.
-- [ ] `sequence` increases monotonically per session.
-- [ ] Mousemove sampling is enforced.
-- [ ] Buffer flushes by size and interval.
-- [ ] Finishing a session flushes remaining events.
-- [ ] Retry behavior handles backend failure without deleting unsent batches.
-- [ ] UI can show event count, batch count and stream status.
-- [ ] Unit tests cover batching, sequence, coordinate normalization and retry classification.
+* Hot path phải tránh allocation-heavy transformations khi có thể.
+* React state có thể hiển thị counters, nhưng buffer data nằm trong refs hoặc plain objects ngoài render state.
+* TanStack Query không được sở hữu telemetry events hoặc buffer state.
+* shadcn components có thể hiển thị stream status nhưng không xử lý raw events.
+* Sender tránh HTTP requests song song vô hạn; một in-flight batch cho mỗi sender là default an toàn nhất cho MVP.
+* Batch payload size nên đủ nhỏ cho local FastAPI parsing và Kafka produce.
+
+---
+
+## 7. Acceptance criteria
+
+* [ ] `mousemove` và `click` events được thu với required fields.
+* [ ] `sequence` tăng đơn điệu theo session.
+* [ ] Mousemove sampling được enforce.
+* [ ] Buffer flush theo size và interval.
+* [ ] Finishing session flush toàn bộ events còn lại.
+* [ ] Retry behavior xử lý backend failure mà không xóa unsent batches.
+* [ ] UI hiển thị được event count, batch count và stream status.
+* [ ] Unit tests cover batching, sequence, coordinate normalization và retry classification.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| Unit tests for buffer | PASS |
-| Unit tests for collector | PASS |
-| Mock API integration test | Sends batch and handles accepted response |
-| Manual offline test | Backend down changes status and preserves bounded buffer |
+| Unit tests cho buffer | PASS |
+| Unit tests cho collector | PASS |
+| Mock API integration test | Gửi batch và xử lý accepted response |
+| Manual offline test | Backend down đổi status và giữ bounded buffer |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan feeds [phase1-plan003](plan003-session-result-and-client-analytics.md) and [phase2-plan001](../phase2/plan001-fastapi-ingestion-contract.md).
+Plan này feed [phase1-plan003](plan003-session-result-and-client-analytics.md) và [phase2-plan001](../phase2/plan001-fastapi-ingestion-contract.md).

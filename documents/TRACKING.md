@@ -21,7 +21,7 @@
 
 ---
 
-## Chi tiết Tasks theo Phase
+## Chi tiết task theo phase
 
 ### P0 — Foundation and Contracts
 
@@ -50,7 +50,7 @@
 | T1.4 | Telemetry collector and coordinate normalization | `TODO` | — | T1.2, T1.3 | Canvas-relative coordinates |
 | T1.5 | Event buffer and batch sender | `TODO` | — | T1.4 | DEC-002, DEC-007 |
 | T1.6 | Stream status UI | `TODO` | — | T1.5 | Connected, buffering, offline, error |
-| T1.7 | Result page and client metrics | `TODO` | — | T1.5 | Provisional result while Spark processes |
+| T1.7 | Result page và client metrics | `TODO` | — | T1.5 | Kết quả tạm thời trong lúc Spark xử lý |
 | T1.8 | Frontend unit tests | `TODO` | — | T1.2, T1.5 | Hit detection, batch, sequence, coordinates |
 | T1.9 | Frontend e2e smoke test | `TODO` | — | T1.7 | Play one short session |
 | T1.10 | P1 gate review package | `TODO` | — | T1.8, T1.9 | G1 pass/fail package |
@@ -61,7 +61,7 @@
 |---|---|---|---|---|---|
 | T2.1 | FastAPI app factory and health endpoint | `TODO` | — | T0.5 | Minimal API runtime |
 | T2.2 | Pydantic telemetry models | `TODO` | — | T0.6 | Match DEC-001 |
-| T2.3 | Session lifecycle endpoints | `TODO` | — | T2.1, T2.2 | Create and complete session |
+| T2.3 | Endpoints vòng đời session | `TODO` | — | T2.1, T2.2 | Tạo và complete session |
 | T2.4 | Batch ingestion endpoint | `TODO` | — | T2.2 | `POST /api/v1/events/batch` |
 | T2.5 | Kafka producer service boundary | `TODO` | — | T2.4, P3 topic decision | DEC-004, DEC-005 |
 | T2.6 | Backpressure and error response model | `TODO` | — | T2.4 | Retryable vs non-retryable |
@@ -86,7 +86,7 @@
 | ID | Task | Trạng thái | Ngày hoàn thành | Blocked by | Notes |
 |---|---|---|---|---|---|
 | T4.1 | Grafana dashboard JSON | `TODO` | — | P3 | Throughput, latency, sessions |
-| T4.2 | Session analytics API/read model | `TODO` | — | P3 | Result/detail metrics |
+| T4.2 | API/read model cho session analytics | `TODO` | — | P3 | Result/detail metrics |
 | T4.3 | Heatmap or trajectory visualization | `TODO` | — | T4.2 | MVP-level bounded data |
 | T4.4 | Load generator | `TODO` | — | P2 | Separate from player app, DEC-008 |
 | T4.5 | Demo script | `TODO` | — | T4.1, T4.4 | Evidence checklist |
@@ -156,9 +156,9 @@ Mỗi gate là binary pass/fail. Gate fail thì sửa foundation hoặc phase hi
 | R-06 | Raw telemetry bị ghi vào InfluxDB quá nhiều | 4×4 | WATCHING | DEC-006, aggregate-only metrics | Move raw writes to MinIO only |
 | R-07 | Local Docker/runtime data bị commit nhầm | 3×5 | WATCHING | `.gitignore`, git status review | Remove from index before commit |
 | R-08 | Scope creep sang Spark/dashboard quá sớm | 4×3 | WATCHING | Tracking marks Spark config as future work | Defer to P3/P4 tasks |
-| R-09 | Playwright browser dependencies không có sẵn | 3×3 | WATCHING | Document install command and validation limitation | Run unit/lint/typecheck first; install browsers later |
-| R-10 | Test tooling baseline quá rỗng, không bắt được regression | 3×4 | WATCHING | Add smoke tests now, focused domain tests in P1/P2 | Expand tests with gameplay/API tasks |
-| R-11 | shadcn UI bị dùng sai cho canvas/telemetry hot path | 4×4 | WATCHING | DEC-011, frontend coding rules | Keep canvas renderer imperative and telemetry in refs/plain TS |
+| R-09 | Playwright browser dependencies không có sẵn | 3×3 | WATCHING | Document lệnh cài đặt và giới hạn validation | Chạy unit/lint/typecheck trước; cài browsers sau |
+| R-10 | Test tooling baseline quá rỗng, không bắt được regression | 3×4 | WATCHING | Thêm smoke tests hiện tại, domain tests tập trung ở P1/P2 | Mở rộng tests cùng gameplay/API tasks |
+| R-11 | shadcn UI bị dùng sai cho canvas/telemetry hot path | 4×4 | WATCHING | DEC-011, frontend coding rules | Giữ canvas renderer dạng imperative và telemetry trong refs/plain TS |
 | R-12 | API vô tình dùng Python hệ thống thay vì uv-managed Python | 3×5 | WATCHING | DEC-012, `.python-version`, validation through `uv run` | Fail gate until uv-managed command evidence exists |
 
 **Score >= 15** cần review khi cập nhật tracking.

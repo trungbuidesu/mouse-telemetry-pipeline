@@ -1,16 +1,16 @@
-# Decision Records
+# Decision Records (quyết định kiến trúc)
 
 ## 1. Mục đích
 
-Thư mục `documents/decisions/` lưu các quyết định kiến trúc có ảnh hưởng xuyên suốt nhiều phase. Mỗi decision record giải thích bối cảnh, quyết định, lý do, hệ quả và những plan/phase phải tuân theo.
+Thư mục `documents/decisions/` lưu các quyết định kiến trúc có ảnh hưởng xuyên suốt nhiều phase. Mỗi `decision record` giải thích bối cảnh, quyết định, lý do, hệ quả và các plan/phase phải tuân theo.
 
 Với dự án này, decision records đặc biệt quan trọng vì ứng dụng là nguồn thu thập dữ liệu tần suất cao. Một thay đổi nhỏ ở frontend telemetry, schema hoặc storage có thể ảnh hưởng đến ingestion API, Kafka, Spark, dashboard và demo.
 
 ---
 
-## 2. Decision Map
+## 2. Bản đồ decision
 
-| ID | Decision | Status | Main phases |
+| ID | Decision | Trạng thái | Phase chính |
 |---|---|---|---|
 | [DEC-001](decision001-canvas-relative-telemetry-schema.md) | Canvas-relative telemetry schema | `DECIDED` | phase0, phase1, phase2, phase3 |
 | [DEC-002](decision002-client-side-batching-and-sampling.md) | Client-side batching and sampling | `DECIDED` | phase1, phase2, phase5 |
@@ -28,9 +28,9 @@ Với dự án này, decision records đặc biệt quan trọng vì ứng dụn
 
 ---
 
-## 3. Status Values
+## 3. Giá trị status
 
-| Status | Meaning |
+| Status | Ý nghĩa |
 |---|---|
 | `PROPOSED` | Đang được cân nhắc, chưa được dùng làm constraint triển khai |
 | `DECIDED` | Đã chốt và các plan/task phải tuân theo |

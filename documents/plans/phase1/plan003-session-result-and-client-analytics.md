@@ -1,103 +1,102 @@
-# Plan: Session Result and Client Analytics
+# Plan: Session result và client analytics
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase1-plan003` |
 | Phase | [phase1](../../phases/phase1/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Show immediate session results from frontend state while backend metrics are still processing. This keeps the user experience responsive and demonstrates asynchronous pipeline behavior.
+Hiển thị kết quả session ngay từ frontend state trong khi backend metrics vẫn đang processing. Cách này giữ user experience responsive và minh họa hành vi pipeline bất đồng bộ.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
-| Dependency | Type | Notes |
+| Dependency | Loại | Ghi chú |
 |---|---|---|
-| [phase1-plan001](plan001-frontend-gameplay-shell.md) | Frontend gameplay | Provides score, hit/miss and session lifecycle |
-| [phase1-plan002](plan002-telemetry-collector-buffer-sender.md) | Telemetry | Provides event and batch counters |
+| [phase1-plan001](plan001-frontend-gameplay-shell.md) | Frontend gameplay | Cung cấp score, hit/miss và session lifecycle |
+| [phase1-plan002](plan002-telemetry-collector-buffer-sender.md) | Telemetry | Cung cấp event và batch counters |
 | [phase2-plan001](../phase2/plan001-fastapi-ingestion-contract.md) | API | Metrics polling contract |
-| [DEC-009](../../decisions/decision009-session-analytics-event-time-watermark.md) | Analytics | Processing status may lag final event |
+| [DEC-009](../../decisions/decision009-session-analytics-event-time-watermark.md) | Analytics | Processing status có thể trễ hơn final event |
 
 ---
 
-## 4. Planned Modules
+## 4. Module dự kiến
 
 | Module | Responsibility |
 |---|---|
-| `frontend/src/pages/ResultPage.tsx` | Display result for `sessionId` |
+| `frontend/src/pages/ResultPage.tsx` | Hiển thị result theo `sessionId` |
 | `frontend/src/api/analyticsApi.ts` | Fetch backend metrics |
-| `frontend/src/hooks/useSessionMetrics.ts` | Poll and expose processing status |
-| `frontend/src/utils/calculations.ts` | Client-side accuracy, distance and basic stats |
-| `frontend/src/components/MouseTrajectory.tsx` | Basic trajectory rendering if local samples are available |
-| `frontend/src/components/ClickHeatmap.tsx` | Basic click density view if local samples are available |
+| `frontend/src/hooks/useSessionMetrics.ts` | Poll và expose processing status |
+| `frontend/src/utils/calculations.ts` | Client-side accuracy, distance và basic stats |
+| `frontend/src/components/MouseTrajectory.tsx` | Render trajectory cơ bản nếu có local samples |
+| `frontend/src/components/ClickHeatmap.tsx` | Hiển thị click density cơ bản nếu có local samples |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Define client result model
+### Step 1: Định nghĩa client result model
 
-- Capture score, hit count, miss count, total click count.
-- Capture generated event count and sent batch count.
-- Capture dropped event count if buffer limit was reached.
+* Capture score, hit count, miss count, total click count.
+* Capture generated event count và sent batch count.
+* Capture dropped event count nếu buffer limit bị chạm.
 
-### Step 2: Build result page
+### Step 2: Xây result page
 
-- Show immediate client-calculated result after finishing.
-- Show backend status: `processing`, `completed` or `error`.
-- Let user play again or view analytics/dashboard.
+* Hiển thị immediate client-calculated result sau finishing.
+* Hiển thị backend status: `processing`, `completed` hoặc `error`.
+* Cho phép user chơi lại hoặc xem analytics/dashboard.
 
 ### Step 3: Poll backend metrics
 
-- Call `GET /api/v1/sessions/{sessionId}/metrics`.
-- Use a bounded polling interval.
-- Stop polling when status is `completed` or on terminal error.
+* Gọi `GET /api/v1/sessions/{sessionId}/metrics`.
+* Dùng polling interval có giới hạn.
+* Dừng polling khi status là `completed` hoặc terminal error.
 
-### Step 4: Add basic visual analytics
+### Step 4: Thêm visual analytics cơ bản
 
-- Show heatmap or trajectory for current session at MVP level.
-- Prefer derived or sampled data, not every raw mousemove in React state.
-
----
-
-## 6. Data Correctness Notes
-
-- Client result is immediate and provisional.
-- Backend result is authoritative for Spark-derived metrics such as total distance and average speed.
-- UI should label processing state clearly so delayed Spark metrics are not mistaken for lost data.
+* Hiển thị heatmap hoặc trajectory cho session hiện tại ở mức MVP.
+* Ưu tiên derived hoặc sampled data, không đưa mọi raw mousemove vào React state.
 
 ---
 
-## 7. Acceptance Criteria
+## 6. Ghi chú data correctness
 
-- [ ] Result page displays score, accuracy, hits, misses, total events and batches.
-- [ ] Result page distinguishes client result from backend processed metrics.
-- [ ] Metrics polling handles `processing` and `completed`.
-- [ ] Play Again starts a clean session with new `sessionId`.
-- [ ] No large raw telemetry array is stored in long-lived React state.
+* Client result là immediate và provisional.
+* Backend result là authoritative cho Spark-derived metrics như total distance và average speed.
+* UI phải label processing state rõ để delayed Spark metrics không bị hiểu nhầm là mất dữ liệu.
+
+---
+
+## 7. Acceptance criteria
+
+* [ ] Result page hiển thị score, accuracy, hits, misses, total events và batches.
+* [ ] Result page phân biệt client result và backend processed metrics.
+* [ ] Metrics polling xử lý `processing` và `completed`.
+* [ ] Play Again bắt đầu session sạch với `sessionId` mới.
+* [ ] Không lưu raw telemetry array lớn trong React state sống lâu.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| Unit tests for calculations | PASS |
-| Mock metrics polling test | Handles processing then completed |
-| Manual session test | Result appears after flush completes |
+| Unit tests cho calculations | PASS |
+| Mock metrics polling test | Xử lý processing rồi completed |
+| Manual session test | Result xuất hiện sau khi flush hoàn tất |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan provides the user-facing result surface used by [phase4-plan001](../phase4/plan001-dashboard-session-analytics.md).
-
+Plan này cung cấp result surface cho user, được [phase4-plan001](../phase4/plan001-dashboard-session-analytics.md) dùng tiếp.

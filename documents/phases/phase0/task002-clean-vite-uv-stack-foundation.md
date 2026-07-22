@@ -1,6 +1,6 @@
-# Task: Clean Vite shadcn Frontend and uv API Stack Foundation
+# Task: Nền tảng clean Vite shadcn frontend và uv API stack
 
-## 1. Task Metadata
+## 1. Thông tin task
 
 | Field | Value |
 |---|---|
@@ -25,15 +25,15 @@ Scope is limited to frontend and ingestion API foundation. Gameplay, telemetry s
 
 ---
 
-## 3. Objective
+## 3. Mục tiêu
 
 ```text
 Establish a reproducible frontend/API foundation that phase1 gameplay and phase2 ingestion tasks can build on without carrying smoke-baseline drift.
 ```
 
-### Acceptance Criteria
+### Tiêu chí nghiệm thu
 
-| Criteria | Result |
+| Tiêu chí | Kết quả |
 |---|---|
 | `frontend/` is initialized against a clean Vite React TypeScript baseline. | `DONE` |
 | Frontend uses shadcn/Tailwind CSS v4 conventions, React Router and TanStack Query provider boundaries. | `DONE` |
@@ -48,7 +48,7 @@ Establish a reproducible frontend/API foundation that phase1 gameplay and phase2
 
 ---
 
-## 4. Phase Context
+## 4. Bối cảnh phase
 
 | Dependency | Status | Relationship |
 |---|---|---|
@@ -58,7 +58,7 @@ Establish a reproducible frontend/API foundation that phase1 gameplay and phase2
 
 ### Decisions Added
 
-| Decision | Status |
+| Decision | Trạng thái |
 |---|---|
 | [DEC-011: Vite React shadcn frontend stack](../../decisions/decision011-vite-react-shadcn-frontend-stack.md) | `ACCEPTED` |
 | [DEC-012: uv-managed Python API environment](../../decisions/decision012-uv-managed-python-api-environment.md) | `ACCEPTED` |
@@ -123,7 +123,7 @@ Updated the frontend/API-related governance layer:
 
 ## 6. Work Log
 
-| Time | Status | Action | Result |
+| Thời gian | Trạng thái | Hành động | Kết quả |
 |---|---|---|---|
 | `2026-07-22 06:09` | `IN_PROGRESS` | Created this task file and inspected task001/frontend/API/docs. | Confirmed prior frontend/API files were smoke baselines. |
 | `2026-07-22 06:18` | `IN_PROGRESS` | Generated a clean Vite reference scaffold and reworked `frontend/`. | Frontend foundation now matches Vite React TS plus shadcn/Tailwind/router/query plan. |
@@ -134,7 +134,7 @@ Updated the frontend/API-related governance layer:
 
 ---
 
-## 7. File Changes
+## 7. File thay đổi
 
 ### Added
 
@@ -186,7 +186,7 @@ Updated the frontend/API-related governance layer:
 
 ---
 
-## 8. Symbol Delta
+## 8. Thay đổi symbol
 
 ### Frontend Symbols Added
 
@@ -220,7 +220,7 @@ Updated the frontend/API-related governance layer:
 
 ### Documentation
 
-| Command | Result | Notes |
+| Command | Kết quả | Ghi chú |
 |---|---|---|
 | `rg --files documents` | `PASS` | Listed 45 document files. |
 | Markdown link check for `documents/**/*.md` | `PASS` | Checked 45 markdown files. |
@@ -228,7 +228,7 @@ Updated the frontend/API-related governance layer:
 
 ### Frontend
 
-| Command | Result | Notes |
+| Command | Kết quả | Ghi chú |
 |---|---|---|
 | `npm install` | `PASS` | Lockfile generated and dependencies installed. |
 | `npm run typecheck` | `PASS` | TypeScript project build succeeds. |
@@ -240,7 +240,7 @@ Updated the frontend/API-related governance layer:
 
 ### API
 
-| Command | Result | Notes |
+| Command | Kết quả | Ghi chú |
 |---|---|---|
 | `uv python install 3.12.13` | `PASS` | Managed CPython 3.12.13 available. |
 | `uv python pin 3.12.13` | `PASS` | Wrote `.python-version`. |
@@ -252,14 +252,14 @@ Updated the frontend/API-related governance layer:
 
 ### Git Hygiene
 
-| Command | Result | Notes |
+| Command | Kết quả | Ghi chú |
 |---|---|---|
 | `git status --short -uall` | `PASS` | Scope is docs/config/source/lockfiles. |
 | `git check-ignore -v frontend/node_modules frontend/dist ingestion-api/.venv` | `PASS` | Runtime/build directories are ignored. |
 
 ### Local Runtime Check
 
-| Command | Result | Notes |
+| Command | Kết quả | Ghi chú |
 |---|---|---|
 | `npm run dev -- --host 127.0.0.1 --port 5173` | `PASS` | `http://127.0.0.1:5173/` returned 200 OK. |
 | `uv run uvicorn app.main:app --host 127.0.0.1 --port 8001` | `PASS` | `http://127.0.0.1:8001/health` returned API health JSON. |
@@ -295,7 +295,7 @@ Updated the frontend/API-related governance layer:
 
 ---
 
-## 11. Final Summary
+## 11. Tổng kết cuối
 
 * **Final Status:** `DONE`
 * **Completed At:** `2026-07-22 06:34`
@@ -306,14 +306,14 @@ Updated the frontend/API-related governance layer:
 Frontend and API foundation are now aligned with the approved clean Vite/shadcn and uv-managed FastAPI stack. Linked phase, plan, coding-rule, tracking, architecture and decision documents were updated. All requested validation commands passed.
 ```
 
-### Remaining Work
+### Việc còn lại
 
-* Implement aim trainer gameplay in phase1.
-* Implement telemetry collector, batching and sender in phase1.
-* Implement ingestion schema and endpoints in phase2.
-* Add Kafka/Spark/MinIO/InfluxDB/Grafana stack in later phases.
+* Triển khai Aim Trainer gameplay trong phase1.
+* Triển khai telemetry collector, batching và sender trong phase1.
+* Triển khai ingestion schema và endpoints trong phase2.
+* Thêm Kafka/Spark/MinIO/InfluxDB/Grafana stack ở các phase sau.
 
-### Suggested Commit Message
+### Commit message gợi ý
 
 ```text
 chore(phase0): establish clean frontend and api stack foundation

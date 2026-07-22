@@ -6,28 +6,28 @@ Phase 4 biến dữ liệu đã xử lý thành câu chuyện demo rõ ràng: ng
 
 ---
 
-## 2. Scope
+## 2. Phạm vi
 
-### In scope
+### Trong scope
 
-- Dashboard KPI: active sessions, events per second, total events, processing latency.
-- Biểu đồ throughput theo thời gian.
-- Session list gần nhất.
-- Session detail với metrics, trajectory hoặc heatmap cơ bản.
-- Demo script cho luồng end-to-end.
-- Load generator tách riêng khỏi app người chơi.
+* Dashboard KPI: active sessions, events per second, total events, processing latency.
+* Biểu đồ throughput theo thời gian.
+* Session list gần nhất.
+* Session detail với metrics, trajectory hoặc heatmap cơ bản.
+* Demo script cho luồng end-to-end.
+* Load generator tách riêng khỏi app người chơi.
 
-### Out of scope
+### Ngoài scope
 
-- Dashboard production-grade.
-- Alerting phức tạp.
-- User account và lịch sử cá nhân.
-- Replay video đầy đủ.
-- So sánh bot/người thật bằng ML.
+* Dashboard production-grade.
+* Alerting phức tạp.
+* User account và lịch sử cá nhân.
+* Replay video đầy đủ.
+* So sánh bot/người thật bằng ML.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
 | Dependency | Từ phase | Ghi chú |
 |---|---|---|
@@ -57,7 +57,7 @@ Phase 4 biến dữ liệu đã xử lý thành câu chuyện demo rõ ràng: ng
 
 ---
 
-## 6. Demo Requirements
+## 6. Demo requirements
 
 Demo phải chứng minh được:
 
@@ -70,12 +70,11 @@ Demo phải chứng minh được:
 
 ---
 
-## 7. Completion Gate
+## 7. Completion gate
 
 Phase 4 hoàn thành khi:
 
-- Có ít nhất một dashboard hoặc màn hình analytics đọc dữ liệu đã qua pipeline.
-- Session demo có thể truy vết từ frontend đến storage.
-- Load generator tạo tải có kiểm soát và không phụ thuộc UI người chơi.
-- Demo script ghi rõ setup, thao tác, expected evidence và cách reset môi trường.
-
+* Có ít nhất một dashboard hoặc màn hình analytics đọc dữ liệu đã qua pipeline.
+* Session demo có thể truy vết từ frontend đến storage.
+* Load generator tạo tải có kiểm soát và không phụ thuộc UI người chơi.
+* Demo script ghi rõ setup, thao tác, expected evidence và cách reset môi trường.

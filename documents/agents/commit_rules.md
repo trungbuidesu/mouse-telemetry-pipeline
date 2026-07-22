@@ -1,4 +1,4 @@
-# Commit Rules
+# Quy tắc commit
 
 ## 1. Mục đích
 
@@ -84,7 +84,7 @@ Task file phải được stage cùng commit nếu commit làm thay đổi:
 
 Không tạo commit code mà task file vẫn mô tả trạng thái cũ.
 
-### Task reference
+### Tham chiếu task
 
 Commit body phải chứa đường dẫn task file:
 
@@ -236,7 +236,7 @@ revert: feat(auth): add session caching
 
 ---
 
-## 7. Scope
+## 7. Phạm vi
 
 Scope phải phản ánh module hoặc responsibility chính:
 

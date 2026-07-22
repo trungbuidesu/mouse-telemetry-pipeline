@@ -1,4 +1,4 @@
-# AIM TRAINER WEB APPLICATION
+# Ứng dụng web Aim Trainer
 ## Ý tưởng, thiết kế chức năng và kiến trúc triển khai
 
 > Tài liệu đặc tả cho ứng dụng Aim Trainer đóng vai trò nguồn sinh dữ liệu trong đồ án môn học Big Data: **Real-time Mouse Tracking Pipeline**.
@@ -333,7 +333,7 @@ flowchart LR
 
 ### 9.2. Nguyên tắc tách trách nhiệm
 
-#### UI layer
+#### UI layer (lớp giao diện)
 
 Phụ trách:
 
@@ -341,7 +341,7 @@ Phụ trách:
 - Hiển thị score, timer và trạng thái.
 - Hiển thị kết quả phiên.
 
-#### Game layer
+#### Game layer (lớp gameplay)
 
 Phụ trách:
 
@@ -351,7 +351,7 @@ Phụ trách:
 - Timer phiên.
 - Kết thúc phiên.
 
-#### Telemetry layer
+#### Telemetry layer (lớp telemetry)
 
 Phụ trách:
 
@@ -362,7 +362,7 @@ Phụ trách:
 - Retry khi gửi thất bại.
 - Theo dõi số event và batch.
 
-#### API layer
+#### API layer (lớp giao tiếp API)
 
 Phụ trách:
 
@@ -676,7 +676,7 @@ Nếu muốn tạo tải lớn cho pipeline, nên dùng load generator riêng th
 
 ---
 
-## 16. API contract
+## 16. Contract API
 
 ### 16.1. Khởi tạo phiên
 
@@ -819,7 +819,7 @@ Metrics: available
 
 ---
 
-## 18. Dashboard
+## 18. Dashboard phân tích
 
 ### 18.1. KPI
 

@@ -1,111 +1,111 @@
-# Plan: Frontend Gameplay Shell
+# Plan: Gameplay shell cho frontend
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase1-plan001` |
 | Phase | [phase1](../../phases/phase1/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Build the playable Aim Trainer shell: routing, canvas play area, game state machine, target generation, hit detection, timer, score and accuracy.
+Xây playable Aim Trainer shell: routing, canvas play area, game state machine, target generation, hit detection, timer, score và accuracy.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
-| Dependency | Type | Notes |
+| Dependency | Loại | Ghi chú |
 |---|---|---|
-| [phase0-plan001](../phase0/plan001-repository-and-doc-governance.md) | Repo setup | Frontend folder and tooling conventions |
-| [phase0-plan002](../phase0/plan002-contract-first-schema-and-api.md) | Contract | Session and event semantics |
-| [DEC-003](../../decisions/decision003-react-state-vs-ref-boundary.md) | Architecture | Avoid render storm from mousemove |
-| [DEC-011](../../decisions/decision011-vite-react-shadcn-frontend-stack.md) | Frontend stack | Defines Vite, shadcn, router and query boundaries |
+| [phase0-plan001](../phase0/plan001-repository-and-doc-governance.md) | Repo setup | Frontend folder và tooling conventions |
+| [phase0-plan002](../phase0/plan002-contract-first-schema-and-api.md) | Contract | Session và event semantics |
+| [DEC-003](../../decisions/decision003-react-state-vs-ref-boundary.md) | Architecture | Tránh render storm từ `mousemove` |
+| [DEC-011](../../decisions/decision011-vite-react-shadcn-frontend-stack.md) | Frontend stack | Định nghĩa Vite, shadcn, router và query boundaries |
 
 ---
 
-## 4. Planned Modules
+## 4. Module dự kiến
 
 | Module | Responsibility |
 |---|---|
-| `frontend/src/app/router.tsx` | Routes for `/`, `/play`, `/result/:sessionId`, `/dashboard` |
-| `frontend/src/app/providers.tsx` | TanStack Query provider for server state only |
-| `frontend/src/pages/TrainerPage.tsx` | Page composition for game screen |
-| `frontend/src/components/AimCanvas.tsx` | Canvas rendering and pointer event boundary |
+| `frontend/src/app/router.tsx` | Routes cho `/`, `/play`, `/result/:sessionId`, `/dashboard` |
+| `frontend/src/app/providers.tsx` | TanStack Query provider chỉ cho server state |
+| `frontend/src/pages/TrainerPage.tsx` | Page composition cho game screen |
+| `frontend/src/components/AimCanvas.tsx` | Canvas rendering và pointer event boundary |
 | `frontend/src/components/SessionHUD.tsx` | Timer, score, accuracy, stream status |
-| `frontend/src/game/gameEngine.ts` | Game lifecycle and score transitions |
-| `frontend/src/game/targetGenerator.ts` | Valid target placement |
+| `frontend/src/game/gameEngine.ts` | Game lifecycle và score transitions |
+| `frontend/src/game/targetGenerator.ts` | Đặt target hợp lệ |
 | `frontend/src/game/hitDetection.ts` | Hit/miss math |
-| `frontend/src/hooks/useAimTrainer.ts` | UI-facing game hook |
+| `frontend/src/hooks/useAimTrainer.ts` | Hook game cho UI |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Initialize frontend app
+### Step 1: Khởi tạo frontend app
 
-- Use the existing clean Vite React TypeScript shadcn foundation.
-- Add routing and basic pages.
-- Keep first screen usable, not a marketing-only page.
+* Dùng clean Vite React TypeScript shadcn foundation hiện có.
+* Thêm routing và basic pages.
+* Giữ first screen usable, không làm marketing-only page.
 
-### Step 2: Implement game model
+### Step 2: Triển khai game model
 
-- Define `Target`, `GameStatus`, session settings and score state.
-- Implement target generation within canvas bounds.
-- Implement hit detection using Euclidean distance.
+* Định nghĩa `Target`, `GameStatus`, session settings và score state.
+* Triển khai target generation trong canvas bounds.
+* Triển khai hit detection bằng Euclidean distance.
 
-### Step 3: Implement canvas boundary
+### Step 3: Triển khai canvas boundary
 
-- Render target on canvas.
-- Convert pointer client coordinates to canvas coordinates.
-- Do not store every pointer coordinate in React state.
+* Render target trên canvas.
+* Convert pointer client coordinates sang canvas coordinates.
+* Không lưu mọi pointer coordinate trong React state.
 
-### Step 4: Implement session lifecycle
+### Step 4: Triển khai session lifecycle
 
-- Start from idle.
-- Run countdown.
-- Start timer.
-- Stop on timer expiry or manual stop.
-- Move to finishing so telemetry can flush in phase1-plan002.
-
----
-
-## 6. Performance Notes
-
-- Canvas drawing should be imperative and bounded.
-- shadcn components are allowed for HUD/layout controls, not canvas drawing.
-- HUD state updates should be limited to meaningful UI values such as timer, score and accuracy.
-- Pointer move handling must be compatible with telemetry sampling in [phase1-plan002](plan002-telemetry-collector-buffer-sender.md).
+* Bắt đầu từ idle.
+* Chạy countdown.
+* Start timer.
+* Stop khi timer hết hoặc user stop thủ công.
+* Chuyển sang finishing để telemetry có thể flush trong phase1-plan002.
 
 ---
 
-## 7. Acceptance Criteria
+## 6. Ghi chú performance
 
-- [ ] User can play a 30 or 60 second session.
-- [ ] Target is always fully inside canvas.
-- [ ] Score increments only on hit.
-- [ ] Miss count increments on off-target click.
-- [ ] Accuracy uses `hitCount / totalClickCount`.
-- [ ] Timer expiration transitions to finishing/completed flow.
-- [ ] Unit tests cover hit detection, accuracy and target bounds.
+* Canvas drawing nên imperative và bounded.
+* shadcn components được dùng cho HUD/layout controls, không dùng cho canvas drawing.
+* HUD state updates chỉ nên giới hạn ở giá trị UI có nghĩa như timer, score và accuracy.
+* Pointer move handling phải tương thích với telemetry sampling trong [phase1-plan002](plan002-telemetry-collector-buffer-sender.md).
+
+---
+
+## 7. Acceptance criteria
+
+* [ ] Người dùng chơi được session 30 hoặc 60 giây.
+* [ ] Target luôn nằm hoàn toàn trong canvas.
+* [ ] Score chỉ tăng khi hit.
+* [ ] Miss count tăng khi click ngoài target.
+* [ ] Accuracy dùng `hitCount / totalClickCount`.
+* [ ] Timer hết sẽ chuyển sang finishing/completed flow.
+* [ ] Unit tests cover hit detection, accuracy và target bounds.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| Unit tests for game utilities | PASS |
-| Manual browser test | Target can be clicked and score changes |
-| Render behavior inspection | Pointer move does not visibly degrade UI |
+| Unit tests cho game utilities | PASS |
+| Manual browser test | Target click được và score thay đổi |
+| Kiểm tra render behavior | Pointer move không làm UI xuống cấp rõ rệt |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan unlocks [phase1-plan002](plan002-telemetry-collector-buffer-sender.md), which attaches telemetry collection to the gameplay shell.
+Plan này mở khóa [phase1-plan002](plan002-telemetry-collector-buffer-sender.md), nơi telemetry collection được gắn vào gameplay shell.

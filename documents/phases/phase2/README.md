@@ -8,32 +8,32 @@ Backend phải hấp thụ được burst nhỏ từ frontend mà không buộc 
 
 ---
 
-## 2. Scope
+## 2. Phạm vi
 
-### In scope
+### Trong scope
 
-- Endpoint tạo session.
-- Endpoint nhận telemetry batch.
-- Endpoint complete session.
-- Endpoint lấy trạng thái metrics/session cơ bản.
-- uv-managed Python API environment từ DEC-012.
-- FastAPI/Pydantic/pydantic-settings/orjson stack từ DEC-013.
-- Schema validation cho event và batch.
-- Idempotency tối thiểu theo `eventId`, `sessionId`, `batchSequence`.
-- Produce event sang Kafka.
-- Backpressure response rõ ràng khi Kafka hoặc API quá tải.
+* Endpoint tạo session.
+* Endpoint nhận telemetry batch.
+* Endpoint complete session.
+* Endpoint lấy trạng thái metrics/session cơ bản.
+* uv-managed Python API environment từ DEC-012.
+* FastAPI/Pydantic/pydantic-settings/orjson stack từ DEC-013.
+* Schema validation cho event và batch.
+* Idempotency tối thiểu theo `eventId`, `sessionId`, `batchSequence`.
+* Produce event sang Kafka.
+* Backpressure response rõ ràng khi Kafka hoặc API quá tải.
 
-### Out of scope
+### Ngoài scope
 
-- Authentication.
-- User profile.
-- Query analytics phức tạp.
-- Spark processing logic.
-- Long-term raw storage trong API.
+* Authentication.
+* User profile.
+* Query analytics phức tạp.
+* Spark processing logic.
+* Long-term raw storage trong API.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
 | Dependency | Từ phase | Ghi chú |
 |---|---|---|
@@ -60,23 +60,23 @@ Backend phải hấp thụ được burst nhỏ từ frontend mà không buộc 
 | [DEC-004: HTTP ingestion before Kafka](../../decisions/decision004-http-ingestion-before-kafka.md) | API là boundary giữa browser và Kafka |
 | [DEC-005: Kafka topic layout and event keys](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Producer topic/key |
 | [DEC-007: Memory-bounded retry policy](../../decisions/decision007-memory-bounded-retry-policy.md) | HTTP error semantics cho frontend retry |
-| [DEC-012: uv-managed Python API environment](../../decisions/decision012-uv-managed-python-api-environment.md) | Python version and command reproducibility |
-| [DEC-013: FastAPI performance-oriented API stack](../../decisions/decision013-fastapi-performance-oriented-api-stack.md) | API stack and request-path constraints |
+| [DEC-012: uv-managed Python API environment](../../decisions/decision012-uv-managed-python-api-environment.md) | Python version và khả năng tái lập command |
+| [DEC-013: FastAPI performance-oriented API stack](../../decisions/decision013-fastapi-performance-oriented-api-stack.md) | API stack và request-path constraints |
 
 ---
 
-## 6. Performance Requirements
+## 6. Performance requirements
 
-- `POST /api/v1/events/batch` trả nhanh với `202 Accepted` khi batch hợp lệ và đã được nhận vào pipeline.
-- API không xử lý analytics nặng trong request path.
-- Payload quá lớn phải bị reject bằng lỗi rõ ràng.
-- Kafka produce lỗi phải được map sang trạng thái retryable hoặc non-retryable.
-- Logging không ghi toàn bộ raw event payload ở mức info trong đường nóng.
-- Validation chạy qua `uv run`, không dùng Python hệ thống.
+* `POST /api/v1/events/batch` trả nhanh với `202 Accepted` khi batch hợp lệ và đã được nhận vào pipeline.
+* API không xử lý analytics nặng trong request path.
+* Payload quá lớn phải bị reject bằng lỗi rõ ràng.
+* Kafka produce lỗi phải được map sang trạng thái retryable hoặc non-retryable.
+* Logging không ghi toàn bộ raw event payload ở mức info trong đường nóng.
+* Validation chạy qua `uv run`, không dùng Python hệ thống.
 
 ---
 
-## 7. Completion Gate
+## 7. Completion gate
 
 Phase 2 hoàn thành khi:
 

@@ -1,80 +1,79 @@
-# Decision DEC-006: Raw Parquet and Time-Series Metrics
+# Decision DEC-006: Raw Parquet và time-series metrics
 
-## 1. Status
+## 1. Trạng thái
 
 `DECIDED`
 
-Date: `2026-07-22`
+Ngày: `2026-07-22`
 
 ---
 
-## 2. Context
+## 2. Bối cảnh
 
-The architecture requires raw telemetry and aggregated metrics to be stored in different places. Raw mouse telemetry can be large and is better suited to object storage. Dashboard metrics are time-series aggregates and are better suited to InfluxDB/Grafana.
+Kiến trúc yêu cầu raw telemetry và aggregated metrics được lưu ở các nơi khác nhau. Raw mouse telemetry có thể lớn và phù hợp hơn với object storage. Dashboard metrics là time-series aggregates nên phù hợp hơn với InfluxDB/Grafana.
 
 ---
 
-## 3. Decision
+## 3. Quyết định
 
-Store raw telemetry events in MinIO as Parquet.
+Lưu raw telemetry events vào MinIO ở định dạng Parquet.
 
-Store aggregated metrics in InfluxDB.
+Lưu aggregated metrics vào InfluxDB.
 
-Do not write every raw `mousemove` event to InfluxDB.
+Không ghi mọi raw `mousemove` event vào InfluxDB.
 
-Recommended raw path shape:
+Raw path khuyến nghị:
 
 ```text
 s3a://mouse-telemetry/raw/events/date=YYYY-MM-DD/hour=HH/
 ```
 
-Recommended metric categories:
+Nhóm metric khuyến nghị:
 
-- event throughput
-- click throughput
-- processing latency
-- session summary metrics
-- ingestion accepted/rejected counters
-
----
-
-## 4. Rationale
-
-- Parquet reduces raw storage size and supports later analytics.
-- MinIO demonstrates object storage pattern for data lake-style raw data.
-- InfluxDB supports Grafana-friendly time-series queries.
-- Separating raw and aggregate data keeps dashboard queries fast.
+* event throughput
+* click throughput
+* processing latency
+* session summary metrics
+* ingestion accepted/rejected counters
 
 ---
 
-## 5. Consequences
+## 4. Lý do
 
-### Positive
-
-- Clear raw vs processed data story for Big Data demo.
-- Dashboard does not scan raw telemetry.
-- Raw data remains available for later analysis.
-
-### Trade-offs
-
-- Two storage systems must be configured.
-- Spark job owns two write paths with different failure modes.
+* Parquet giảm dung lượng raw storage và hỗ trợ analytics sau này.
+* MinIO minh họa object storage pattern cho raw data kiểu data lake.
+* InfluxDB hỗ trợ time-series queries thân thiện với Grafana.
+* Tách raw data và aggregate data giúp dashboard query nhanh hơn.
 
 ---
 
-## 6. Implementation Constraints
+## 5. Hệ quả
 
-- Spark writes raw event records to MinIO, not FastAPI.
-- InfluxDB writes should be aggregate-level.
-- Runtime buckets, local volumes and checkpoints must not be committed.
-- Session detail that needs raw trajectory should load bounded/sampled data.
+### Tích cực
+
+* Câu chuyện raw vs processed data rõ ràng cho Big Data demo.
+* Dashboard không phải scan raw telemetry.
+* Raw data vẫn có sẵn cho phân tích sau này.
+
+### Đánh đổi
+
+* Cần cấu hình hai storage systems.
+* Spark job sở hữu hai write paths với failure mode khác nhau.
 
 ---
 
-## 7. Linked Documents
+## 6. Ràng buộc triển khai
 
-- [phase3](../phases/phase3/README.md)
-- [phase4](../phases/phase4/README.md)
-- [phase3-plan002](../plans/phase3/plan002-spark-streaming-to-minio-influxdb.md)
-- [phase4-plan001](../plans/phase4/plan001-dashboard-session-analytics.md)
+* Spark ghi raw event records vào MinIO, không phải FastAPI.
+* InfluxDB writes nên ở mức aggregate.
+* Runtime buckets, local volumes và checkpoints không được commit.
+* Session detail cần raw trajectory phải load dữ liệu bounded/sampled.
 
+---
+
+## 7. Tài liệu liên quan
+
+* [phase3](../phases/phase3/README.md)
+* [phase4](../phases/phase4/README.md)
+* [phase3-plan002](../plans/phase3/plan002-spark-streaming-to-minio-influxdb.md)
+* [phase4-plan001](../plans/phase4/plan001-dashboard-session-analytics.md)

@@ -1,6 +1,6 @@
-# Task: Document Governance Tracking and Test Config Baseline
+# Task: Tracking governance tài liệu và baseline test config
 
-## 1. Task Metadata
+## 1. Thông tin task
 
 * **Task ID:** `phase0-task001`
 * **Task Name:** `Document governance tracking and test config baseline`
@@ -15,7 +15,7 @@
 
 ---
 
-## 2. Original Request
+## 2. Yêu cầu gốc
 
 > PLEASE IMPLEMENT THIS PLAN:
 > # Plan: Documents Tracking, Coding Rules Split, And Test Config Baseline
@@ -140,21 +140,21 @@
 
 ---
 
-## 3. Objective
+## 3. Mục tiêu
 
-### Primary Objective
+### Mục tiêu chính
 
 ```text
-Create repository governance tracking, split coding rules for frontend/API, and add minimal real test/tooling config for Aim Trainer frontend and ingestion API.
+Tạo tracking governance cho repository, tách coding rules cho frontend/API và thêm baseline test/tooling tối thiểu nhưng chạy được cho Aim Trainer frontend và ingestion API.
 ```
 
 ### Motivation
 
 ```text
-The project currently has architecture and planning documents but no root tracking file, source-specific coding rules, or executable validation baseline for frontend/API work.
+Project đã có tài liệu kiến trúc và planning, nhưng chưa có root tracking file, coding rules theo từng source area hoặc baseline validation chạy được cho frontend/API.
 ```
 
-### Acceptance Criteria
+### Tiêu chí nghiệm thu
 
 * [x] `documents/TRACKING.md` exists and tracks phases, tasks, gates, milestones, risks and update rules.
 * [x] `documents/agents/coding_rules.md` routes agents to frontend/API coding rule files.
@@ -167,7 +167,7 @@ The project currently has architecture and planning documents but no root tracki
 * [x] Không có thay đổi ngoài phạm vi.
 * [x] Các validation liên quan pass hoặc lỗi còn lại được giải thích.
 
-### Out of Scope
+### Ngoài scope
 
 * Implementing Aim Trainer gameplay.
 * Implementing FastAPI ingestion endpoints.
@@ -176,15 +176,15 @@ The project currently has architecture and planning documents but no root tracki
 
 ---
 
-## 4. Phase Context
+## 4. Bối cảnh phase
 
-### Existing Tasks in Phase
+### Task đã có trong phase
 
 | Task | Status | Relationship |
 |---|---|---|
 | `documents/phases/phase0/README.md` | phase overview | `DEPENDENCY` |
 
-### Previous Relevant Task
+### Task liên quan trước đó
 
 * **Task:** `None`
 * **Outcome:** `No prior task files existed in phase0.`
@@ -193,48 +193,48 @@ The project currently has architecture and planning documents but no root tracki
   * Local-first tooling remains the default.
   * Frontend/API are the only runtime components receiving test config in this task.
 
-### Task Dependencies
+### Phụ thuộc của task
 
 * Depends on `documents/aim_trainer_app_architecture.md`.
 * Depends on `documents/phases/phase0/README.md`.
 * Depends on existing documents generated before this task.
 
-### Overlap Check
+### Kiểm tra trùng lặp
 
 * **Equivalent task already exists:** `NO`
 * **Overlapping task:** `None`
-* **Decision:** `CREATE NEW`
-* **Reason:**
+* **Quyết định:** `CREATE NEW`
+* **Lý do:**
 
 ```text
-No phase0 task file exists. The request adds governance tracking and test config baseline, which belongs to phase0 foundation work.
+Chưa có task file phase0. Yêu cầu này thêm governance tracking và baseline test config, thuộc foundation work của phase0.
 ```
 
 ---
 
-## 5. Initial Project State
+## 5. Trạng thái project ban đầu
 
-### Git State
+### Trạng thái Git
 
 * **Current branch:** `main`
 * **Current commit:** `3650946`
 * **Working tree:** `DIRTY`
 
-### Existing Modified Files
+### File đã sửa từ trước
 
 * `None`
 
-### Existing Untracked Files
+### File chưa track từ trước
 
 * `documents/` tree from earlier architecture/planning work.
 
-### Existing Diff Summary
+### Tóm tắt diff đã có
 
 ```text
-The repository has only README.md and LICENSE tracked. The documents/ tree is currently untracked and contains architecture, agent rules, phase docs, plan docs and decision docs.
+Repository chỉ có README.md và LICENSE đang được track. Cây documents/ đang untracked và chứa architecture, agent rules, phase docs, plan docs và decision docs.
 ```
 
-### Project Stack
+### Stack project
 
 * **Language/runtime:** `TypeScript frontend planned; Python API planned`
 * **Framework:** `React/Vite planned; FastAPI planned`
@@ -244,27 +244,27 @@ The repository has only README.md and LICENSE tracked. The documents/ tree is cu
 * **Lint command:** `frontend: npm run lint; API: uv run ruff check .`
 * **Type-check command:** `frontend: npm run typecheck; API: uv run mypy app`
 
-### Baseline Validation
+### Validation baseline
 
-| Command | Result | Notes |
+| Command | Kết quả | Ghi chú |
 |---|---|---|
 | `rg --files` | `PASS` | Repository shape inspected. |
 | `git status --short -uall` | `PASS` | Shows untracked `documents/` tree. |
 | `Get-Command node,npm,uv` | `PASS` | Tool commands are available locally. |
 
-### Architecture Observed
+### Kiến trúc quan sát được
 
 * **Relevant module:** `documents/`, future `frontend/`, future `ingestion-api/`
 * **Current responsibility owner:** `documents/aim_trainer_app_architecture.md`, `documents/phases/`, `documents/plans/`, `documents/decisions/`
 * **Entry point:** `None yet for runtime code`
 
-### Current Data Flow
+### Data flow hiện tại
 
 ```text
-Architecture documents → Phase/Plan/Decision docs → Governance/test-config baseline → Future source tasks
+Architecture documents -> Phase/Plan/Decision docs -> Governance/test-config baseline -> Future source tasks
 ```
 
-### Existing Risks
+### Rủi ro hiện có
 
 * `documents/` is untracked from prior work, so Git status includes older docs and this task's new docs together.
 * No runtime source exists yet, so validation requires minimal smoke skeletons.
@@ -280,14 +280,14 @@ Architecture documents → Phase/Plan/Decision docs → Governance/test-config b
 | `documents/agents/coding_rules.md` | Empty | Coding rules index requested | `MODIFY` |
 | `documents/agents/coding_rules_frontend.md` | Missing | Frontend-specific rules requested | `CREATE` |
 | `documents/agents/coding_rules_api.md` | Missing | API-specific rules requested | `CREATE` |
-| `documents/agents/AGENTS.md` | Task/process protocol | Must point to rules index | `MODIFY` |
+| `documents/agents/AGENTS.md` | Task/process protocol | Phải trỏ tới rules index | `MODIFY` |
 | `.gitignore` | Missing | Repo hygiene requested | `CREATE` |
 | `frontend/` | Missing | Frontend test config requested | `CREATE` |
 | `ingestion-api/` | Missing | API test config requested | `CREATE` |
 
 ---
 
-## 7. Existing-Code Search
+## 7. Tìm kiếm code hiện có
 
 ### Searches Performed
 
@@ -298,7 +298,7 @@ Architecture documents → Phase/Plan/Decision docs → Governance/test-config b
 | `Vitest`, `pytest`, `ruff`, `mypy` | Only mentioned in docs/plans, no source config exists. |
 | `frontend`, `ingestion-api` | Mentioned in architecture/plans but no directories exist. |
 
-### Relevant Existing Implementations
+### Implementation hiện có liên quan
 
 * `documents/plans/phase0/plan001-repository-and-doc-governance.md`
   Location: `documents/plans/phase0/plan001-repository-and-doc-governance.md`
@@ -308,14 +308,14 @@ Architecture documents → Phase/Plan/Decision docs → Governance/test-config b
   Location: `documents/plans/phase0/plan002-contract-first-schema-and-api.md`
   Responsibility: `Frontend/API contract planning.`
 
-### Implementation Decision
+### Quyết định triển khai
 
-* **Decision:** `CREATE`
+* **Quyết định:** `CREATE`
 * **Target:** `documents/TRACKING.md`, split coding rules, frontend/API config skeletons`
-* **Reason:**
+* **Lý do:**
 
 ```text
-No existing tracking file or source test config exists. The minimal create path matches the approved plan and phase0 foundation responsibility.
+Chưa có tracking file hoặc source test config. Hướng tạo tối thiểu khớp approved plan và responsibility foundation của phase0.
 ```
 
 ### Creation Justification
@@ -323,38 +323,38 @@ No existing tracking file or source test config exists. The minimal create path 
 * **REUSE không phù hợp vì:** `No local equivalent exists except an empty coding_rules.md.`
 * **EXTEND không phù hợp vì:** `Tracking and config files are missing; coding_rules.md must become an index, not a full single rules file.`
 * **Responsibility mới là:** `Governance tracking, subsystem rules routing, and validation baseline.`
-* **Expected consumers:** `Agents, developers, future phase tasks and validation workflows.`
+* **Người dùng dự kiến:** `Agents, developers, future phase tasks and validation workflows.`
 * **Public or internal:** `INTERNAL`
 
 ---
 
-## 8. Implementation Plan
+## 8. Kế hoạch triển khai
 
-* [x] **Step 1:** Add tracking and split coding rules.
+* [x] **Step 1:** Thêm tracking và tách coding rules.
   * Files: `documents/TRACKING.md`, `documents/agents/coding_rules.md`, `documents/agents/coding_rules_frontend.md`, `documents/agents/coding_rules_api.md`, `documents/agents/AGENTS.md`
-  * Expected result: Governance docs exist and link correctly.
+  * Kết quả kỳ vọng: Governance docs tồn tại và link đúng.
   * Validation: Markdown link check.
 
 * [x] **Step 2:** Add frontend tooling baseline.
   * Files: `frontend/*`
-  * Expected result: npm scripts for typecheck, lint, unit tests and e2e tests exist.
+  * Kết quả kỳ vọng: npm scripts cho typecheck, lint, unit tests và e2e tests tồn tại.
   * Validation: `npm install`, `npm run typecheck`, `npm run lint`, `npm run test`, `npm run test:e2e`.
 
 * [x] **Step 3:** Add API tooling baseline.
   * Files: `ingestion-api/*`
-  * Expected result: uv project with ruff, mypy and pytest smoke test exists.
+  * Kết quả kỳ vọng: uv project với ruff, mypy và pytest smoke test tồn tại.
   * Validation: `uv sync --all-groups`, `uv run ruff check .`, `uv run mypy app`, `uv run pytest`.
 
 * [x] **Step 4:** Add repo hygiene and final validation.
   * Files: `.gitignore`, task file updates.
-  * Expected result: Generated dependencies/caches/build outputs ignored; task file finalized.
+  * Kết quả kỳ vọng: Generated dependencies/caches/build outputs được ignore; task file được chốt.
   * Validation: `rg --files documents`, Markdown link check, `git status --short -uall`.
 
 ---
 
 ## 9. Work Log
 
-### `2026-07-22 05:16` — Task initialized
+### `2026-07-22 05:16` — Khởi tạo task
 
 * **Status:** `IN_PROGRESS`
 * **Action:**
@@ -368,10 +368,10 @@ No existing tracking file or source test config exists. The minimal create path 
   * `documents/phases/phase0/README.md`
   * `documents/plans/phase0/plan001-repository-and-doc-governance.md`
   * `documents/plans/phase0/plan002-contract-first-schema-and-api.md`
-* **Result:**
+* **Kết quả:**
   * Confirmed this is a new phase0 task and source/config directories do not exist yet.
 * **Next verified action:**
-  * Add tracking and split coding rules.
+  * Thêm tracking và tách coding rules.
 
 ---
 
@@ -395,14 +395,14 @@ No existing tracking file or source test config exists. The minimal create path 
   * `documents/agents/AGENTS.md`
 * **Symbols changed:**
   * `None`
-* **Result:**
+* **Kết quả:**
   * Governance tracking and source-specific coding rule structure now exist.
 * **Validation:**
   * `NOT RUN` → Full Markdown link check will run after all docs/config changes are complete.
-* **Decision or discovery:**
+* **Quyết định hoặc phát hiện:**
   * Frontend and API rules are split now; Spark/infrastructure rules remain future phase work.
 * **Next verified action:**
-  * Add frontend npm/Vite/Vitest/Playwright/ESLint baseline.
+  * Thêm baseline frontend npm/Vite/Vitest/Playwright/ESLint.
 
 ---
 
@@ -433,14 +433,14 @@ No existing tracking file or source test config exists. The minimal create path 
   * `frontend/tests/e2e/app.spec.ts`
 * **Symbols changed:**
   * `App`
-* **Result:**
+* **Kết quả:**
   * Frontend has an executable smoke baseline without gameplay implementation.
 * **Validation:**
   * `NOT RUN` → npm install and frontend scripts will run after API baseline is added.
-* **Decision or discovery:**
+* **Quyết định hoặc phát hiện:**
   * Added minimal app source because Vite/Vitest/Playwright configs need a renderable target to validate.
 * **Next verified action:**
-  * Add ingestion API uv/pytest/ruff/mypy baseline.
+  * Thêm baseline ingestion API uv/pytest/ruff/mypy.
 
 ---
 
@@ -461,14 +461,14 @@ No existing tracking file or source test config exists. The minimal create path 
   * `.gitignore`
 * **Symbols changed:**
   * `app.__version__`
-* **Result:**
+* **Kết quả:**
   * API has executable pytest/ruff/mypy baseline without route implementation.
 * **Validation:**
   * `NOT RUN` → API and frontend validation will run in final validation step.
-* **Decision or discovery:**
+* **Quyết định hoặc phát hiện:**
   * API skeleton remains intentionally minimal; endpoint implementation stays in phase2 tasks.
 * **Next verified action:**
-  * Run documentation, frontend, API and Git validation.
+  * Chạy validation cho documentation, frontend, API và Git.
 
 ---
 
@@ -494,7 +494,7 @@ No existing tracking file or source test config exists. The minimal create path 
   * `documents/phases/phase0/task001-doc-governance-test-config.md`
 * **Symbols changed:**
   * `None`
-* **Result:**
+* **Kết quả:**
   * All requested documentation, frontend and API validation commands pass after config fixes.
 * **Validation:**
   * `rg --files documents` → `PASS`
@@ -510,55 +510,55 @@ No existing tracking file or source test config exists. The minimal create path 
   * `uv run pytest` → `PASS`
   * `git status --short -uall` → `PASS`
   * Final Markdown link check after task-file update → `PASS`
-* **Decision or discovery:**
+* **Quyết định hoặc phát hiện:**
   * Lockfiles are kept because they make the test/tooling baseline reproducible.
 * **Next verified action:**
   * Final Markdown link check after this task-file update.
 
 ---
 
-## 10. Changes
+## 10. Thay đổi
 
 ### Added Files
 
 #### `documents/TRACKING.md`
 
-* **Purpose:** Root progress tracking for phases, tasks, gates, milestones and risks.
+* **Mục đích:** Tracking tiến độ root cho phases, tasks, gates, milestones và risks.
 * **Why required:** User requested a tracking file modeled after AuthDiff.
 * **Used by:** Agents, developers and phase reviews.
 * **Visibility:** `INTERNAL`
 
 #### `documents/agents/coding_rules_frontend.md`
 
-* **Purpose:** Frontend TypeScript/React/Vite coding and validation rules.
+* **Mục đích:** Coding và validation rules cho frontend TypeScript/React/Vite.
 * **Why required:** Frontend rules differ from API/Python rules.
 * **Used by:** Agents and developers working under `frontend/`.
 * **Visibility:** `INTERNAL`
 
 #### `documents/agents/coding_rules_api.md`
 
-* **Purpose:** FastAPI/Python/uv coding and validation rules.
+* **Mục đích:** Coding và validation rules cho FastAPI/Python/uv.
 * **Why required:** API rules differ from frontend/TypeScript rules.
 * **Used by:** Agents and developers working under `ingestion-api/`.
 * **Visibility:** `INTERNAL`
 
 #### `.gitignore`
 
-* **Purpose:** Prevent dependencies, caches, build outputs, env files and runtime data from being tracked.
+* **Mục đích:** Ngăn dependencies, caches, build outputs, env files và runtime data bị track.
 * **Why required:** Validation commands generate local outputs.
 * **Used by:** Git workflow.
 * **Visibility:** `INTERNAL`
 
 #### `frontend/`
 
-* **Purpose:** Minimal React/Vite smoke app and frontend tooling baseline.
+* **Mục đích:** React/Vite smoke app tối thiểu và baseline tooling frontend.
 * **Why required:** Frontend validation scripts need executable targets.
 * **Used by:** Future phase1 frontend work.
 * **Visibility:** `INTERNAL`
 
 #### `ingestion-api/`
 
-* **Purpose:** Minimal uv/Python smoke package and API tooling baseline.
+* **Mục đích:** uv/Python smoke package tối thiểu và baseline tooling API.
 * **Why required:** API validation scripts need executable targets.
 * **Used by:** Future phase2 API work.
 * **Visibility:** `INTERNAL`
@@ -569,7 +569,7 @@ No existing tracking file or source test config exists. The minimal create path 
 
 * **Previous responsibility:** Empty placeholder file.
 * **Changes made:** Converted into a coding rules index that routes to subsystem-specific rules.
-* **Reason:** The project now has frontend and API rules with different stacks.
+* **Lý do:** Project hiện có frontend rules và API rules cho hai stack khác nhau.
 * **Behavioral impact:** Future source tasks have a clear rule lookup path.
 * **Compatibility impact:** `None`
 
@@ -577,7 +577,7 @@ No existing tracking file or source test config exists. The minimal create path 
 
 * **Previous responsibility:** Agent task/process protocol.
 * **Changes made:** Updated source coding-rule references to use the index and subsystem files.
-* **Reason:** Prevents one generic coding rule file from incorrectly applying to all stacks.
+* **Lý do:** Prevents one generic coding rule file from incorrectly applying to all stacks.
 * **Behavioral impact:** Agents must read the subsystem-specific rules before source edits.
 * **Compatibility impact:** `None`
 
@@ -585,7 +585,7 @@ No existing tracking file or source test config exists. The minimal create path 
 
 * **Previous responsibility:** Current task log.
 * **Changes made:** Recorded implementation, validation, changes and final summary.
-* **Reason:** Task files are the source of truth.
+* **Lý do:** Task files are the source of truth.
 * **Behavioral impact:** Work can be resumed or audited from task documentation.
 * **Compatibility impact:** `None`
 
@@ -595,7 +595,7 @@ No existing tracking file or source test config exists. The minimal create path 
 
 ---
 
-## 11. Symbol Delta
+## 11. Thay đổi symbol
 
 ### Added Symbols
 
@@ -639,9 +639,9 @@ No existing tracking file or source test config exists. The minimal create path 
 
 ## 12. Validation
 
-### Focused Validation
+### Validation tập trung
 
-| Command | Result | Evidence or Notes |
+| Command | Kết quả | Bằng chứng hoặc ghi chú |
 |---|---|---|
 | `rg --files` | `PASS` | Initial repository inspection. |
 | `git status --short -uall` | `PASS` | Initial working tree inspected. |
@@ -660,9 +660,9 @@ No existing tracking file or source test config exists. The minimal create path 
 | `git status --short -uall` | `PASS` | Only intended docs/config/source/lock files are untracked; generated outputs are ignored. |
 | Final Markdown link check after task-file update | `PASS` | All Markdown links resolve after final task log update. |
 
-### Final Validation
+### Validation cuối
 
-| Check | Result | Notes |
+| Check | Kết quả | Ghi chú |
 |---|---|---|
 | Unit tests | `PASS` | `npm run test`, `uv run pytest`. |
 | Integration tests | `PASS` | `npm run test:e2e` smoke test. |
@@ -682,7 +682,7 @@ No existing tracking file or source test config exists. The minimal create path 
 * [x] Public API changes đã được ghi lại.
 * [x] Error paths đã được xem xét.
 
-### Validation Not Performed
+### Validation chưa thực hiện
 
 ```text
 None.
@@ -724,12 +724,12 @@ N/A
 ### Next Verified Action
 
 ```text
-Add tracking and split coding rules.
+Thêm tracking và tách coding rules.
 ```
 
 ---
 
-## 15. Final Summary
+## 15. Tổng kết cuối
 
 * **Final Status:** `DONE`
 * **Completed At:** `2026-07-22 05:37`
@@ -740,7 +740,7 @@ Add tracking and split coding rules.
 Added root tracking, split coding rules, frontend test tooling baseline, API test tooling baseline and repo hygiene. All requested validations pass.
 ```
 
-### Acceptance Criteria Result
+### Kết quả tiêu chí nghiệm thu
 
 * [x] `documents/TRACKING.md` tracks phase/task/gate/milestone/risk status.
 * [x] Coding rules are split and routed through `documents/agents/coding_rules.md`.
@@ -748,7 +748,7 @@ Added root tracking, split coding rules, frontend test tooling baseline, API tes
 * [x] API uv/pytest/ruff/mypy baseline validates.
 * [x] Generated dependencies, caches and build outputs are ignored.
 
-### Files Changed
+### File đã thay đổi
 
 * `documents/TRACKING.md` — root progress tracking.
 * `documents/agents/coding_rules.md` — coding rules index.
@@ -759,38 +759,38 @@ Added root tracking, split coding rules, frontend test tooling baseline, API tes
 * `frontend/` — frontend smoke app and tooling baseline.
 * `ingestion-api/` — API smoke package and tooling baseline.
 
-### Main Behavioral Changes
+### Thay đổi hành vi chính
 
 * Added governance tracking.
 * Added executable frontend validation baseline.
 * Added executable API validation baseline.
 * No gameplay or API route behavior added.
 
-### Validation Result
+### Kết quả validation
 
 * **Tests:** `PASS`
 * **Lint:** `PASS`
 * **Type-check:** `PASS`
 * **Build:** `PASS`
 
-### Remaining Work
+### Việc còn lại
 
-* Implement shared telemetry schema contract files.
-* Implement API contract fixtures.
-* Add real frontend gameplay and telemetry tests in phase1.
-* Add API route and ingestion tests in phase2.
+* Triển khai shared telemetry schema contract files.
+* Triển khai API contract fixtures.
+* Thêm frontend gameplay thật và telemetry tests trong phase1.
+* Thêm API route và ingestion tests trong phase2.
 
-### Known Limitations
+### Giới hạn đã biết
 
 * Spark/Kafka/Grafana test config is intentionally deferred to later phases.
 * Frontend/API currently contain smoke baselines only, not production behavior.
 
-### Follow-up Tasks
+### Task tiếp theo
 
 * `phase0-task002-shared-telemetry-schema-contract`
 * `phase0-task003-api-contract-fixtures`
 
-### Suggested Commit Message
+### Commit message gợi ý
 
 ```text
 docs(phase0): add governance tracking and test config baseline

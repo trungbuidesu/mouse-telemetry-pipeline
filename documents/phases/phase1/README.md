@@ -6,35 +6,35 @@ Phase 1 tạo ứng dụng Aim Trainer chạy được trên trình duyệt và 
 
 ---
 
-## 2. Scope
+## 2. Phạm vi
 
-### In scope
+### Trong scope
 
-- Trang `/play` với canvas, target tròn, score, accuracy và timer.
-- App shell dùng Vite React TypeScript, shadcn/ui, Tailwind CSS và React Router từ DEC-011.
-- Session lifecycle: `idle`, `countdown`, `running`, `finishing`, `completed`.
-- Thu thập `mousemove`, `click`, `session_start`, `session_end`.
-- Chuẩn hóa tọa độ theo canvas và optional normalized coordinate.
-- Buffer trong memory, flush theo batch size hoặc interval.
-- Retry có giới hạn khi backend lỗi.
-- Kết quả tạm thời phía client và trang result cơ bản.
+* Trang `/play` với canvas, target tròn, score, accuracy và timer.
+* App shell dùng Vite React TypeScript, shadcn/ui, Tailwind CSS và React Router từ DEC-011.
+* Session lifecycle: `idle`, `countdown`, `running`, `finishing`, `completed`.
+* Thu thập `mousemove`, `click`, `session_start`, `session_end`.
+* Chuẩn hóa tọa độ theo canvas và optional normalized coordinate.
+* Buffer trong memory, flush theo batch size hoặc interval.
+* Retry có giới hạn khi backend lỗi.
+* Kết quả tạm thời phía client và trang result cơ bản.
 
-### Out of scope
+### Ngoài scope
 
-- Authentication.
-- Multiplayer.
-- Replay video đầy đủ.
-- IndexedDB offline persistence.
-- Mobile-first gameplay.
-- Dashboard hệ thống hoàn chỉnh.
+* Authentication.
+* Multiplayer.
+* Replay video đầy đủ.
+* IndexedDB offline persistence.
+* Mobile-first gameplay.
+* Dashboard hệ thống hoàn chỉnh.
 
 ---
 
-## 3. Dependencies
+## 3. Phụ thuộc
 
 | Dependency | Từ phase | Ghi chú |
 |---|---|---|
-| Event schema | phase0 | Không tự đổi field public khi chưa cập nhật decision |
+| Event schema | phase0 | Không tự đổi public field khi chưa cập nhật decision |
 | API contract | phase0 | Frontend gọi qua API layer, không biết Kafka |
 | Batch policy | phase0 | Dựa vào DEC-002 và DEC-007 |
 
@@ -62,21 +62,21 @@ Phase 1 tạo ứng dụng Aim Trainer chạy được trên trình duyệt và 
 
 ---
 
-## 6. Performance Requirements
+## 6. Performance requirements
 
 Frontend phase này phải được kiểm tra theo các điểm sau:
 
-- Di chuột liên tục không làm tăng render count theo số event raw.
-- Canvas render không phụ thuộc React state cho từng tọa độ chuột.
-- shadcn components không nằm trong canvas drawing loop hoặc telemetry event hot path.
-- Flush interval mặc định là 250 ms, batch size mặc định là 100 event.
-- `mousemove` được sample tối thiểu theo khoảng 16 ms.
-- Khi backend tắt, UI vẫn playable trong giới hạn buffer.
-- Khi kết thúc session, buffer còn lại được flush trước khi chuyển result chính thức.
+* Di chuột liên tục không làm tăng render count theo số event raw.
+* Canvas render không phụ thuộc React state cho từng tọa độ chuột.
+* shadcn components không nằm trong canvas drawing loop hoặc telemetry event hot path.
+* Flush interval mặc định là 250 ms, batch size mặc định là 100 event.
+* `mousemove` được sample tối thiểu theo khoảng 16 ms.
+* Khi backend tắt, UI vẫn playable trong giới hạn buffer.
+* Khi kết thúc session, buffer còn lại được flush trước khi chuyển result chính thức.
 
 ---
 
-## 7. Completion Gate
+## 7. Completion gate
 
 Phase 1 hoàn thành khi:
 

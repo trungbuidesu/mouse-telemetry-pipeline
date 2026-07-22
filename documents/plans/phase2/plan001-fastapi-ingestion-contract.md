@@ -1,113 +1,112 @@
 # Plan: FastAPI Ingestion Contract
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase2-plan001` |
 | Phase | [phase2](../../phases/phase2/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Implement FastAPI as the stable HTTP ingestion boundary for browser clients. The API validates session and telemetry payloads, accepts valid batches quickly and forwards events to Kafka.
+Triển khai FastAPI làm HTTP ingestion boundary ổn định cho browser clients. API validate session và telemetry payloads, accept valid batches thật nhanh rồi forward events sang Kafka.
 
 ---
 
-## 3. Related Decisions
+## 3. Decisions liên quan
 
-| Decision | Why needed |
+| Decision | Vì sao cần |
 |---|---|
 | [DEC-001](../../decisions/decision001-canvas-relative-telemetry-schema.md) | Shared payload semantics |
-| [DEC-004](../../decisions/decision004-http-ingestion-before-kafka.md) | Browser sends HTTP, backend owns Kafka |
-| [DEC-005](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Producer topic and key behavior |
-| [DEC-012](../../decisions/decision012-uv-managed-python-api-environment.md) | uv-managed Python reproducibility |
-| [DEC-013](../../decisions/decision013-fastapi-performance-oriented-api-stack.md) | FastAPI stack and request-path performance constraints |
+| [DEC-004](../../decisions/decision004-http-ingestion-before-kafka.md) | Browser gửi HTTP, backend sở hữu Kafka |
+| [DEC-005](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Producer topic và key behavior |
+| [DEC-012](../../decisions/decision012-uv-managed-python-api-environment.md) | Khả năng tái lập uv-managed Python |
+| [DEC-013](../../decisions/decision013-fastapi-performance-oriented-api-stack.md) | FastAPI stack và request-path performance constraints |
 
 ---
 
-## 4. Planned Modules
+## 4. Module dự kiến
 
 | Module | Responsibility |
 |---|---|
 | `ingestion-api/app/main.py` | FastAPI application factory |
 | `ingestion-api/app/core/config.py` | pydantic-settings configuration |
-| `ingestion-api/app/api/routes/sessions.py` | Session lifecycle endpoints |
+| `ingestion-api/app/api/routes/sessions.py` | Endpoints vòng đời session |
 | `ingestion-api/app/api/routes/events.py` | Telemetry batch endpoint |
-| `ingestion-api/app/schemas/telemetry.py` | Pydantic event and batch models |
+| `ingestion-api/app/schemas/telemetry.py` | Pydantic event và batch models |
 | `ingestion-api/app/services/kafka_producer.py` | Kafka producer boundary |
-| `ingestion-api/app/core/config.py` | Environment config |
 | `schemas/telemetry/` | Shared schema fixtures/docs |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Initialize API project
+### Step 1: Khởi tạo API project
 
-- Create FastAPI app with health endpoint.
-- Run with uv-managed Python 3.12.13.
-- Add config for Kafka bootstrap servers and topic names.
-- Add `.env.example` entries.
+* Tạo FastAPI app có health endpoint.
+* Chạy bằng uv-managed Python 3.12.13.
+* Thêm config cho Kafka bootstrap servers và topic names.
+* Thêm entries trong `.env.example`.
 
-### Step 2: Implement schema models
+### Step 2: Triển khai schema models
 
-- Define base telemetry event model.
-- Define event models for `session_start`, `mousemove`, `click`, `session_end`.
-- Define batch model and request size constraints.
-- Validate normalized coordinate ranges when provided.
+* Định nghĩa base telemetry event model.
+* Định nghĩa event models cho `session_start`, `mousemove`, `click`, `session_end`.
+* Định nghĩa batch model và request size constraints.
+* Validate khoảng normalized coordinate khi được cung cấp.
 
-### Step 3: Implement endpoints
+### Step 3: Triển khai endpoints
 
-- `POST /api/v1/sessions`
-- `POST /api/v1/events/batch`
-- `POST /api/v1/sessions/{sessionId}/complete`
-- `GET /api/v1/sessions/{sessionId}/metrics`
+* `POST /api/v1/sessions`
+* `POST /api/v1/events/batch`
+* `POST /api/v1/sessions/{sessionId}/complete`
+* `GET /api/v1/sessions/{sessionId}/metrics`
 
 ### Step 4: Produce Kafka messages
 
-- Key telemetry messages by `sessionId`.
-- Preserve event payload and add ingestion metadata only when needed.
-- Return `202 Accepted` after valid batch is accepted for produce.
+* Key telemetry messages theo `sessionId`.
+* Giữ event payload và chỉ thêm ingestion metadata khi cần.
+* Trả `202 Accepted` sau khi valid batch được accept để produce.
 
 ---
 
-## 6. Performance Notes
+## 6. Ghi chú performance
 
-- Request path must not compute session analytics.
-- Validation should reject bad payloads before Kafka.
-- Logging should summarize batch counts and identifiers, not dump every event.
-- Kafka producer should be reused, not recreated per request.
-- API should expose payload size and batch count limits in config.
-- Keep `orjson` available for profiled custom response paths, but do not force deprecated response defaults onto `response_model` routes or use JSON speed as an excuse to put analytics in the request path.
+* Request path không được tính session analytics.
+* Validation nên reject bad payload trước Kafka.
+* Logging nên summarize batch counts và identifiers, không dump từng event.
+* Kafka producer nên được reuse, không tạo lại theo mỗi request.
+* API nên expose payload size và batch count limits trong config.
+* Giữ `orjson` sẵn cho custom response paths có profiling, nhưng không ép deprecated response defaults lên `response_model` routes hoặc dùng tốc độ JSON làm lý do nhét analytics vào request path.
 
 ---
 
-## 7. Acceptance Criteria
+## 7. Acceptance criteria
 
-- [ ] Session endpoint accepts valid session metadata.
-- [ ] Batch endpoint accepts valid mixed event batches.
-- [ ] Invalid event type or missing required field returns structured `400`.
-- [ ] Batch accepted by API is produced to Kafka topic.
-- [ ] Health endpoint reports API liveness.
-- [ ] Tests cover accepted batch, invalid payload and producer failure.
+* [ ] Session endpoint accept valid session metadata.
+* [ ] Batch endpoint accept valid mixed event batches.
+* [ ] Invalid event type hoặc thiếu required field trả structured `400`.
+* [ ] Batch được API accept sẽ produce vào Kafka topic.
+* [ ] Health endpoint báo API liveness.
+* [ ] Tests cover accepted batch, invalid payload và producer failure.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
 | FastAPI unit tests | PASS |
 | Contract fixture tests | PASS |
-| Local API smoke test | `POST /api/v1/events/batch` returns expected status |
+| Local API smoke test | `POST /api/v1/events/batch` trả expected status |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan unlocks [phase2-plan002](plan002-backpressure-and-idempotent-ingestion.md) and [phase3-plan001](../phase3/plan001-kafka-topics-and-local-infrastructure.md).
+Plan này mở khóa [phase2-plan002](plan002-backpressure-and-idempotent-ingestion.md) và [phase3-plan001](../phase3/plan001-kafka-topics-and-local-infrastructure.md).

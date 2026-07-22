@@ -1,29 +1,29 @@
-# Decision DEC-012: uv-Managed Python API Environment
+# Decision DEC-012: Môi trường Python API do uv quản lý
 
-## 1. Status
+## 1. Trạng thái
 
 `DECIDED`
 
-Date: `2026-07-22`
+Ngày: `2026-07-22`
 
 ---
 
-## 2. Context
+## 2. Bối cảnh
 
-The ingestion API must be reproducible at the environment level. The user explicitly requested not to rely on the machine's Python. The goal is a reproducible Python environment for API development, not full app/data reproducibility.
+Ingestion API phải tái lập được ở mức môi trường. Người dùng yêu cầu rõ là không phụ thuộc Python cài sẵn trên máy. Mục tiêu là môi trường Python tái lập được cho API development, không phải tái lập toàn bộ app/data.
 
 ---
 
-## 3. Decision
+## 3. Quyết định
 
-Use uv-managed Python for `ingestion-api`.
+Dùng uv-managed Python cho `ingestion-api`.
 
 API environment defaults:
 
-- `.python-version = 3.12.13`
-- `requires-python = ">=3.12,<3.13"`
-- committed `uv.lock`
-- validation through `uv run`, never direct system `python`
+* `.python-version = 3.12.13`
+* `requires-python = ">=3.12,<3.13"`
+* commit `uv.lock`
+* validation đi qua `uv run`, không dùng trực tiếp system `python`
 
 Setup commands:
 
@@ -35,43 +35,42 @@ uv sync --all-groups --python 3.12.13
 
 ---
 
-## 4. Rationale
+## 4. Lý do
 
-- uv can install and select a managed Python interpreter.
-- Pinning Python avoids accidental drift to system Python or Python 3.13.
-- `uv.lock` makes dependency resolution repeatable for the API foundation.
-- The API remains isolated from frontend and future Big Data services.
-
----
-
-## 5. Consequences
-
-### Positive
-
-- API validation commands are reproducible across machines that have uv.
-- Python version is explicit in source.
-- Future API tasks can add routes without revisiting environment setup.
-
-### Trade-offs
-
-- Contributors need uv installed.
-- The environment is reproducible; external services and data are still phase-specific.
+* uv có thể cài và chọn managed Python interpreter.
+* Pin Python tránh drift sang system Python hoặc Python 3.13.
+* `uv.lock` giúp dependency resolution của API foundation có thể lặp lại.
+* API được cô lập khỏi frontend và các Big Data services tương lai.
 
 ---
 
-## 6. Implementation Constraints
+## 5. Hệ quả
 
-- Do not run API validation with direct `python`, `pip` or global pytest.
-- Keep `.venv/` ignored.
-- Update `.python-version`, `requires-python` and `uv.lock` together if Python version changes.
-- Record any Python version change in this decision or a superseding decision.
+### Tích cực
+
+* API validation commands tái lập được trên các máy có uv.
+* Python version được ghi rõ trong source.
+* Các task API sau có thể thêm routes mà không phải quyết lại environment setup.
+
+### Đánh đổi
+
+* Contributor cần cài uv.
+* Môi trường tái lập được; external services và data vẫn phụ thuộc từng phase.
 
 ---
 
-## 7. Linked Documents
+## 6. Ràng buộc triển khai
 
-- [phase0](../phases/phase0/README.md)
-- [phase2](../phases/phase2/README.md)
-- [phase2-plan001](../plans/phase2/plan001-fastapi-ingestion-contract.md)
-- [coding rules api](../agents/coding_rules_api.md)
+* Không chạy API validation bằng `python`, `pip` hoặc global pytest trực tiếp.
+* Giữ `.venv/` ignored.
+* Nếu đổi Python version, cập nhật `.python-version`, `requires-python` và `uv.lock` cùng nhau.
+* Ghi mọi thay đổi Python version vào decision này hoặc decision thay thế.
 
+---
+
+## 7. Tài liệu liên quan
+
+* [phase0](../phases/phase0/README.md)
+* [phase2](../phases/phase2/README.md)
+* [phase2-plan001](../plans/phase2/plan001-fastapi-ingestion-contract.md)
+* [coding rules api](../agents/coding_rules_api.md)

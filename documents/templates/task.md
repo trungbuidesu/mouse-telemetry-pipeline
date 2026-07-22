@@ -1,6 +1,6 @@
-# Task: `<Task Name>`
+# Template task: `<Task Name>`
 
-## 1. Task Metadata
+## 1. Thông tin task
 
 * **Task ID:** `<phase>-task<sequence>`
 * **Task Name:** `<Tên mô tả đúng hành vi>`
@@ -15,7 +15,7 @@
 
 ---
 
-## 2. Original Request
+## 2. Yêu cầu gốc
 
 Copy nguyên văn yêu cầu của người dùng.
 
@@ -23,9 +23,9 @@ Copy nguyên văn yêu cầu của người dùng.
 
 ---
 
-## 3. Objective
+## 3. Mục tiêu
 
-### Primary Objective
+### Mục tiêu chính
 
 ```text
 <Hành vi hoặc kết quả phải đạt được sau khi task hoàn thành>
@@ -37,7 +37,7 @@ Copy nguyên văn yêu cầu của người dùng.
 <Vì sao task này cần thiết và vấn đề nào đang được giải quyết>
 ```
 
-### Acceptance Criteria
+### Tiêu chí nghiệm thu
 
 * [ ] `<Điều kiện kiểm tra được 1>`
 * [ ] `<Điều kiện kiểm tra được 2>`
@@ -45,7 +45,7 @@ Copy nguyên văn yêu cầu của người dùng.
 * [ ] Không có thay đổi ngoài phạm vi.
 * [ ] Các validation liên quan pass hoặc lỗi còn lại được giải thích.
 
-### Out of Scope
+### Ngoài scope
 
 * `<Không thực hiện trong task này>`
 * `<Không refactor phần này>`
@@ -53,15 +53,15 @@ Copy nguyên văn yêu cầu của người dùng.
 
 ---
 
-## 4. Phase Context
+## 4. Bối cảnh phase
 
-### Existing Tasks in Phase
+### Task đã có trong phase
 
 | Task          | Status     | Relationship                            |
 | ------------- | ---------- | --------------------------------------- |
 | `<task file>` | `<status>` | `DEPENDENCY / RELATED / OVERLAP / NONE` |
 
-### Previous Relevant Task
+### Task liên quan trước đó
 
 * **Task:** `<task file hoặc None>`
 * **Outcome:** `<kết quả quan trọng>`
@@ -70,17 +70,17 @@ Copy nguyên văn yêu cầu của người dùng.
   * `<Quyết định phải giữ nguyên>`
   * `<Constraint từ task trước>`
 
-### Task Dependencies
+### Phụ thuộc của task
 
 * `<Task này phụ thuộc task nào>`
 * `<Điều kiện nào phải tồn tại trước khi thực hiện>`
 
-### Overlap Check
+### Kiểm tra trùng lặp
 
 * **Equivalent task already exists:** `YES | NO`
 * **Overlapping task:** `<task file hoặc None>`
-* **Decision:** `CONTINUE EXISTING | CREATE NEW`
-* **Reason:**
+* **Quyết định:** `CONTINUE EXISTING | CREATE NEW`
+* **Lý do:**
 
 ```text
 <Giải thích tại sao tiếp tục task cũ hoặc tạo task mới>
@@ -88,31 +88,31 @@ Copy nguyên văn yêu cầu của người dùng.
 
 ---
 
-## 5. Initial Project State
+## 5. Trạng thái project ban đầu
 
 Phần này phải hoàn thành trước khi lập implementation plan.
 
-### Git State
+### Trạng thái Git
 
 * **Current branch:** `<branch>`
 * **Current commit:** `<hash>`
 * **Working tree:** `CLEAN | DIRTY`
 
-### Existing Modified Files
+### File đã sửa từ trước
 
 * `<path hoặc None>`
 
-### Existing Untracked Files
+### File chưa track từ trước
 
 * `<path hoặc None>`
 
-### Existing Diff Summary
+### Tóm tắt diff đã có
 
 ```text
 <Tóm tắt những thay đổi đã tồn tại trước task>
 ```
 
-### Project Stack
+### Stack project
 
 * **Language/runtime:** `<runtime>`
 * **Framework:** `<framework>`
@@ -122,25 +122,25 @@ Phần này phải hoàn thành trước khi lập implementation plan.
 * **Lint command:** `<command hoặc unknown>`
 * **Type-check command:** `<command hoặc unknown>`
 
-### Baseline Validation
+### Validation baseline
 
-| Command     | Result                  | Notes     |
+| Command     | Kết quả                 | Ghi chú   |
 | ----------- | ----------------------- | --------- |
 | `<command>` | `PASS / FAIL / NOT RUN` | `<notes>` |
 
-### Architecture Observed
+### Kiến trúc quan sát được
 
 * **Relevant module:** `<module>`
 * **Current responsibility owner:** `<file/class/module>`
 * **Entry point:** `<entry point>`
 
-### Current Data Flow
+### Data flow hiện tại
 
 ```text
 <Input> → <Component> → <Component> → <Output>
 ```
 
-### Existing Risks
+### Rủi ro hiện có
 
 * `<Existing failing tests>`
 * `<Uncommitted work>`
@@ -156,7 +156,7 @@ Phần này phải hoàn thành trước khi lập implementation plan.
 
 ---
 
-## 7. Existing-Code Search
+## 7. Tìm kiếm code hiện có
 
 ### Searches Performed
 
@@ -166,17 +166,17 @@ Phần này phải hoàn thành trước khi lập implementation plan.
 | `<equivalent behavior>`       | `<locations hoặc none>` |
 | `<related concept>`           | `<locations hoặc none>` |
 
-### Relevant Existing Implementations
+### Implementation hiện có liên quan
 
 * `<symbol>`
   Location: `<file>`
   Responsibility: `<responsibility>`
 
-### Implementation Decision
+### Quyết định triển khai
 
-* **Decision:** `REUSE | EXTEND | CREATE`
+* **Quyết định:** `REUSE | EXTEND | CREATE`
 * **Target:** `<symbol/file>`
-* **Reason:**
+* **Lý do:**
 
 ```text
 <Vì sao đây là thay đổi nhỏ và phù hợp nhất>
@@ -189,38 +189,38 @@ Chỉ điền nếu chọn `CREATE`.
 * **REUSE không phù hợp vì:** `<reason>`
 * **EXTEND không phù hợp vì:** `<reason>`
 * **Responsibility mới là:** `<responsibility>`
-* **Expected consumers:** `<consumers>`
+* **Người dùng dự kiến:** `<consumers>`
 * **Public or internal:** `<public/internal>`
 
 ---
 
-## 8. Implementation Plan
+## 8. Kế hoạch triển khai
 
 Mỗi bước phải nhỏ và kiểm tra được riêng.
 
 * [ ] **Step 1:** `<small action>`
 
   * Files: `<paths>`
-  * Expected result: `<result>`
+  * Kết quả kỳ vọng: `<result>`
   * Validation: `<command/check>`
 
 * [ ] **Step 2:** `<small action>`
 
   * Files: `<paths>`
-  * Expected result: `<result>`
+  * Kết quả kỳ vọng: `<result>`
   * Validation: `<command/check>`
 
 * [ ] **Step 3:** `<small action>`
 
   * Files: `<paths>`
-  * Expected result: `<result>`
+  * Kết quả kỳ vọng: `<result>`
   * Validation: `<command/check>`
 
 ---
 
 ## 9. Work Log
 
-### `[YYYY-MM-DD HH:mm]` — Task initialized
+### `[YYYY-MM-DD HH:mm]` — Khởi tạo task
 
 * **Status:** `DISCOVERY`
 
@@ -235,7 +235,7 @@ Mỗi bước phải nhỏ và kiểm tra được riêng.
 
   * `<path>`
 
-* **Result:**
+* **Kết quả:**
 
   * `<result>`
 
@@ -265,7 +265,7 @@ Mỗi bước phải nhỏ và kiểm tra được riêng.
 
   * `<symbol hoặc None>`
 
-* **Result:**
+* **Kết quả:**
 
   * `<actual result>`
 
@@ -273,7 +273,7 @@ Mỗi bước phải nhỏ và kiểm tra được riêng.
 
   * `<command>` → `PASS / FAIL / NOT RUN`
 
-* **Decision or discovery:**
+* **Quyết định hoặc phát hiện:**
 
   * `<decision hoặc discovery>`
 
@@ -283,7 +283,7 @@ Mỗi bước phải nhỏ và kiểm tra được riêng.
 
 ---
 
-## 10. Changes
+## 10. Thay đổi
 
 Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch.
 
@@ -291,7 +291,7 @@ Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch
 
 #### `<path>`
 
-* **Purpose:** `<responsibility>`
+* **Mục đích:** `<responsibility>`
 * **Why required:** `<reason>`
 * **Used by:** `<consumers>`
 * **Visibility:** `PUBLIC | INTERNAL`
@@ -302,7 +302,7 @@ Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch
 
 * **Previous responsibility:** `<responsibility>`
 * **Changes made:** `<changes>`
-* **Reason:** `<reason>`
+* **Lý do:** `<reason>`
 * **Behavioral impact:** `<impact>`
 * **Compatibility impact:** `<none hoặc description>`
 
@@ -310,12 +310,12 @@ Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch
 
 #### `<path>`
 
-* **Reason:** `<reason>`
+* **Lý do:** `<reason>`
 * **Replacement:** `<replacement hoặc None>`
 
 ---
 
-## 11. Symbol Delta
+## 11. Thay đổi symbol
 
 ### Added Symbols
 
@@ -345,7 +345,7 @@ Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch
 
 #### `<symbol>`
 
-* **Reason:** `<reason>`
+* **Lý do:** `<reason>`
 * **Replacement:** `<replacement hoặc None>`
 
 ### Important Variables Added
@@ -363,21 +363,21 @@ Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch
 
 ## 12. Validation
 
-### Focused Validation
+### Validation tập trung
 
-| Command     | Result                  | Evidence or Notes |
+| Command     | Kết quả                 | Bằng chứng hoặc ghi chú |
 | ----------- | ----------------------- | ----------------- |
 | `<command>` | `PASS / FAIL / NOT RUN` | `<notes>`         |
 
-### Final Validation
+### Validation cuối
 
-| Check             | Result                  | Notes     |
+| Check             | Kết quả                 | Ghi chú   |
 | ----------------- | ----------------------- | --------- |
 | Unit tests        | `PASS / FAIL / NOT RUN` | `<notes>` |
 | Integration tests | `PASS / FAIL / NOT RUN` | `<notes>` |
 | Lint              | `PASS / FAIL / NOT RUN` | `<notes>` |
 | Type-check        | `PASS / FAIL / NOT RUN` | `<notes>` |
-| Build             | `PASS / FAIL / NOT RUN` | `<notes>` |
+| Build             | `PASS / FAIL / NOT RUN` | `<ghi chú>` |
 
 ### Diff Review
 
@@ -391,7 +391,7 @@ Phần này phải phản ánh diff thực tế, không phản ánh kế hoạch
 * [ ] Public API changes đã được ghi lại.
 * [ ] Error paths đã được xem xét.
 
-### Validation Not Performed
+### Validation chưa thực hiện
 
 ```text
 <Các kiểm tra chưa chạy và lý do>
@@ -442,7 +442,7 @@ Chỉ ghi nhận, không tự ý sửa nếu ngoài phạm vi.
 
 ---
 
-## 15. Final Summary
+## 15. Tổng kết cuối
 
 Chỉ điền khi kết thúc task.
 
@@ -455,40 +455,40 @@ Chỉ điền khi kết thúc task.
 <Hành vi thực tế đã hoàn thành>
 ```
 
-### Acceptance Criteria Result
+### Kết quả tiêu chí nghiệm thu
 
 * [ ] `<criterion 1>`
 * [ ] `<criterion 2>`
 * [ ] `<criterion 3>`
 
-### Files Changed
+### File đã thay đổi
 
 * `<path>` — `<main change>`
 
-### Main Behavioral Changes
+### Thay đổi hành vi chính
 
 * `<behavior change>`
 
-### Validation Result
+### Kết quả validation
 
 * **Tests:** `PASS / FAIL / PARTIAL / NOT RUN`
 * **Lint:** `PASS / FAIL / NOT RUN`
 * **Type-check:** `PASS / FAIL / NOT RUN`
 * **Build:** `PASS / FAIL / NOT RUN`
 
-### Remaining Work
+### Việc còn lại
 
 * `<None hoặc remaining work>`
 
-### Known Limitations
+### Giới hạn đã biết
 
 * `<None hoặc limitation>`
 
-### Follow-up Tasks
+### Task tiếp theo
 
 * `<Proposed task name hoặc None>`
 
-### Suggested Commit Message
+### Commit message gợi ý
 
 ```text
 <type(scope): concise description>

@@ -1,105 +1,108 @@
-# Plan: Backpressure and Idempotent Ingestion
+# Plan: Backpressure và idempotent ingestion
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase2-plan002` |
 | Phase | [phase2](../../phases/phase2/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Make ingestion failure modes explicit so frontend retry behavior is safe. The API should distinguish invalid data from retryable overload, prevent unbounded memory growth and reduce duplicate effects from retried batches.
+Làm failure modes của ingestion rõ ràng để frontend retry an toàn. API phải phân biệt invalid data với retryable overload, ngăn memory tăng không giới hạn và giảm tác động duplicate từ các batch bị retry.
+
+`backpressure` là cách backend nói với client rằng hệ thống đang quá tải hoặc dependency chưa sẵn sàng, để client giảm tốc/retry thay vì tiếp tục dồn request.
+
+`idempotent` nghĩa là cùng một request hoặc batch bị gửi lại không gây hiệu ứng trùng lặp ngoài ý muốn.
 
 ---
 
-## 3. Related Decisions
+## 3. Decisions liên quan
 
-| Decision | Why needed |
+| Decision | Vì sao cần |
 |---|---|
-| [DEC-002](../../decisions/decision002-client-side-batching-and-sampling.md) | Expected batch frequency and size |
-| [DEC-005](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Ordering and duplicate handling downstream |
+| [DEC-002](../../decisions/decision002-client-side-batching-and-sampling.md) | Batch frequency và size kỳ vọng |
+| [DEC-005](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Ordering và duplicate handling downstream |
 | [DEC-007](../../decisions/decision007-memory-bounded-retry-policy.md) | Frontend retry semantics |
 
 ---
 
-## 4. Planned Behaviors
+## 4. Behavior dự kiến
 
-| Behavior | Requirement |
+| Behavior | Yêu cầu |
 |---|---|
-| Payload limit | Reject oversized request with `413` |
-| Schema error | Return `400`, not retryable |
-| Kafka unavailable | Return `503`, retryable |
-| API overloaded | Return `429`, retryable |
-| Duplicate batch | Accept idempotently when possible |
-| Duplicate event | Preserve `eventId` so downstream can deduplicate |
+| Payload limit | Reject oversized request bằng `413` |
+| Schema error | Trả `400`, không retryable |
+| Kafka unavailable | Trả `503`, retryable |
+| API overloaded | Trả `429`, retryable |
+| Duplicate batch | Accept idempotently khi có thể |
+| Duplicate event | Giữ `eventId` để downstream deduplicate |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Define error model
+### Step 1: Định nghĩa error model
 
-- Use a consistent JSON error shape.
-- Include retryable flag for client behavior.
-- Avoid exposing internal stack traces.
+* Dùng JSON error shape nhất quán.
+* Bao gồm retryable flag cho client behavior.
+* Không expose internal stack traces.
 
-### Step 2: Add request limits
+### Step 2: Thêm request limits
 
-- Limit max events per batch.
-- Limit max request body size if framework/runtime supports it.
-- Reject empty batches unless explicitly allowed for heartbeat.
+* Giới hạn max events per batch.
+* Giới hạn max request body size nếu framework/runtime hỗ trợ.
+* Reject empty batches trừ khi được cho phép rõ để làm heartbeat.
 
-### Step 3: Add idempotency support
+### Step 3: Thêm idempotency support
 
-- Treat `(sessionId, batchSequence)` as batch-level idempotency key for MVP.
-- Keep `eventId` for downstream duplicate detection.
-- Document retention limits for any in-memory duplicate cache.
+* Xem `(sessionId, batchSequence)` là batch-level idempotency key cho MVP.
+* Giữ `eventId` cho downstream duplicate detection.
+* Document retention limits cho mọi in-memory duplicate cache.
 
-### Step 4: Add backpressure mapping
+### Step 4: Thêm backpressure mapping
 
-- Map Kafka producer timeout to `503`.
-- Map local queue full to `429`.
-- Keep response fast and deterministic.
-
----
-
-## 6. Performance Notes
-
-- Idempotency cache must be bounded.
-- API should avoid synchronous disk writes in the hot request path.
-- Do not retry Kafka indefinitely inside one HTTP request; let frontend retry according to DEC-007.
-- Metrics/logging should count dropped/rejected/accepted batches.
+* Map Kafka producer timeout sang `503`.
+* Map local queue full sang `429`.
+* Giữ response nhanh và deterministic.
 
 ---
 
-## 7. Acceptance Criteria
+## 6. Ghi chú performance
 
-- [ ] Invalid payloads are not retried by frontend contract.
-- [ ] Retryable failures return status code and body that identify retryability.
-- [ ] Oversized batches are rejected before Kafka produce.
-- [ ] Duplicate batch behavior is documented and tested at MVP level.
-- [ ] Backpressure does not grow memory without bound.
+* Idempotency cache phải bounded.
+* API nên tránh sync disk writes trong hot request path.
+* Không retry Kafka vô hạn bên trong một HTTP request; để frontend retry theo DEC-007.
+* Metrics/logging nên đếm dropped/rejected/accepted batches.
+
+---
+
+## 7. Acceptance criteria
+
+* [ ] Invalid payloads không được frontend contract retry.
+* [ ] Retryable failures trả status code và body nhận diện retryability.
+* [ ] Oversized batches bị reject trước Kafka produce.
+* [ ] Duplicate batch behavior được document và test ở mức MVP.
+* [ ] Backpressure không làm memory tăng vô hạn.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| Unit tests for error mapping | PASS |
+| Unit tests cho error mapping | PASS |
 | Producer failure test | `503` retryable response |
 | Oversized batch test | `413` response |
 | Duplicate batch test | Deterministic behavior |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan supports frontend retry handling in [phase1-plan002](../phase1/plan002-telemetry-collector-buffer-sender.md) and stable stream input for [phase3](../../phases/phase3/README.md).
-
+Plan này hỗ trợ frontend retry handling trong [phase1-plan002](../phase1/plan002-telemetry-collector-buffer-sender.md) và stream input ổn định cho [phase3](../../phases/phase3/README.md).

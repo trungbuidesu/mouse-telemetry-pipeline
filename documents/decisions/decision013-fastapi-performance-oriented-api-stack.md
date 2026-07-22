@@ -1,70 +1,70 @@
-# Decision DEC-013: FastAPI Performance-Oriented API Stack
+# Decision DEC-013: FastAPI stack định hướng performance
 
-## 1. Status
+## 1. Trạng thái
 
 `DECIDED`
 
-Date: `2026-07-22`
+Ngày: `2026-07-22`
 
 ---
 
-## 2. Context
+## 2. Bối cảnh
 
-The ingestion API sits on the hot path between the browser and Kafka. It must validate and accept telemetry batches quickly, then hand work to downstream systems. The API should not become an analytics processor.
-
----
-
-## 3. Decision
-
-Use the following API stack:
-
-- FastAPI.
-- Pydantic v2 for request/response models.
-- `pydantic-settings` for environment config.
-- Uvicorn standard extras for local ASGI serving.
-- `orjson` available for custom response paths where profiling shows benefit; routes with response models should use FastAPI/Pydantic direct serialization.
-- pytest, pytest-asyncio, httpx, ruff and mypy for validation.
-
-Foundation scope includes only app factory and `GET /health`. Session and batch ingestion endpoints remain phase2 work.
+Ingestion API nằm trên hot path giữa browser và Kafka. API phải validate và accept telemetry batches nhanh, rồi chuyển việc sang downstream systems. API không được biến thành analytics processor.
 
 ---
 
-## 4. Rationale
+## 3. Quyết định
 
-- FastAPI and Pydantic fit schema-heavy HTTP ingestion.
-- `pydantic-settings` keeps config typed and testable.
-- `orjson` keeps a fast JSON option available for future high-volume responses without forcing deprecated response defaults onto typed routes.
-- Keeping analytics out of the request path protects frontend retry and API latency.
+Dùng API stack sau:
 
----
+* FastAPI.
+* Pydantic v2 cho request/response models.
+* `pydantic-settings` cho environment config.
+* Uvicorn standard extras cho local ASGI serving.
+* `orjson` có sẵn cho custom response paths khi profiling cho thấy có lợi; routes có response model nên dùng serialization trực tiếp của FastAPI/Pydantic.
+* pytest, pytest-asyncio, httpx, ruff và mypy cho validation.
 
-## 5. Consequences
-
-### Positive
-
-- API routes can be added behind a typed app factory.
-- Health checks are available before ingestion endpoints.
-- Performance constraints are present before the API grows.
-
-### Trade-offs
-
-- `orjson` adds a native dependency and should be used intentionally, not as a blanket default.
-- API schema discipline must be maintained as endpoints are added.
+Foundation scope chỉ gồm app factory và `GET /health`. Session và batch ingestion endpoints nằm ở phase2.
 
 ---
 
-## 6. Implementation Constraints
+## 4. Lý do
 
-- Request handlers must not compute Spark-style analytics.
-- Do not write raw telemetry synchronously to disk in the request path.
-- Kafka producer integration must live behind a service boundary.
-- Keep error responses explicit about retryability when ingestion endpoints are added.
+* FastAPI và Pydantic phù hợp HTTP ingestion nặng về schema.
+* `pydantic-settings` giữ config có type rõ và dễ test.
+* `orjson` giữ một lựa chọn JSON nhanh cho response volume cao trong tương lai mà không ép deprecated response defaults lên typed routes.
+* Không đưa analytics vào request path giúp bảo vệ frontend retry và API latency.
 
 ---
 
-## 7. Linked Documents
+## 5. Hệ quả
 
-- [phase2](../phases/phase2/README.md)
-- [phase2-plan001](../plans/phase2/plan001-fastapi-ingestion-contract.md)
-- [phase2-plan002](../plans/phase2/plan002-backpressure-and-idempotent-ingestion.md)
-- [coding rules api](../agents/coding_rules_api.md)
+### Tích cực
+
+* API routes có thể được thêm sau app factory có type rõ.
+* Health check có sẵn trước khi thêm ingestion endpoints.
+* Performance constraints xuất hiện trước khi API lớn dần.
+
+### Đánh đổi
+
+* `orjson` thêm native dependency và nên được dùng có chủ đích, không làm blanket default.
+* Cần giữ kỷ luật schema khi thêm endpoints.
+
+---
+
+## 6. Ràng buộc triển khai
+
+* Request handlers không được tính Spark-style analytics.
+* Không ghi raw telemetry đồng bộ xuống disk trong request path.
+* Kafka producer integration phải nằm sau service boundary.
+* Khi thêm ingestion endpoints, error response phải nói rõ retryability.
+
+---
+
+## 7. Tài liệu liên quan
+
+* [phase2](../phases/phase2/README.md)
+* [phase2-plan001](../plans/phase2/plan001-fastapi-ingestion-contract.md)
+* [phase2-plan002](../plans/phase2/plan002-backpressure-and-idempotent-ingestion.md)
+* [coding rules api](../agents/coding_rules_api.md)

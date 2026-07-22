@@ -1,26 +1,28 @@
-# Environment Setup and Runbook
+# Thiết lập và khởi chạy môi trường
 
-> Scope: `frontend/` and `ingestion-api/` only. Big Data runtime services are intentionally out of scope for this document.
+> Phạm vi: chỉ `frontend/` và `ingestion-api/`. Các runtime service của Big Data stack chưa nằm trong tài liệu này.
 
-## 1. Purpose
+## 1. Mục đích
 
-This document explains how to start and reproduce the local development environments for:
+Tài liệu này hướng dẫn cách khởi chạy và tái lập môi trường local cho:
 
 * [frontend](../frontend/)
 * [ingestion-api](../ingestion-api/)
 
-The frontend environment is reproduced from `package-lock.json` with npm. The API environment is reproduced with uv-managed CPython and `uv.lock`; do not use the machine's system Python directly for API commands.
+Môi trường frontend được tái lập từ `package-lock.json` bằng npm. Môi trường API được tái lập bằng uv-managed CPython và `uv.lock`; không dùng trực tiếp Python hệ thống của máy cho các lệnh API.
 
-## 2. Prerequisites
+`uv-managed` nghĩa là uv chịu trách nhiệm cài và chọn đúng phiên bản Python cho project. Điều này giúp môi trường ổn định hơn giữa các máy, miễn là cùng dùng `.python-version` và `uv.lock`.
+
+## 2. Công cụ cần có
 
 ### Frontend
 
-| Tool | Required by | Current baseline |
+| Tool | Dùng cho | Baseline hiện tại |
 |---|---|---|
 | Node.js | Vite 8.1.5 | `^20.19.0 || >=22.12.0` |
-| npm | package install and scripts | validated with npm `11.12.1` |
+| npm | cài package và chạy script | đã validate với npm `11.12.1` |
 
-Check locally:
+Kiểm tra trên máy:
 
 ```powershell
 node --version
@@ -29,29 +31,29 @@ npm --version
 
 ### API
 
-| Tool | Required by | Current baseline |
+| Tool | Dùng cho | Baseline hiện tại |
 |---|---|---|
-| uv | Python runtime and dependency management | validated with uv `0.11.29` |
-| CPython | API runtime | uv-managed `3.12.13` |
+| uv | quản lý Python runtime và dependencies | đã validate với uv `0.11.29` |
+| CPython | runtime của API | uv-managed `3.12.13` |
 
-Check locally:
+Kiểm tra trên máy:
 
 ```powershell
 uv --version
 ```
 
-## 3. Frontend Reproduction
+## 3. Tái lập môi trường frontend
 
-Run from the repository root:
+Chạy từ root của repository:
 
 ```powershell
 cd frontend
 npm ci
 ```
 
-Use `npm ci` for reproducible installs because it respects `package-lock.json`. Use `npm install` only when intentionally changing dependencies and updating the lockfile.
+Dùng `npm ci` khi cần môi trường tái lập được, vì lệnh này bám sát `package-lock.json`. Chỉ dùng `npm install` khi chủ động thay đổi dependency và cập nhật lockfile.
 
-### Frontend Commands
+### Lệnh frontend
 
 ```powershell
 cd frontend
@@ -63,21 +65,21 @@ npm run test:e2e
 npm run build
 ```
 
-The default Vite dev server starts at:
+Vite dev server mặc định chạy tại:
 
 ```text
 http://127.0.0.1:5173/
 ```
 
-If the port is busy:
+Nếu port đang bận:
 
 ```powershell
 npm run dev -- --host 127.0.0.1 --port 5174
 ```
 
-### Frontend Reset
+### Reset frontend
 
-If the frontend environment becomes stale:
+Khi môi trường frontend bị stale hoặc dependency lỗi:
 
 ```powershell
 cd frontend
@@ -86,11 +88,11 @@ Remove-Item -LiteralPath dist -Recurse -Force -ErrorAction SilentlyContinue
 npm ci
 ```
 
-Generated directories such as `node_modules/`, `dist/`, `coverage/`, `playwright-report/` and `test-results/` must stay untracked.
+Các thư mục sinh ra trong quá trình chạy như `node_modules/`, `dist/`, `coverage/`, `playwright-report/` và `test-results/` phải không được track bởi Git.
 
-## 4. API Reproduction
+## 4. Tái lập môi trường API
 
-Run from the repository root:
+Chạy từ root của repository:
 
 ```powershell
 cd ingestion-api
@@ -99,26 +101,28 @@ uv python pin 3.12.13
 uv sync --all-groups --python 3.12.13
 ```
 
-The project must use:
+Project phải dùng:
 
 ```text
 ingestion-api/.python-version = 3.12.13
 requires-python = >=3.12,<3.13
 ```
 
-Verify the active interpreter:
+Kiểm tra interpreter đang được dùng:
 
 ```powershell
 uv run python -c "import sys; print(sys.version); print(sys.executable)"
 ```
 
-The executable should resolve under:
+Executable nên nằm dưới:
 
 ```text
 ingestion-api/.venv/
 ```
 
-### API Commands
+Nếu executable trỏ ra Python cài sẵn của hệ thống, môi trường chưa đạt yêu cầu tái lập.
+
+### Lệnh API
 
 ```powershell
 cd ingestion-api
@@ -134,7 +138,7 @@ Health endpoint:
 http://127.0.0.1:8001/health
 ```
 
-Expected response:
+Response kỳ vọng:
 
 ```json
 {
@@ -145,11 +149,11 @@ Expected response:
 }
 ```
 
-Port `8000` may be occupied by another local service. Use `8001` for this project unless a later task reserves a different API port.
+Port `8000` có thể đang được một local service khác dùng. Tạm thời dùng `8001` cho project này, trừ khi một task sau quyết định port API khác.
 
-### API Reset
+### Reset API
 
-If the API environment becomes stale:
+Khi môi trường API bị stale:
 
 ```powershell
 cd ingestion-api
@@ -158,11 +162,11 @@ uv python install 3.12.13
 uv sync --all-groups --python 3.12.13
 ```
 
-Do not run `python`, `pip`, `pytest`, `ruff` or `mypy` directly for this project. Use `uv run ...` so commands execute inside the pinned environment.
+Không chạy trực tiếp `python`, `pip`, `pytest`, `ruff` hoặc `mypy` cho project này. Dùng `uv run ...` để đảm bảo command chạy bên trong môi trường đã pin.
 
-## 5. Starting Both Services
+## 5. Khởi chạy cả hai service
 
-Use two terminals.
+Dùng hai terminal.
 
 Terminal 1:
 
@@ -178,30 +182,34 @@ cd ingestion-api
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8001
 ```
 
-Then open:
+Sau đó mở:
 
 * Frontend: `http://127.0.0.1:5173/`
 * API health: `http://127.0.0.1:8001/health`
 
-## 6. Performance Boundaries
+## 6. Ranh giới performance
 
 ### Frontend
 
-* shadcn/ui is for HUD, layout, controls and dashboard-style UI only.
-* Do not put canvas drawing, hit detection or telemetry hot-path processing inside shadcn components.
-* Do not store raw telemetry event arrays in React state.
-* Do not send one HTTP request per pointer event.
-* Use refs, plain TypeScript modules and bounded buffers for high-frequency telemetry paths.
+* shadcn/ui chỉ dùng cho HUD, layout, controls và UI kiểu dashboard.
+* Không đặt canvas drawing, hit detection hoặc xử lý telemetry hot path bên trong shadcn components.
+* Không lưu raw telemetry event array trong React state.
+* Không gửi một HTTP request cho từng pointer event.
+* Dùng refs, plain TypeScript modules và bounded buffers cho các luồng telemetry tần suất cao.
+
+`hot path` là đoạn code chạy rất thường xuyên hoặc ảnh hưởng trực tiếp đến độ mượt, ví dụ `mousemove`, canvas draw loop và buffer append. Code trong hot path cần ít allocation, ít re-render và không làm I/O đồng bộ.
 
 ### API
 
-* Request handlers should validate and accept data quickly.
-* Do not run analytics in the request path.
-* Do not perform synchronous disk writes in the hot path.
-* Keep Kafka producer logic behind a service boundary when it is introduced.
-* Keep response models typed and avoid blanket JSON response defaults that conflict with FastAPI/Pydantic serialization.
+* Request handler chỉ nên validate và accept dữ liệu nhanh.
+* Không chạy analytics trong request path.
+* Không ghi disk đồng bộ trong hot path.
+* Khi thêm Kafka producer, đặt logic đó sau service boundary.
+* Giữ response model có type rõ ràng và tránh blanket JSON response default nếu nó xung đột với cơ chế serialize của FastAPI/Pydantic.
 
-## 7. Quick Validation Checklist
+`service boundary` là lớp tách giữa route handler và hệ thống bên ngoài như Kafka. Route chỉ gọi service theo contract rõ ràng; chi tiết retry, timeout, producer client và mapping lỗi nằm trong service.
+
+## 7. Checklist validation nhanh
 
 Frontend:
 
@@ -225,19 +233,19 @@ uv run mypy app
 uv run pytest
 ```
 
-Repository hygiene:
+Git hygiene:
 
 ```powershell
 git status --short -uall
 git check-ignore -v frontend/node_modules frontend/dist ingestion-api/.venv
 ```
 
-## 8. Related Documents
+## 8. Tài liệu liên quan
 
 * [Tracking](TRACKING.md)
-* [Aim Trainer Architecture](aim_trainer_app_architecture.md)
-* [Frontend Coding Rules](agents/coding_rules_frontend.md)
-* [API Coding Rules](agents/coding_rules_api.md)
+* [Kiến trúc Aim Trainer](aim_trainer_app_architecture.md)
+* [Coding rules frontend](agents/coding_rules_frontend.md)
+* [Coding rules API](agents/coding_rules_api.md)
 * [DEC-011: Vite React shadcn frontend stack](decisions/decision011-vite-react-shadcn-frontend-stack.md)
 * [DEC-012: uv-managed Python API environment](decisions/decision012-uv-managed-python-api-environment.md)
 * [DEC-013: FastAPI performance-oriented API stack](decisions/decision013-fastapi-performance-oriented-api-stack.md)

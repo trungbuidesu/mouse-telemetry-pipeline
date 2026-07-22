@@ -1,74 +1,73 @@
-# Decision DEC-002: Client-Side Batching and Sampling
+# Decision DEC-002: Batching và sampling phía client
 
-## 1. Status
+## 1. Trạng thái
 
 `DECIDED`
 
-Date: `2026-07-22`
+Ngày: `2026-07-22`
 
 ---
 
-## 2. Context
+## 2. Bối cảnh
 
-`mousemove` can fire at high frequency. Sending one HTTP request per mouse event would overload the browser, API and Kafka producer while adding little analytical value for MVP.
+`mousemove` có thể phát sinh với tần suất cao. Nếu gửi một HTTP request cho mỗi mouse event, browser, API và Kafka producer sẽ bị quá tải trong khi giá trị phân tích tăng không đáng kể cho MVP.
 
-The architecture requires the demo to show continuous data generation and batch transmission. It also requires the UI to remain responsive while collecting telemetry.
-
----
-
-## 3. Decision
-
-The frontend will batch telemetry before sending it to FastAPI.
-
-Default policy:
-
-- Flush when buffer reaches `100` events.
-- Flush every `250 ms` while a session is running.
-- Sample `mousemove` to at most one recorded event every `16 ms`.
-- Never sample away `click`, `session_start` or `session_end`.
-- Keep batch sending through HTTP API, not direct Kafka.
+Kiến trúc cần demo được việc dữ liệu phát sinh liên tục và được gửi theo batch. UI cũng phải giữ được độ mượt trong lúc thu telemetry.
 
 ---
 
-## 4. Rationale
+## 3. Quyết định
 
-- 100-event batches are small enough for local API parsing and large enough to avoid request storms.
-- 250 ms interval gives near-real-time demo feedback.
-- 16 ms mousemove sampling approximates 60 samples/second, enough for trajectory and speed metrics.
-- Preserving clicks keeps accuracy and reaction metrics correct.
+Frontend sẽ gom telemetry thành batch trước khi gửi đến FastAPI.
 
----
+Policy mặc định:
 
-## 5. Consequences
-
-### Positive
-
-- Browser sends predictable request volume.
-- API and Kafka receive controlled batches.
-- UI has fewer hot-path side effects.
-- Demo can still show thousands of events in a session.
-
-### Trade-offs
-
-- Raw browser mousemove events above the sample rate are intentionally not retained.
-- Very fine-grained movement reconstruction is out of MVP scope.
+* Flush khi buffer đạt `100` events.
+* Flush mỗi `250 ms` khi session đang chạy.
+* Sample `mousemove` tối đa một recorded event mỗi `16 ms`.
+* Không bao giờ sample bỏ `click`, `session_start` hoặc `session_end`.
+* Gửi batch qua HTTP API, không gửi trực tiếp vào Kafka.
 
 ---
 
-## 6. Implementation Constraints
+## 4. Lý do
 
-- Sampling must happen before appending `mousemove` to the telemetry buffer.
-- Batch flush must also run during session finishing.
-- Config values should come from environment variables or telemetry config defaults.
-- Load testing must not be achieved by disabling sampling in the player app; use DEC-008 instead.
+* Batch 100 events đủ nhỏ để local API parse nhanh và đủ lớn để tránh request storm.
+* Interval 250 ms tạo cảm giác near-real-time cho demo.
+* Sampling 16 ms cho `mousemove` xấp xỉ 60 samples/giây, đủ cho trajectory và speed metrics.
+* Giữ nguyên click giúp accuracy và reaction metrics chính xác.
 
 ---
 
-## 7. Linked Documents
+## 5. Hệ quả
 
-- [phase1](../phases/phase1/README.md)
-- [phase5](../phases/phase5/README.md)
-- [phase1-plan002](../plans/phase1/plan002-telemetry-collector-buffer-sender.md)
-- [phase4-plan002](../plans/phase4/plan002-demo-scenarios-and-load-generation.md)
-- [DEC-008](decision008-load-generator-separated-from-player-app.md)
+### Tích cực
 
+* Browser gửi request volume có thể dự đoán.
+* API và Kafka nhận batch có kiểm soát.
+* UI có ít side effect trong hot path hơn.
+* Demo vẫn có thể sinh hàng nghìn events trong một session.
+
+### Đánh đổi
+
+* Raw browser mousemove event vượt quá sample rate sẽ chủ động không được giữ lại.
+* Việc dựng lại chuyển động cực kỳ chi tiết nằm ngoài scope MVP.
+
+---
+
+## 6. Ràng buộc triển khai
+
+* Sampling phải xảy ra trước khi append `mousemove` vào telemetry buffer.
+* Batch flush vẫn phải chạy trong trạng thái session finishing.
+* Config values nên đến từ environment variables hoặc telemetry config defaults.
+* Load testing không được thực hiện bằng cách tắt sampling trong player app; dùng DEC-008.
+
+---
+
+## 7. Tài liệu liên quan
+
+* [phase1](../phases/phase1/README.md)
+* [phase5](../phases/phase5/README.md)
+* [phase1-plan002](../plans/phase1/plan002-telemetry-collector-buffer-sender.md)
+* [phase4-plan002](../plans/phase4/plan002-demo-scenarios-and-load-generation.md)
+* [DEC-008](decision008-load-generator-separated-from-player-app.md)

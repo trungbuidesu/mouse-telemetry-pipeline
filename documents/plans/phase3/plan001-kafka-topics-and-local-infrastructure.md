@@ -1,106 +1,105 @@
-# Plan: Kafka Topics and Local Infrastructure
+# Plan: Kafka topics và local infrastructure
 
-## 1. Metadata
+## 1. Thông tin
 
-| Field | Value |
+| Trường | Giá trị |
 |---|---|
 | Plan ID | `phase3-plan001` |
 | Phase | [phase3](../../phases/phase3/README.md) |
 | Status | `PLANNED` |
-| Last Updated | `2026-07-22` |
-| Source | [Aim Trainer App Architecture](../../aim_trainer_app_architecture.md) |
+| Cập nhật lần cuối | `2026-07-22` |
+| Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
 
-## 2. Objective
+## 2. Mục tiêu
 
-Create the local streaming infrastructure required for the end-to-end demo: Kafka, topic bootstrap, MinIO, InfluxDB and Spark runtime wiring.
+Tạo local streaming infrastructure cần cho end-to-end demo: Kafka, topic bootstrap, MinIO, InfluxDB và Spark runtime wiring.
 
 ---
 
-## 3. Related Decisions
+## 3. Decisions liên quan
 
-| Decision | Why needed |
+| Decision | Vì sao cần |
 |---|---|
-| [DEC-005](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Topic naming, partitioning and keys |
+| [DEC-005](../../decisions/decision005-kafka-topic-layout-and-event-keys.md) | Topic naming, partitioning và keys |
 | [DEC-006](../../decisions/decision006-raw-parquet-and-timeseries-metrics.md) | Storage destinations |
 | [DEC-010](../../decisions/decision010-local-first-docker-compose-stack.md) | Local demo strategy |
 
 ---
 
-## 4. Planned Files
+## 4. File dự kiến
 
 | File | Responsibility |
 |---|---|
-| `infrastructure/docker-compose.yml` or root `docker-compose.yml` | Local services |
+| `infrastructure/docker-compose.yml` hoặc root `docker-compose.yml` | Local services |
 | `infrastructure/kafka/create-topics.sh` | Topic bootstrap |
-| `infrastructure/minio/` | Bucket init if needed |
-| `infrastructure/influxdb/` | Bucket/org/token init docs or scripts |
-| `.env.example` | Local service ports and credentials placeholders |
+| `infrastructure/minio/` | Bucket init nếu cần |
+| `infrastructure/influxdb/` | Bucket/org/token init docs hoặc scripts |
+| `.env.example` | Local service ports và credentials placeholders |
 
 ---
 
-## 5. Work Breakdown
+## 5. Work breakdown
 
-### Step 1: Define service topology
+### Step 1: Định nghĩa service topology
 
-- Kafka broker and controller setup appropriate for local development.
-- MinIO object storage with explicit bucket for raw telemetry.
-- InfluxDB for aggregate metrics.
-- Spark service or documented local Spark command.
+* Kafka broker và controller setup phù hợp local development.
+* MinIO object storage với bucket rõ ràng cho raw telemetry.
+* InfluxDB cho aggregate metrics.
+* Spark service hoặc documented local Spark command.
 
-### Step 2: Define topics
+### Step 2: Định nghĩa topics
 
-- Create telemetry topic for raw events.
-- Optionally create dead-letter topic for invalid/unparseable events.
-- Use retention appropriate for demo local data volume.
+* Tạo telemetry topic cho raw events.
+* Optional dead-letter topic cho invalid/unparseable events.
+* Dùng retention phù hợp với demo local data volume.
 
-### Step 3: Define local data paths
+### Step 3: Định nghĩa local data paths
 
-- Store runtime volumes outside committed source files.
-- Add `.gitignore` rules for local data.
-- Document reset commands.
+* Lưu runtime volumes ngoài committed source files.
+* Thêm `.gitignore` rules cho local data.
+* Document reset commands.
 
 ### Step 4: Smoke test infrastructure
 
-- Start services.
-- Create topics.
-- Produce and consume one test message.
-- Verify MinIO and InfluxDB are reachable.
+* Start services.
+* Tạo topics.
+* Produce và consume một test message.
+* Verify MinIO và InfluxDB reachable.
 
 ---
 
-## 6. Performance Notes
+## 6. Ghi chú performance
 
-- Local Kafka partition count should be enough to demonstrate partitioning but not overcomplicate the demo.
-- Topic key by `sessionId` preserves per-session ordering within a partition.
-- Retention can be short for demo to keep disk usage bounded.
-- Do not write every mousemove to InfluxDB; raw event storage belongs in MinIO.
+* Local Kafka partition count nên đủ để demo partitioning nhưng không làm demo quá phức tạp.
+* Topic key theo `sessionId` giữ per-session ordering trong một partition.
+* Retention có thể ngắn cho demo để giới hạn disk usage.
+* Không ghi mọi mousemove vào InfluxDB; raw event storage thuộc về MinIO.
 
 ---
 
-## 7. Acceptance Criteria
+## 7. Acceptance criteria
 
-- [ ] Docker Compose starts Kafka, MinIO and InfluxDB locally.
-- [ ] Kafka topics are created repeatably.
-- [ ] API can connect to Kafka using `.env.example` values.
-- [ ] Runtime data directories are ignored by Git.
-- [ ] Reset instructions are documented.
+* [ ] Docker Compose start được Kafka, MinIO và InfluxDB local.
+* [ ] Kafka topics được tạo lặp lại được.
+* [ ] API connect được Kafka bằng `.env.example` values.
+* [ ] Runtime data directories được Git ignore.
+* [ ] Reset instructions được document.
 
 ---
 
 ## 8. Validation
 
-| Check | Expected result |
+| Check | Kết quả kỳ vọng |
 |---|---|
-| `docker compose up` | Services become healthy |
-| Kafka produce/consume smoke test | Message round-trip succeeds |
-| MinIO smoke test | Bucket exists and accepts object |
-| InfluxDB smoke test | Bucket is queryable |
+| `docker compose up` | Services healthy |
+| Kafka produce/consume smoke test | Message round-trip thành công |
+| MinIO smoke test | Bucket tồn tại và nhận object |
+| InfluxDB smoke test | Bucket query được |
 
 ---
 
-## 9. Handoff
+## 9. Bàn giao
 
-This plan unlocks [phase3-plan002](plan002-spark-streaming-to-minio-influxdb.md).
-
+Plan này mở khóa [phase3-plan002](plan002-spark-streaming-to-minio-influxdb.md).

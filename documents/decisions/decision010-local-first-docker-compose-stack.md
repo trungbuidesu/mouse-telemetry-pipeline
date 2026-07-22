@@ -1,74 +1,73 @@
-# Decision DEC-010: Local-First Docker Compose Stack
+# Decision DEC-010: Docker Compose stack ưu tiên local
 
-## 1. Status
+## 1. Trạng thái
 
 `DECIDED`
 
-Date: `2026-07-22`
+Ngày: `2026-07-22`
 
 ---
 
-## 2. Context
+## 2. Bối cảnh
 
-The project is a student Big Data demo. The system needs to be runnable and inspectable on a local development machine without requiring cloud infrastructure.
-
----
-
-## 3. Decision
-
-Use a local-first Docker Compose stack for the pipeline services:
-
-- FastAPI ingestion API when containerized.
-- Kafka.
-- Spark runtime or Spark-compatible local execution.
-- MinIO.
-- InfluxDB.
-- Grafana.
-
-Frontend may run via Vite development server during development and can be containerized later if useful for demo.
+Project là Big Data demo cho đồ án. Hệ thống cần chạy và inspect được trên máy development local, không phụ thuộc cloud infrastructure.
 
 ---
 
-## 4. Rationale
+## 3. Quyết định
 
-- Local Compose is repeatable and easy to demonstrate.
-- Services can be started, stopped and reset together.
-- It matches the architecture without introducing cloud deployment complexity.
-- It keeps focus on data flow and performance rather than infrastructure provisioning.
+Dùng Docker Compose stack theo hướng local-first cho các pipeline services:
 
----
+* FastAPI ingestion API khi containerize.
+* Kafka.
+* Spark runtime hoặc Spark-compatible local execution.
+* MinIO.
+* InfluxDB.
+* Grafana.
 
-## 5. Consequences
-
-### Positive
-
-- Demo can run offline after dependencies/images are available.
-- Runbook can be concrete.
-- Runtime volumes can be reset for repeated demos.
-
-### Trade-offs
-
-- Local laptop resources limit throughput.
-- Compose setup is not a production deployment model.
+Frontend có thể chạy bằng Vite dev server trong development và containerize sau nếu hữu ích cho demo.
 
 ---
 
-## 6. Implementation Constraints
+## 4. Lý do
 
-- `.env.example` must include required local variables without secrets.
-- Runtime data directories and Docker volumes must not be committed.
-- Ports should be documented.
-- Reset commands must be explicit and avoid destructive ambiguity.
-- Health checks should be added where practical.
+* Local Compose tái lập được và dễ demo.
+* Các service có thể start, stop và reset cùng nhau.
+* Bám kiến trúc mà không kéo thêm độ phức tạp cloud deployment.
+* Giữ trọng tâm vào data flow và performance thay vì infrastructure provisioning.
 
 ---
 
-## 7. Linked Documents
+## 5. Hệ quả
 
-- [phase0](../phases/phase0/README.md)
-- [phase3](../phases/phase3/README.md)
-- [phase5](../phases/phase5/README.md)
-- [phase0-plan001](../plans/phase0/plan001-repository-and-doc-governance.md)
-- [phase3-plan001](../plans/phase3/plan001-kafka-topics-and-local-infrastructure.md)
-- [phase5-plan002](../plans/phase5/plan002-packaging-runbooks-and-final-report.md)
+### Tích cực
 
+* Demo có thể chạy offline sau khi đã có dependencies/images.
+* Runbook có thể rất cụ thể.
+* Runtime volumes có thể reset cho các lần demo lặp lại.
+
+### Đánh đổi
+
+* Tài nguyên laptop local giới hạn throughput.
+* Compose setup không phải production deployment model.
+
+---
+
+## 6. Ràng buộc triển khai
+
+* `.env.example` phải có các biến local cần thiết nhưng không chứa secrets.
+* Runtime data directories và Docker volumes không được commit.
+* Ports phải được document.
+* Reset commands phải rõ ràng và tránh ambiguity có thể gây xóa nhầm.
+* Health checks nên được thêm khi thực tế.
+
+---
+
+## 7. Tài liệu liên quan
+
+* [phase0](../phases/phase0/README.md)
+* [phase3](../phases/phase3/README.md)
+* [phase5](../phases/phase5/README.md)
+* [phase0-plan001](../plans/phase0/plan001-repository-and-doc-governance.md)
+* [phase3-plan001](../plans/phase3/plan001-kafka-topics-and-local-infrastructure.md)
+* [phase5-plan002](../plans/phase5/plan002-packaging-runbooks-and-final-report.md)
