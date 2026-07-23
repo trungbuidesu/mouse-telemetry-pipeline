@@ -10,7 +10,7 @@
 | Cập nhật lần cuối | `2026-07-24` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
-> Step 1 (telemetry types) hoàn thành trong `documents/phases/phase1/task003-telemetry-type-definitions.md`. Steps 2–5 (collector/buffer/sender) còn lại cho T1.4/T1.5.
+> Step 1 (telemetry types) hoàn thành trong `documents/phases/phase1/task003-telemetry-type-definitions.md`. Steps 2–3 (collector + sampling) hoàn thành trong `documents/phases/phase1/task004-telemetry-collector-coordinate-normalization.md`. Steps 4–5 (buffer/sender) còn lại cho T1.5.
 
 ---
 
@@ -56,16 +56,16 @@ Triển khai frontend telemetry path: capture input tần suất cao, normalize 
 
 ### Step 2: Triển khai collector
 
-* Sinh `eventId` cho từng event.
-* Gắn `sessionId`, `eventTime` và `sequence` tăng đơn điệu.
-* Convert coordinates sang canvas-relative và normalized forms.
-* Tính `targetHit` và `reactionTimeMs` cho click events.
+* [x] Sinh `eventId` cho từng event.
+* [x] Gắn `sessionId`, `eventTime` và `sequence` tăng đơn điệu.
+* [x] Convert coordinates sang canvas-relative và normalized forms.
+* [x] Tính `targetHit` và `reactionTimeMs` cho click events.
 
 ### Step 3: Triển khai sampling
 
-* Ghi tối đa một `mousemove` mỗi 16 ms theo default.
-* Không bao giờ sample bỏ `click`, `session_start` hoặc `session_end`.
-* Track skipped mousemove count riêng nếu hữu ích cho debugging.
+* [x] Ghi tối đa một `mousemove` mỗi 16 ms theo default.
+* [x] Không bao giờ sample bỏ `click`, `session_start` hoặc `session_end`.
+* [x] Track skipped mousemove count riêng nếu hữu ích cho debugging.
 
 ### Step 4: Triển khai buffer và flush policy
 
