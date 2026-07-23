@@ -1,7 +1,7 @@
 # MOUSE TELEMETRY PIPELINE — TRACKING TIẾN ĐỘ
 
 > **Cập nhật lần cuối:** 24/07/2026
-> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (11/11); G1 PASSED; P2 in progress (7/8)
+> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (11/11); G1 PASSED; P2 complete (8/8); G2 PASSED
 > **Mục tiêu:** Real-time Mouse Tracking Pipeline dùng Aim Trainer làm nguồn sinh dữ liệu
 
 ---
@@ -13,13 +13,13 @@
 | ----- | ----------------------------- | ------------- | ----------- | ------------ | --------------- | --------------------------------------------- |
 | P0    | Foundation and Contracts      | `DONE`        | 11/11 tasks | 22/07/2026   | 22/07/2026      | G0 PASSED; Docker Compose chuyển sang P3/T3.0 |
 | P1    | Frontend Telemetry MVP        | `DONE`        | 11/11 tasks | 23/07/2026   | 24/07/2026      | G1 PASSED; T1.11 Strict Mode follow-up |
-| P2    | Ingestion API                 | `IN_PROGRESS` | 7/8 tasks   | 24/07/2026   | —               | FastAPI nhận batch và produce Kafka; next T2.8 |
+| P2    | Ingestion API                 | `DONE`        | 8/8 tasks   | 24/07/2026   | 24/07/2026      | G2 PASSED; FastAPI batch + Kafka producer (mocked OK) |
 | P3    | Stream Processing and Storage | `NOT_STARTED` | 0/9 tasks   | —            | —               | Docker Compose, Kafka, Spark, MinIO, InfluxDB |
 | P4    | Analytics and Demo            | `NOT_STARTED` | 0/7 tasks   | —            | —               | Dashboard, session analytics, load generator  |
 | P5    | Hardening and Delivery        | `NOT_STARTED` | 0/7 tasks   | —            | —               | Performance validation, runbook, final report |
 
 
-**Tổng:** 29/52 tasks hoàn thành
+**Tổng:** 30/52 tasks hoàn thành
 
 ---
 
@@ -78,12 +78,12 @@
 | ---- | ---------------------------------------------------------- | ---------- | --------------- | ----------------------- | ----------------------------------------------------------------------------------------- |
 | T2.1 | FastAPI ingestion route package and health baseline review | `DONE`     | 24/07/2026   | T0.7, T0.8              | task: `documents/phases/phase2/task001-fastapi-ingestion-route-package.md` |
 | T2.2 | Pydantic telemetry models                                  | `DONE`     | 24/07/2026   | T0.6                    | task: `documents/phases/phase2/task002-pydantic-telemetry-models.md` |
-| T2.3 | Endpoints vòng đời session                                 | `DONE`     | 24/07/2026   | T2.1, T2.2              | task: `documents/phases/phase2/task003-session-lifecycle-endpoints.md` |
-| T2.4 | Batch ingestion endpoint                                   | `DONE`     | 24/07/2026   | T2.2                    | task: `documents/phases/phase2/task004-batch-ingestion-endpoint.md` |
-| T2.5 | Kafka producer service boundary                            | `DONE`     | 24/07/2026   | T2.4, P3 topic decision | task: `documents/phases/phase2/task005-kafka-producer-service.md`; DEC-004, DEC-005 |
-| T2.6 | Backpressure and error response model                      | `DONE`     | 24/07/2026   | T2.4                    | task: `documents/phases/phase2/task006-backpressure-error-idempotency.md` |
+| T2.3 | Endpoints vòng đời session                                 | `DONE`     | 24/07/2026   | T2.1, T2.2              | task: `documents/phases/phase2/task003-session-lifecycle-endpoints.md`                    |
+| T2.4 | Batch ingestion endpoint                                   | `DONE`     | 24/07/2026   | T2.2                    | task: `documents/phases/phase2/task004-batch-ingestion-endpoint.md`                     |
+| T2.5 | Kafka producer service boundary                            | `DONE`     | 24/07/2026   | T2.4, P3 topic decision | task: `documents/phases/phase2/task005-kafka-producer-service.md`; DEC-004, DEC-005      |
+| T2.6 | Backpressure and error response model                      | `DONE`     | 24/07/2026   | T2.4                    | task: `documents/phases/phase2/task006-backpressure-error-idempotency.md`                |
 | T2.7 | API contract tests                                         | `DONE`     | 24/07/2026   | T2.2, T2.4              | task: `documents/phases/phase2/task007-api-contract-tests.md`; httpx ASGI + fixtures |
-| T2.8 | P2 gate review package                                     | `TODO`     | —               | T2.7                    | G2 pass/fail package                                                                      |
+| T2.8 | P2 gate review package                                     | `DONE`     | 24/07/2026   | T2.7                    | task: `documents/phases/phase2/task008-p2-gate-review.md`; G2 PASSED; pytest 60 passed / 1 skipped |
 
 
 
@@ -149,7 +149,7 @@ Mỗi gate là binary pass/fail. Gate fail thì ưu tiên sửa foundation hoặ
 | ---- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | G0   | P0    | Tracking exists, coding rules split, clean Vite/shadcn frontend validates, uv-managed API validates, shared schema contract files exist, API contract fixtures exist, env examples/review package are recorded | `PASSED`     |
 | G1   | P1    | Aim Trainer playable, no mousemove render storm, telemetry batches valid, final flush reliable                                                                                                                 | `PASSED`     |
-| G2   | P2    | FastAPI accepts valid batches, rejects invalid payloads, produces Kafka messages, retryable failures explicit                                                                                                  | `NOT_PASSED` |
+| G2   | P2    | FastAPI accepts valid batches, rejects invalid payloads, produces Kafka messages, retryable failures explicit                                                                                                  | `PASSED`     |
 | G3   | P3    | Docker Compose services start, Kafka -> Spark -> MinIO/InfluxDB works for one session, raw and aggregate storage separated                                                                                     | `NOT_PASSED` |
 | G4   | P4    | Dashboard/session analytics show real pipeline data and load generator affects throughput                                                                                                                      | `NOT_PASSED` |
 | G5   | P5    | Local runbook reproducible, performance validation recorded, no runtime data/secrets tracked                                                                                                                   | `NOT_PASSED` |
@@ -185,7 +185,7 @@ Mỗi gate là binary pass/fail. Gate fail thì ưu tiên sửa foundation hoặ
 | ------------------------------ | ---------------- | ------------- | ------------------------------------------------------------------------------- | ---- |
 | M1: Foundation ready           | Phase 0 complete | `REACHED`     | Tracking, rules, stack foundation, schema/contracts, env examples, gate package | G0   |
 | M2: Frontend data source ready | Phase 1 complete | `REACHED`     | Playable Aim Trainer emits valid batches                                        | G1   |
-| M3: Ingestion ready            | Phase 2 complete | `NOT_REACHED` | FastAPI validates and produces telemetry                                        | G2   |
+| M3: Ingestion ready            | Phase 2 complete | `REACHED`     | FastAPI validates and produces telemetry                                        | G2   |
 | M4: Streaming storage ready    | Phase 3 complete | `NOT_REACHED` | Kafka/Spark writes raw and metrics                                              | G3   |
 | M5: Demo analytics ready       | Phase 4 complete | `NOT_REACHED` | Dashboard, session analytics, load generator                                    | G4   |
 | M6: Delivery ready             | Phase 5 complete | `NOT_REACHED` | Runbook, validation, final report outline                                       | G5   |
@@ -202,16 +202,16 @@ Mỗi gate là binary pass/fail. Gate fail thì ưu tiên sửa foundation hoặ
 | ---- | ---------------------------------------------------------- | --- | ---------- | --------------------------------------------------------- | -------------------------------------------------------------------- |
 | R-01 | Frontend telemetry gây re-render quá nhiều                 | 5×5 | WATCHING   | DEC-003, T1.4–T1.6 refs/buffer; G1 cites design; T5.1 for probe | Giảm UI counters, chuyển hot state sang refs                         |
 | R-02 | Batch policy tạo request storm hoặc mất event cuối phiên   | 4×5 | WATCHING   | DEC-002, DEC-007, T1.5/T1.8/T1.9 flush evidence; G1 PASSED      | Tăng batch size/interval, thêm sender queue guard                    |
-| R-03 | Schema drift giữa frontend/API/Spark                       | 4×5 | WATCHING   | Shared fixtures, DEC-001, contract tests                  | Freeze schema v1, add migration decision                             |
-| R-04 | API xử lý analytics nặng trong request path                | 3×5 | WATCHING   | API coding rules, service boundary                        | Move work to Spark/async pipeline                                    |
-| R-05 | Kafka topic/key sai làm mất ordering theo session          | 3×4 | WATCHING   | DEC-005, topic bootstrap tests                            | Re-key by sessionId and replay local data                            |
+| R-03 | Schema drift giữa frontend/API/Spark                       | 4×5 | WATCHING   | Shared fixtures, DEC-001, T2.2 models + T2.7 HTTP contracts; G2 PASSED | Freeze schema v1; Spark parser must reuse contracts (T3.4)            |
+| R-04 | API xử lý analytics nặng trong request path                | 3×5 | WATCHING   | Metrics stub + producer boundary (T2.3–T2.5); G2 notes no analytics in path | Keep aggregates in Spark/P4; avoid request-path compute              |
+| R-05 | Kafka topic/key sai làm mất ordering theo session          | 3×4 | WATCHING   | DEC-005 + T2.5 producer unit keying; live topic still P3/T3.1         | Re-key by sessionId and replay local data                            |
 | R-06 | Raw telemetry bị ghi vào InfluxDB quá nhiều                | 4×4 | WATCHING   | DEC-006, aggregate-only metrics                           | Move raw writes to MinIO only                                        |
 | R-07 | Local Docker/runtime data bị commit nhầm                   | 3×5 | WATCHING   | `.gitignore`, git status review                           | Remove from index before commit                                      |
 | R-08 | Scope creep sang Spark/dashboard quá sớm                   | 4×3 | WATCHING   | Tracking marks Spark config as future work                | Defer to P3/P4 tasks                                                 |
 | R-09 | Playwright browser dependencies không có sẵn               | 3×3 | WATCHING   | `test:e2e` installs chromium; verified in T1.9/T1.10          | Chạy unit/lint/typecheck trước; cài browsers sau                     |
-| R-10 | Test tooling baseline quá rỗng, không bắt được regression  | 3×4 | WATCHING   | T1.8 68 unit + T1.9 2 e2e; expand further in P2               | Mở rộng tests cùng gameplay/API tasks                                |
+| R-10 | Test tooling baseline quá rỗng, không bắt được regression  | 3×4 | WATCHING   | T1.8/T1.9 + P2 API suite 60 passed / 1 skipped (G2); expand in P3 smoke | Mở rộng integration tests với Compose/Kafka                          |
 | R-11 | shadcn UI bị dùng sai cho canvas/telemetry hot path        | 4×4 | WATCHING   | DEC-011; G1 confirms canvas/telemetry outside shadcn loop     | Giữ canvas renderer dạng imperative và telemetry trong refs/plain TS |
-| R-12 | API vô tình dùng Python hệ thống thay vì uv-managed Python | 3×5 | WATCHING   | DEC-012, `.python-version`, validation through `uv run`   | Fail gate until uv-managed command evidence exists                   |
+| R-12 | API vô tình dùng Python hệ thống thay vì uv-managed Python | 3×5 | WATCHING   | DEC-012; T2.8 fresh `uv run` ruff/mypy/pytest evidence on `.venv` | Keep gating on `uv run`; document in runbook                         |
 
 
 **Score >= 15** cần review khi cập nhật tracking.

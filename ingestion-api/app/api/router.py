@@ -8,7 +8,7 @@ from app.core.config import Settings
 
 
 def build_api_router(settings: Settings) -> APIRouter:
-    """Aggregate health and empty /api/v1 session/event routers."""
+    """Aggregate health, session lifecycle, and /api/v1 events batch routers."""
 
     api_router = APIRouter()
     api_router.include_router(build_health_router(settings))

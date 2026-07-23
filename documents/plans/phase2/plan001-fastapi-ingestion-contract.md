@@ -6,8 +6,8 @@
 |---|---|
 | Plan ID | `phase2-plan001` |
 | Phase | [phase2](../../phases/phase2/README.md) |
-| Status | `PLANNED` |
-| Cập nhật lần cuối | `2026-07-22` |
+| Status | `IN_PROGRESS` |
+| Cập nhật lần cuối | `2026-07-24` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
@@ -39,7 +39,9 @@ Triển khai FastAPI làm HTTP ingestion boundary ổn định cho browser clien
 | `ingestion-api/app/api/routes/sessions.py` | Endpoints vòng đời session |
 | `ingestion-api/app/api/routes/events.py` | Telemetry batch endpoint |
 | `ingestion-api/app/schemas/telemetry.py` | Pydantic event và batch models |
-| `ingestion-api/app/services/kafka_producer.py` | Kafka producer boundary |
+| `ingestion-api/app/schemas/sessions.py` | Pydantic session create/complete/metrics models |
+| `ingestion-api/app/services/telemetry_producer.py` | TelemetryProducer Protocol + NoOp/Recording + KafkaTelemetryProducer (aiokafka) |
+| `ingestion-api/app/services/session_store.py` | In-memory session lifecycle store |
 | `schemas/telemetry/` | Shared schema fixtures/docs |
 
 ---
@@ -63,16 +65,16 @@ Triển khai FastAPI làm HTTP ingestion boundary ổn định cho browser clien
 
 ### Step 3: Triển khai endpoints
 
-* `POST /api/v1/sessions`
-* `POST /api/v1/events/batch`
-* `POST /api/v1/sessions/{sessionId}/complete`
-* `GET /api/v1/sessions/{sessionId}/metrics`
+* [x] `POST /api/v1/sessions` (T2.3)
+* [x] `POST /api/v1/events/batch` (T2.4 accept; T2.5 Kafka default producer)
+* [x] `POST /api/v1/sessions/{sessionId}/complete` (T2.3)
+* [x] `GET /api/v1/sessions/{sessionId}/metrics` (T2.3; processing stub until P4)
 
 ### Step 4: Produce Kafka messages
 
-* Key telemetry messages theo `sessionId`.
-* Giữ event payload và chỉ thêm ingestion metadata khi cần.
-* Trả `202 Accepted` sau khi valid batch được accept để produce.
+* [x] Key telemetry messages theo `sessionId`. (T2.5; DEC-005)
+* [x] Giữ event payload và chỉ thêm ingestion metadata khi cần. (T2.5: one JSON event message per event)
+* [x] Trả `202 Accepted` sau khi valid batch được accept để produce. (T2.4 accept; T2.5 real produce)
 
 ---
 
@@ -89,12 +91,12 @@ Triển khai FastAPI làm HTTP ingestion boundary ổn định cho browser clien
 
 ## 7. Acceptance criteria
 
-* [ ] Session endpoint accept valid session metadata.
-* [ ] Batch endpoint accept valid mixed event batches.
-* [ ] Invalid event type hoặc thiếu required field trả structured `400`.
-* [ ] Batch được API accept sẽ produce vào Kafka topic.
-* [ ] Health endpoint báo API liveness.
-* [ ] Tests cover accepted batch, invalid payload và producer failure.
+* [x] Session endpoint accept valid session metadata.
+* [x] Batch endpoint accept valid mixed event batches. (T2.4; Kafka produce deferred to T2.5)
+* [x] Invalid event type hoặc thiếu required field trả structured `400`. (T2.4)
+* [x] Batch được API accept sẽ produce vào Kafka topic. (T2.5; mocked aiokafka unit tests)
+* [x] Health endpoint báo API liveness.
+* [x] Tests cover accepted batch, invalid payload và producer failure. (accepted/invalid in T2.4; producer failure→503 in T2.6)
 
 ---
 
