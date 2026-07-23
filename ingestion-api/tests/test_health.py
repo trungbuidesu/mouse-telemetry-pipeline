@@ -24,11 +24,12 @@ async def test_health_endpoint_returns_api_status() -> None:
     }
 
 
-def test_create_app_mounts_health_and_empty_v1_routers() -> None:
+def test_create_app_mounts_health_and_session_routes() -> None:
     app = create_app()
     openapi_paths = set(app.openapi().get("paths", {}))
 
     assert "/health" in openapi_paths
-    # Empty sessions/events routers are mounted under /api/v1 but expose no paths yet.
-    assert "/api/v1/sessions" not in openapi_paths
+    assert "/api/v1/sessions" in openapi_paths
+    assert "/api/v1/sessions/{sessionId}/complete" in openapi_paths
+    assert "/api/v1/sessions/{sessionId}/metrics" in openapi_paths
     assert "/api/v1/events/batch" not in openapi_paths
