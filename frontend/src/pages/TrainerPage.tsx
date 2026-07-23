@@ -30,6 +30,10 @@ export function TrainerPage(): ReactElement {
           score={trainer.score}
           accuracyLabel={trainer.accuracyLabel}
           sessionId={trainer.sessionId}
+          streamStatus={trainer.streamStatus}
+          eventCount={trainer.eventCount}
+          sentBatchCount={trainer.sentBatchCount}
+          droppedEventCount={trainer.droppedEventCount}
           onDurationChange={trainer.setDuration}
           onStart={trainer.start}
           onStop={trainer.stop}

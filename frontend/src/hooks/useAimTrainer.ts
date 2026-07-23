@@ -27,6 +27,8 @@ import {
   type GameStatus,
   type Target,
 } from "@/game/types";
+import { useTelemetry } from "@/hooks/useTelemetry";
+import type { StreamStatus } from "@/api/telemetryApi";
 
 export type AimTrainerApi = {
   status: GameStatus;
@@ -36,6 +38,10 @@ export type AimTrainerApi = {
   score: number;
   accuracyLabel: string;
   sessionId: string | null;
+  streamStatus: StreamStatus;
+  eventCount: number;
+  sentBatchCount: number;
+  droppedEventCount: number;
   canvasRef: RefObject<HTMLCanvasElement | null>;
   setDuration: (durationSeconds: DurationSeconds) => void;
   start: () => void;
@@ -129,6 +135,12 @@ function readCanvasPoint(
 }
 
 export function useAimTrainer(): AimTrainerApi {
+  const telemetry = useTelemetry();
+  const telemetryRef = useRef(telemetry);
+  useEffect(() => {
+    telemetryRef.current = telemetry;
+  }, [telemetry]);
+
   const [session, setSession] = useState(() => createInitialSession());
   const [countdownRemaining, setCountdownRemaining] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -136,7 +148,6 @@ export function useAimTrainer(): AimTrainerApi {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const countdownTimerRef = useRef<number | null>(null);
   const sessionTimerRef = useRef<number | null>(null);
-  const finishingTimerRef = useRef<number | null>(null);
   const statusRef = useRef<GameStatus>(session.status);
   const targetRef = useRef<Target | null>(session.currentTarget);
   const pointerRef = useRef<{ x: number; y: number } | null>(null);
@@ -154,10 +165,6 @@ export function useAimTrainer(): AimTrainerApi {
     if (sessionTimerRef.current !== null) {
       window.clearInterval(sessionTimerRef.current);
       sessionTimerRef.current = null;
-    }
-    if (finishingTimerRef.current !== null) {
-      window.clearTimeout(finishingTimerRef.current);
-      finishingTimerRef.current = null;
     }
   }, []);
 
@@ -192,6 +199,41 @@ export function useAimTrainer(): AimTrainerApi {
     });
   }, []);
 
+  const beginTelemetryForRunning = useCallback((runningSession: typeof session) => {
+    const canvas = canvasRef.current;
+    if (!runningSession.sessionId) {
+      return;
+    }
+    telemetryRef.current.beginSession({
+      sessionId: runningSession.sessionId,
+      durationSeconds: runningSession.durationSeconds,
+      canvasWidth: canvas?.clientWidth || 1,
+      canvasHeight: canvas?.clientHeight || 1,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      devicePixelRatio: window.devicePixelRatio || 1,
+    });
+  }, []);
+
+  const finishWithTelemetryFlush = useCallback((current: typeof session) => {
+    const finishing = beginFinishing(current);
+    if (finishing.status !== "finishing") {
+      return current;
+    }
+
+    void telemetryRef.current
+      .endSession({
+        score: current.score,
+        hitCount: current.hitCount,
+        missCount: current.missCount,
+      })
+      .finally(() => {
+        setSession((finishingState) => complete(finishingState));
+      });
+
+    return finishing;
+  }, []);
+
   const beginSessionTimer = useCallback(
     (durationSeconds: DurationSeconds) => {
       if (sessionTimerRef.current !== null) {
@@ -210,22 +252,11 @@ export function useAimTrainer(): AimTrainerApi {
             window.clearInterval(sessionTimerRef.current);
             sessionTimerRef.current = null;
           }
-          setSession((current) => {
-            const finishing = beginFinishing(current);
-            if (finishing.status !== "finishing") {
-              return current;
-            }
-
-            finishingTimerRef.current = window.setTimeout(() => {
-              setSession((finishingState) => complete(finishingState));
-            }, 150);
-
-            return finishing;
-          });
+          setSession((current) => finishWithTelemetryFlush(current));
         }
       }, 1000);
     },
-    [],
+    [finishWithTelemetryFlush],
   );
 
   useEffect(() => {
@@ -292,6 +323,7 @@ export function useAimTrainer(): AimTrainerApi {
             const target = spawnTargetForCanvas();
             const withTarget = target ? applyTarget(running, target) : running;
             targetRef.current = withTarget.currentTarget;
+            beginTelemetryForRunning(withTarget);
             beginSessionTimer(withTarget.durationSeconds);
             return withTarget;
           });
@@ -300,7 +332,7 @@ export function useAimTrainer(): AimTrainerApi {
 
       return next;
     });
-  }, [beginSessionTimer, clearTimers, spawnTargetForCanvas]);
+  }, [beginSessionTimer, beginTelemetryForRunning, clearTimers, spawnTargetForCanvas]);
 
   const stop = useCallback(() => {
     clearTimers();
@@ -310,22 +342,13 @@ export function useAimTrainer(): AimTrainerApi {
     setSession((current) => {
       // Cancel before running: return to idle without entering finishing/flush.
       if (current.status === "countdown") {
+        telemetryRef.current.resetTelemetry();
         return createInitialSession(current.durationSeconds);
       }
 
-      const finishing = beginFinishing(current);
-      if (finishing.status !== "finishing") {
-        return current;
-      }
-
-      // Stub flush point for phase1-plan002 telemetry final flush.
-      finishingTimerRef.current = window.setTimeout(() => {
-        setSession((finishingState) => complete(finishingState));
-      }, 150);
-
-      return finishing;
+      return finishWithTelemetryFlush(current);
     });
-  }, [clearTimers]);
+  }, [clearTimers, finishWithTelemetryFlush]);
 
   const playAgain = useCallback(() => {
     start();
@@ -336,6 +359,7 @@ export function useAimTrainer(): AimTrainerApi {
     setCountdownRemaining(0);
     setTimeRemaining(0);
     pointerRef.current = null;
+    telemetryRef.current.resetTelemetry();
     setSession((current) => reset(current));
   }, [clearTimers]);
 
@@ -351,6 +375,15 @@ export function useAimTrainer(): AimTrainerApi {
       const point = readCanvasPoint(canvas, event);
       pointerRef.current = statusRef.current === "running" ? point : null;
       paintPlayfield(canvas, ctx, statusRef.current, targetRef.current, pointerRef.current);
+
+      if (statusRef.current === "running") {
+        telemetryRef.current.recordPointerMove({
+          x: point.x,
+          y: point.y,
+          canvasWidth: canvas.clientWidth,
+          canvasHeight: canvas.clientHeight,
+        });
+      }
     },
     [],
   );
@@ -375,7 +408,18 @@ export function useAimTrainer(): AimTrainerApi {
           return current;
         }
 
-        const hit = isHit(point.x, point.y, current.currentTarget);
+        const target = current.currentTarget;
+        const hit = isHit(point.x, point.y, target);
+        telemetryRef.current.recordClick({
+          x: point.x,
+          y: point.y,
+          canvasWidth: canvas.clientWidth,
+          canvasHeight: canvas.clientHeight,
+          targetId: target.id,
+          targetHit: hit,
+          targetCreatedAt: target.createdAt,
+        });
+
         let next = registerClick(current, hit);
 
         if (hit) {
@@ -404,6 +448,10 @@ export function useAimTrainer(): AimTrainerApi {
     score: session.score,
     accuracyLabel: accuracy === null ? "—" : `${accuracy}%`,
     sessionId: session.sessionId,
+    streamStatus: telemetry.streamStatus,
+    eventCount: telemetry.eventCount,
+    sentBatchCount: telemetry.sentBatchCount,
+    droppedEventCount: telemetry.droppedEventCount,
     canvasRef,
     setDuration,
     start,

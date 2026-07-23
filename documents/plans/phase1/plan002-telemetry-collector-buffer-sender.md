@@ -6,11 +6,11 @@
 |---|---|
 | Plan ID | `phase1-plan002` |
 | Phase | [phase1](../../phases/phase1/README.md) |
-| Status | `PLANNED` |
+| Status | `DONE` |
 | Cập nhật lần cuối | `2026-07-24` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
-> Step 1 (telemetry types) hoàn thành trong `documents/phases/phase1/task003-telemetry-type-definitions.md`. Steps 2–3 (collector + sampling) hoàn thành trong `documents/phases/phase1/task004-telemetry-collector-coordinate-normalization.md`. Steps 4–5 (buffer/sender) còn lại cho T1.5.
+> Steps 1–5 hoàn thành qua task003 (types), task004 (collector), task005 (buffer/sender + useTelemetry wiring). Polished stream status UI còn lại ở T1.6.
 
 ---
 
@@ -69,17 +69,17 @@ Triển khai frontend telemetry path: capture input tần suất cao, normalize 
 
 ### Step 4: Triển khai buffer và flush policy
 
-* Flush khi buffer đạt 100 events.
-* Flush mỗi 250 ms khi running.
-* Flush toàn bộ events còn lại trong finishing.
-* Enforce `MAX_BUFFERED_EVENTS = 20000`.
+* [x] Flush khi buffer đạt 100 events.
+* [x] Flush mỗi 250 ms khi running.
+* [x] Flush toàn bộ events còn lại trong finishing.
+* [x] Enforce `MAX_BUFFERED_EVENTS = 20000`.
 
 ### Step 5: Triển khai sender và retry
 
-* Gửi batches đến `POST /api/v1/events/batch`.
-* Retry retryable failures với backoff 500 ms, 1 s và 2 s.
-* Giữ failed batch đến khi success hoặc max retry outcome được ghi nhận.
-* Expose stream status cho UI.
+* [x] Gửi batches đến `POST /api/v1/events/batch`.
+* [x] Retry retryable failures với backoff 500 ms, 1 s và 2 s.
+* [x] Giữ failed batch đến khi success hoặc max retry outcome được ghi nhận.
+* [x] Expose stream status cho UI.
 
 ---
 
@@ -96,14 +96,14 @@ Triển khai frontend telemetry path: capture input tần suất cao, normalize 
 
 ## 7. Acceptance criteria
 
-* [ ] `mousemove` và `click` events được thu với required fields.
-* [ ] `sequence` tăng đơn điệu theo session.
-* [ ] Mousemove sampling được enforce.
-* [ ] Buffer flush theo size và interval.
-* [ ] Finishing session flush toàn bộ events còn lại.
-* [ ] Retry behavior xử lý backend failure mà không xóa unsent batches.
-* [ ] UI hiển thị được event count, batch count và stream status.
-* [ ] Unit tests cover batching, sequence, coordinate normalization và retry classification.
+* [x] `mousemove` và `click` events được thu với required fields.
+* [x] `sequence` tăng đơn điệu theo session.
+* [x] Mousemove sampling được enforce.
+* [x] Buffer flush theo size và interval.
+* [x] Finishing session flush toàn bộ events còn lại.
+* [x] Retry behavior xử lý backend failure mà không xóa unsent batches.
+* [x] UI hiển thị được event count, batch count và stream status.
+* [x] Unit tests cover batching, sequence, coordinate normalization và retry classification.
 
 ---
 

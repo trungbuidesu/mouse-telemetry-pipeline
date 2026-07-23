@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { StreamStatus } from "@/api/telemetryApi";
 import type { DurationSeconds, GameStatus } from "@/game/types";
 
 type SessionHUDProps = {
@@ -12,6 +13,10 @@ type SessionHUDProps = {
   score: number;
   accuracyLabel: string;
   sessionId: string | null;
+  streamStatus: StreamStatus;
+  eventCount: number;
+  sentBatchCount: number;
+  droppedEventCount: number;
   onDurationChange: (durationSeconds: DurationSeconds) => void;
   onStart: () => void;
   onStop: () => void;
@@ -55,6 +60,10 @@ export function SessionHUD({
   score,
   accuracyLabel,
   sessionId,
+  streamStatus,
+  eventCount,
+  sentBatchCount,
+  droppedEventCount,
   onDurationChange,
   onStart,
   onStop,
@@ -134,7 +143,10 @@ export function SessionHUD({
         ) : null}
       </div>
 
-      <p className="text-xs text-muted-foreground">Session ID: {sessionId ?? "—"}</p>
+      <p className="text-xs text-muted-foreground">
+        Session ID: {sessionId ?? "—"} · Stream: {streamStatus} · Events: {eventCount} · Batches:{" "}
+        {sentBatchCount} · Dropped: {droppedEventCount}
+      </p>
     </section>
   );
 }

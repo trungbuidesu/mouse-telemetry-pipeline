@@ -1,7 +1,7 @@
 # MOUSE TELEMETRY PIPELINE — TRACKING TIẾN ĐỘ
 
 > **Cập nhật lần cuối:** 24/07/2026
-> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 in progress (4/10)
+> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 in progress (5/10)
 > **Mục tiêu:** Real-time Mouse Tracking Pipeline dùng Aim Trainer làm nguồn sinh dữ liệu
 
 ---
@@ -12,14 +12,14 @@
 | Phase | Tên                           | Trạng thái    | Tiến độ     | Ngày bắt đầu | Ngày hoàn thành | Ghi chú                                       |
 | ----- | ----------------------------- | ------------- | ----------- | ------------ | --------------- | --------------------------------------------- |
 | P0    | Foundation and Contracts      | `DONE`        | 11/11 tasks | 22/07/2026   | 22/07/2026      | G0 PASSED; Docker Compose chuyển sang P3/T3.0 |
-| P1    | Frontend Telemetry MVP        | `IN_PROGRESS` | 4/10 tasks  | 23/07/2026   | —               | T1.1–T1.4 DONE; next T1.5 buffer/sender       |
+| P1    | Frontend Telemetry MVP        | `IN_PROGRESS` | 5/10 tasks  | 23/07/2026   | —               | T1.1–T1.5 DONE; next T1.6 stream status UI    |
 | P2    | Ingestion API                 | `NOT_STARTED` | 0/8 tasks   | —            | —               | FastAPI nhận batch và produce Kafka           |
 | P3    | Stream Processing and Storage | `NOT_STARTED` | 0/9 tasks   | —            | —               | Docker Compose, Kafka, Spark, MinIO, InfluxDB |
 | P4    | Analytics and Demo            | `NOT_STARTED` | 0/7 tasks   | —            | —               | Dashboard, session analytics, load generator  |
 | P5    | Hardening and Delivery        | `NOT_STARTED` | 0/7 tasks   | —            | —               | Performance validation, runbook, final report |
 
 
-**Tổng:** 15/52 tasks hoàn thành
+**Tổng:** 16/52 tasks hoàn thành
 
 ---
 
@@ -60,7 +60,7 @@
 | T1.2  | Aim Trainer canvas gameplay                        | `DONE`     | 23/07/2026      | T1.1       | task: `documents/phases/phase1/task002-aim-trainer-canvas-gameplay.md` |
 | T1.3  | Telemetry type definitions                         | `DONE`     | 24/07/2026      | T0.7       | task: `documents/phases/phase1/task003-telemetry-type-definitions.md`  |
 | T1.4  | Telemetry collector and coordinate normalization   | `DONE`     | 24/07/2026      | T1.2, T1.3 | task: `documents/phases/phase1/task004-telemetry-collector-coordinate-normalization.md` |
-| T1.5  | Event buffer and batch sender                      | `TODO`     | —               | T1.4       | DEC-002, DEC-007                                                       |
+| T1.5  | Event buffer and batch sender                      | `DONE`     | 24/07/2026      | T1.4       | task: `documents/phases/phase1/task005-event-buffer-batch-sender.md` |
 | T1.6  | Stream status UI                                   | `TODO`     | —               | T1.5       | Connected, buffering, offline, error                                   |
 | T1.7  | Result page và client metrics                      | `TODO`     | —               | T1.5       | Kết quả tạm thời trong lúc Spark xử lý                                 |
 | T1.8  | Frontend unit tests                                | `TODO`     | —               | T1.2, T1.5 | Hit detection, batch, sequence, coordinates                            |
