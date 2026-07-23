@@ -34,14 +34,14 @@ export function HomePage(): ReactElement {
 
         <div className="grid flex-1 items-center gap-8 py-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
-            <Badge variant="secondary">Frontend + API foundation</Badge>
+            <Badge variant="secondary">Phase 1 gameplay shell</Badge>
             <div className="space-y-4">
               <h2 className="max-w-3xl text-5xl font-semibold leading-tight tracking-tight">
                 Aim Trainer prepared for high-frequency telemetry capture.
               </h2>
               <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-                This shell establishes the routes, UI primitives and provider boundaries for the
-                upcoming playable data-collection app.
+                Open the trainer to run session lifecycle controls on the playable `/play` route.
+                Target hit detection and score arrive in the next task.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
