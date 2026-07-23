@@ -52,8 +52,7 @@ async def test_create_session_rejects_invalid_duration(client: AsyncClient) -> N
 
     response = await client.post("/api/v1/sessions", json=payload)
 
-    # FastAPI default validation status until T2.4 maps to 400.
-    assert response.status_code == 422
+    assert response.status_code == 400
 
 
 @pytest.mark.asyncio
@@ -63,7 +62,7 @@ async def test_create_session_rejects_non_positive_dimensions(client: AsyncClien
 
     response = await client.post("/api/v1/sessions", json=payload)
 
-    assert response.status_code == 422
+    assert response.status_code == 400
 
 
 @pytest.mark.asyncio

@@ -24,7 +24,7 @@ async def test_health_endpoint_returns_api_status() -> None:
     }
 
 
-def test_create_app_mounts_health_and_session_routes() -> None:
+def test_create_app_mounts_health_session_and_batch_routes() -> None:
     app = create_app()
     openapi_paths = set(app.openapi().get("paths", {}))
 
@@ -32,4 +32,4 @@ def test_create_app_mounts_health_and_session_routes() -> None:
     assert "/api/v1/sessions" in openapi_paths
     assert "/api/v1/sessions/{sessionId}/complete" in openapi_paths
     assert "/api/v1/sessions/{sessionId}/metrics" in openapi_paths
-    assert "/api/v1/events/batch" not in openapi_paths
+    assert "/api/v1/events/batch" in openapi_paths
