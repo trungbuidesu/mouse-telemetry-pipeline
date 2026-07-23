@@ -5,6 +5,7 @@ description = "FastAPI ingestion API for the mouse telemetry pipeline."
 readme = "../README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+  "aiokafka>=0.12.0",
   "fastapi>=0.116.0",
   "orjson>=3.11.0",
   "pydantic>=2.11.0",
@@ -25,6 +26,9 @@ dev = [
 testpaths = ["tests"]
 pythonpath = ["."]
 asyncio_mode = "auto"
+markers = [
+  "integration: optional live-broker or cross-service checks (skipped by default)",
+]
 
 [tool.ruff]
 line-length = 100

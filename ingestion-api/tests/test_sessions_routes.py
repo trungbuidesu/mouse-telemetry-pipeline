@@ -9,6 +9,7 @@ from httpx import ASGITransport, AsyncClient
 
 from app.main import create_app
 from app.services.session_store import InMemorySessionStore
+from app.services.telemetry_producer import NoOpTelemetryProducer
 
 FIXTURES_DIR = Path(__file__).resolve().parents[2] / "contracts" / "fixtures"
 
@@ -26,7 +27,10 @@ def session_store() -> InMemorySessionStore:
 
 @pytest.fixture
 async def client(session_store: InMemorySessionStore) -> AsyncClient:
-    app = create_app(session_store=session_store)
+    app = create_app(
+        session_store=session_store,
+        telemetry_producer=NoOpTelemetryProducer(),
+    )
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://testserver") as http:
         yield http

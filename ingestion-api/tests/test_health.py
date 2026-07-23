@@ -5,11 +5,13 @@ from httpx import ASGITransport, AsyncClient
 
 from app import __version__
 from app.main import create_app
+from app.services.telemetry_producer import NoOpTelemetryProducer
 
 
 @pytest.mark.asyncio
 async def test_health_endpoint_returns_api_status() -> None:
-    app = create_app()
+    # NoOp override: avoid lifespan Kafka connect in unit tests (no live broker).
+    app = create_app(telemetry_producer=NoOpTelemetryProducer())
     transport = ASGITransport(app=app)
 
     async with AsyncClient(transport=transport, base_url="http://testserver") as client:
@@ -25,7 +27,7 @@ async def test_health_endpoint_returns_api_status() -> None:
 
 
 def test_create_app_mounts_health_session_and_batch_routes() -> None:
-    app = create_app()
+    app = create_app(telemetry_producer=NoOpTelemetryProducer())
     openapi_paths = set(app.openapi().get("paths", {}))
 
     assert "/health" in openapi_paths
