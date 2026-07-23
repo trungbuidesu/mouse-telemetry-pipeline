@@ -48,10 +48,11 @@ Triển khai FastAPI làm HTTP ingestion boundary ổn định cho browser clien
 
 ### Step 1: Khởi tạo API project
 
-* Tạo FastAPI app có health endpoint.
-* Chạy bằng uv-managed Python 3.12.13.
-* Thêm config cho Kafka bootstrap servers và topic names.
-* Thêm entries trong `.env.example`.
+* [x] Tạo FastAPI app có health endpoint. (T0.6 baseline; T2.1 moved to `app/api/routes/health.py`)
+* [x] Chạy bằng uv-managed Python 3.12.13.
+* [x] Thêm config cho Kafka bootstrap servers và topic names. (T2.1 typed Settings; producer ở T2.5)
+* [x] Thêm entries trong `.env.example`.
+* [x] Scaffold `app/api/routes` package with empty sessions/events routers (T2.1).
 
 ### Step 2: Triển khai schema models
 

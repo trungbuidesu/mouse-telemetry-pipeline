@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     allowed_origins: tuple[str, ...] = Field(
         default=("http://localhost:5173", "http://127.0.0.1:5173")
     )
+    # Typed for T2.5 producer wiring; unused on the request path in T2.1.
+    kafka_bootstrap_servers: str = "localhost:9092"
+    kafka_topic: str = "mouse.telemetry.events.v1"
 
 
 @lru_cache

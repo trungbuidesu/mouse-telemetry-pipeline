@@ -142,7 +142,7 @@ cd ingestion-api
 Copy-Item .env.example .env
 ```
 
-Settings đọc biến với prefix `MOUSE_TELEMETRY_` (xem `app/core/config.py`). Kafka-related keys trong `.env.example` chỉ là placeholder deferred đến phase2/phase3.
+Settings đọc biến với prefix `MOUSE_TELEMETRY_` (xem `app/core/config.py`). `MOUSE_TELEMETRY_KAFKA_BOOTSTRAP_SERVERS` và `MOUSE_TELEMETRY_KAFKA_TOPIC` là typed settings (DEC-005) sẵn cho producer ở T2.5; T2.1 không yêu cầu Kafka đang chạy.
 
 ### Lệnh API
 
