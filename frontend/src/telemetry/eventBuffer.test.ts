@@ -64,6 +64,30 @@ describe("createEventBuffer", () => {
     expect(buffer.size()).toBe(0);
   });
 
+  it("leaves remainder below batchSize for the next takeBatch", () => {
+    const buffer = createEventBuffer({ maxBufferedEvents: 10, batchSize: 3 });
+    for (let i = 0; i < 5; i += 1) {
+      buffer.append(mouseMove(i));
+    }
+
+    expect(buffer.takeBatch()).toHaveLength(3);
+    expect(buffer.size()).toBe(2);
+    expect(buffer.takeBatch()).toBeNull();
+
+    buffer.append(mouseMove(5));
+    const second = buffer.takeBatch();
+    expect(second?.map((event) => event.sequence)).toEqual([3, 4, 5]);
+  });
+
+  it("takeBatch preserves append order by sequence", () => {
+    const buffer = createEventBuffer({ maxBufferedEvents: 10, batchSize: 3 });
+    buffer.append(mouseMove(0));
+    buffer.append(click(1));
+    buffer.append(mouseMove(2));
+
+    expect(buffer.takeBatch()?.map((event) => event.sequence)).toEqual([0, 1, 2]);
+  });
+
   it("drainUpTo takes at most n events when any are present", () => {
     const buffer = createEventBuffer({ maxBufferedEvents: 10, batchSize: 100 });
     buffer.append(mouseMove(0));

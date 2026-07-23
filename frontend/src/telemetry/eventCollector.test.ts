@@ -60,6 +60,42 @@ describe("createEventCollector", () => {
     expect(isTelemetryEvent(click)).toBe(true);
   });
 
+  it("keeps contiguous sequences across start, move, click, and end", () => {
+    const { collector, advance } = makeHarness();
+    collector.reset("session-1");
+
+    const start = collector.createSessionStart({
+      durationSeconds: 30,
+      canvasWidth: 100,
+      canvasHeight: 100,
+      viewportWidth: 1920,
+      viewportHeight: 1080,
+      devicePixelRatio: 1,
+    });
+    advance(TELEMETRY_CONFIG.sampleIntervalMs);
+    const move = collector.tryCreateMouseMove({ x: 10, y: 10, ...canvas });
+    const click = collector.createClick({
+      x: 10,
+      y: 10,
+      ...canvas,
+      targetId: "target-1",
+      targetHit: true,
+      targetCreatedAt: 1_000,
+    });
+    const end = collector.createSessionEnd({
+      score: 1,
+      hitCount: 1,
+      missCount: 0,
+      totalEvents: 4,
+    });
+
+    expect(move).not.toBeNull();
+    expect([start.sequence, move?.sequence, click.sequence, end.sequence]).toEqual([
+      0, 1, 2, 3,
+    ]);
+    expect(collector.nextSequence()).toBe(3);
+  });
+
   it("samples mousemove within the sample interval", () => {
     const { collector, advance } = makeHarness();
     collector.reset("session-1");
