@@ -6,8 +6,8 @@
 |---|---|
 | Plan ID | `phase2-plan002` |
 | Phase | [phase2](../../phases/phase2/README.md) |
-| Status | `PLANNED` |
-| Cập nhật lần cuối | `2026-07-22` |
+| Status | `DONE` |
+| Cập nhật lần cuối | `2026-07-24` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
 ---
@@ -49,27 +49,27 @@ Làm failure modes của ingestion rõ ràng để frontend retry an toàn. API 
 
 ### Step 1: Định nghĩa error model
 
-* Dùng JSON error shape nhất quán.
-* Bao gồm retryable flag cho client behavior.
-* Không expose internal stack traces.
+* [x] Dùng JSON error shape nhất quán.
+* [x] Bao gồm retryable flag cho client behavior.
+* [x] Không expose internal stack traces.
 
 ### Step 2: Thêm request limits
 
-* Giới hạn max events per batch.
-* Giới hạn max request body size nếu framework/runtime hỗ trợ.
-* Reject empty batches trừ khi được cho phép rõ để làm heartbeat.
+* [x] Giới hạn max events per batch.
+* [x] Giới hạn max request body size nếu framework/runtime hỗ trợ.
+* [x] Reject empty batches trừ khi được cho phép rõ để làm heartbeat.
 
 ### Step 3: Thêm idempotency support
 
-* Xem `(sessionId, batchSequence)` là batch-level idempotency key cho MVP.
-* Giữ `eventId` cho downstream duplicate detection.
-* Document retention limits cho mọi in-memory duplicate cache.
+* [x] Xem `(sessionId, batchSequence)` là batch-level idempotency key cho MVP.
+* [x] Giữ `eventId` cho downstream duplicate detection.
+* [x] Document retention limits cho mọi in-memory duplicate cache.
 
 ### Step 4: Thêm backpressure mapping
 
-* Map Kafka producer timeout sang `503`.
-* Map local queue full sang `429`.
-* Giữ response nhanh và deterministic.
+* [x] Map Kafka producer timeout sang `503`.
+* [x] Map local queue full sang `429`.
+* [x] Giữ response nhanh và deterministic.
 
 ---
 
@@ -84,11 +84,11 @@ Làm failure modes của ingestion rõ ràng để frontend retry an toàn. API 
 
 ## 7. Acceptance criteria
 
-* [ ] Invalid payloads không được frontend contract retry.
-* [ ] Retryable failures trả status code và body nhận diện retryability.
-* [ ] Oversized batches bị reject trước Kafka produce.
-* [ ] Duplicate batch behavior được document và test ở mức MVP.
-* [ ] Backpressure không làm memory tăng vô hạn.
+* [x] Invalid payloads không được frontend contract retry.
+* [x] Retryable failures trả status code và body nhận diện retryability.
+* [x] Oversized batches bị reject trước Kafka produce.
+* [x] Duplicate batch behavior được document và test ở mức MVP.
+* [x] Backpressure không làm memory tăng vô hạn.
 
 ---
 

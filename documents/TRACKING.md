@@ -1,7 +1,7 @@
 # MOUSE TELEMETRY PIPELINE — TRACKING TIẾN ĐỘ
 
 > **Cập nhật lần cuối:** 24/07/2026
-> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (11/11); G1 PASSED; P2 in progress (5/8)
+> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (11/11); G1 PASSED; P2 in progress (6/8)
 > **Mục tiêu:** Real-time Mouse Tracking Pipeline dùng Aim Trainer làm nguồn sinh dữ liệu
 
 ---
@@ -13,13 +13,13 @@
 | ----- | ----------------------------- | ------------- | ----------- | ------------ | --------------- | --------------------------------------------- |
 | P0    | Foundation and Contracts      | `DONE`        | 11/11 tasks | 22/07/2026   | 22/07/2026      | G0 PASSED; Docker Compose chuyển sang P3/T3.0 |
 | P1    | Frontend Telemetry MVP        | `DONE`        | 11/11 tasks | 23/07/2026   | 24/07/2026      | G1 PASSED; T1.11 Strict Mode follow-up |
-| P2    | Ingestion API                 | `IN_PROGRESS` | 5/8 tasks   | 24/07/2026   | —               | FastAPI nhận batch và produce Kafka; next T2.6 |
+| P2    | Ingestion API                 | `IN_PROGRESS` | 6/8 tasks   | 24/07/2026   | —               | FastAPI nhận batch và produce Kafka; next T2.7 |
 | P3    | Stream Processing and Storage | `NOT_STARTED` | 0/9 tasks   | —            | —               | Docker Compose, Kafka, Spark, MinIO, InfluxDB |
 | P4    | Analytics and Demo            | `NOT_STARTED` | 0/7 tasks   | —            | —               | Dashboard, session analytics, load generator  |
 | P5    | Hardening and Delivery        | `NOT_STARTED` | 0/7 tasks   | —            | —               | Performance validation, runbook, final report |
 
 
-**Tổng:** 27/52 tasks hoàn thành
+**Tổng:** 28/52 tasks hoàn thành
 
 ---
 
@@ -81,7 +81,7 @@
 | T2.3 | Endpoints vòng đời session                                 | `DONE`     | 24/07/2026   | T2.1, T2.2              | task: `documents/phases/phase2/task003-session-lifecycle-endpoints.md` |
 | T2.4 | Batch ingestion endpoint                                   | `DONE`     | 24/07/2026   | T2.2                    | task: `documents/phases/phase2/task004-batch-ingestion-endpoint.md` |
 | T2.5 | Kafka producer service boundary                            | `DONE`     | 24/07/2026   | T2.4, P3 topic decision | task: `documents/phases/phase2/task005-kafka-producer-service.md`; DEC-004, DEC-005 |
-| T2.6 | Backpressure and error response model                      | `TODO`     | —               | T2.4                    | Retryable vs non-retryable                                                                |
+| T2.6 | Backpressure and error response model                      | `DONE`     | 24/07/2026   | T2.4                    | task: `documents/phases/phase2/task006-backpressure-error-idempotency.md` |
 | T2.7 | API contract tests                                         | `TODO`     | —               | T2.2, T2.4              | Valid/invalid batch fixtures                                                              |
 | T2.8 | P2 gate review package                                     | `TODO`     | —               | T2.7                    | G2 pass/fail package                                                                      |
 

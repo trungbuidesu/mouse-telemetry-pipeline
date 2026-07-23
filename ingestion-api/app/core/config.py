@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     # Typed for T2.5 producer wiring; unused on the request path in T2.1.
     kafka_bootstrap_servers: str = "localhost:9092"
     kafka_topic: str = "mouse.telemetry.events.v1"
+    # T2.6 backpressure / limits (max_events_per_batch khớp TelemetryBatch max 100).
+    max_request_body_bytes: int = 1_048_576
+    max_events_per_batch: int = 100
+    idempotency_cache_max_entries: int = 10_000
 
 
 @lru_cache
