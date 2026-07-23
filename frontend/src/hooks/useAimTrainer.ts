@@ -6,6 +6,7 @@ import {
   type PointerEvent,
   type RefObject,
 } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   accuracyPercent,
@@ -29,6 +30,8 @@ import {
 } from "@/game/types";
 import { useTelemetry } from "@/hooks/useTelemetry";
 import type { StreamStatus } from "@/api/telemetryApi";
+import { accuracyPercent as clientAccuracyPercent } from "@/utils/calculations";
+import { saveClientSessionResult } from "@/utils/clientSessionResult";
 
 export type AimTrainerApi = {
   status: GameStatus;
@@ -136,6 +139,7 @@ function readCanvasPoint(
 }
 
 export function useAimTrainer(): AimTrainerApi {
+  const navigate = useNavigate();
   const telemetry = useTelemetry();
   const telemetryRef = useRef(telemetry);
   useEffect(() => {
@@ -216,24 +220,49 @@ export function useAimTrainer(): AimTrainerApi {
     });
   }, []);
 
-  const finishWithTelemetryFlush = useCallback((current: typeof session) => {
-    const finishing = beginFinishing(current);
-    if (finishing.status !== "finishing") {
-      return current;
-    }
+  const finishWithTelemetryFlush = useCallback(
+    (current: typeof session) => {
+      const finishing = beginFinishing(current);
+      if (finishing.status !== "finishing") {
+        return current;
+      }
 
-    void telemetryRef.current
-      .endSession({
-        score: current.score,
-        hitCount: current.hitCount,
-        missCount: current.missCount,
-      })
-      .finally(() => {
-        setSession((finishingState) => complete(finishingState));
-      });
+      const sessionId = current.sessionId;
+      void telemetryRef.current
+        .endSession({
+          score: current.score,
+          hitCount: current.hitCount,
+          missCount: current.missCount,
+        })
+        .then((counters) => {
+          setSession((finishingState) => complete(finishingState));
 
-    return finishing;
-  }, []);
+          if (sessionId) {
+            saveClientSessionResult({
+              sessionId,
+              score: current.score,
+              hitCount: current.hitCount,
+              missCount: current.missCount,
+              totalClickCount: current.totalClickCount,
+              accuracyPercent: clientAccuracyPercent({
+                hitCount: current.hitCount,
+                totalClickCount: current.totalClickCount,
+              }),
+              eventCount: counters.eventCount,
+              sentBatchCount: counters.sentBatchCount,
+              droppedEventCount: counters.droppedEventCount,
+              lastBatchEventCount: counters.lastBatchEventCount,
+              durationSeconds: current.durationSeconds,
+              completedAt: Date.now(),
+            });
+            navigate(`/result/${sessionId}`);
+          }
+        });
+
+      return finishing;
+    },
+    [navigate],
+  );
 
   const beginSessionTimer = useCallback(
     (durationSeconds: DurationSeconds) => {

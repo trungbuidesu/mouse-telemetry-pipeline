@@ -6,9 +6,11 @@
 |---|---|
 | Plan ID | `phase1-plan003` |
 | Phase | [phase1](../../phases/phase1/README.md) |
-| Status | `PLANNED` |
-| Cập nhật lần cuối | `2026-07-22` |
+| Status | `PARTIAL` |
+| Cập nhật lần cuối | `2026-07-24` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
+
+> Steps 1–3 hoàn thành qua task007 (client snapshot, ResultPage, metrics poll). Step 4 heatmap/trajectory deferred to T4.3.
 
 ---
 
@@ -46,26 +48,26 @@ Hiển thị kết quả session ngay từ frontend state trong khi backend metr
 
 ### Step 1: Định nghĩa client result model
 
-* Capture score, hit count, miss count, total click count.
-* Capture generated event count và sent batch count.
-* Capture dropped event count nếu buffer limit bị chạm.
+* [x] Capture score, hit count, miss count, total click count.
+* [x] Capture generated event count và sent batch count.
+* [x] Capture dropped event count nếu buffer limit bị chạm.
 
 ### Step 2: Xây result page
 
-* Hiển thị immediate client-calculated result sau finishing.
-* Hiển thị backend status: `processing`, `completed` hoặc `error`.
-* Cho phép user chơi lại hoặc xem analytics/dashboard.
+* [x] Hiển thị immediate client-calculated result sau finishing.
+* [x] Hiển thị backend status: `processing`, `completed` hoặc `error`.
+* [x] Cho phép user chơi lại hoặc xem analytics/dashboard.
 
 ### Step 3: Poll backend metrics
 
-* Gọi `GET /api/v1/sessions/{sessionId}/metrics`.
-* Dùng polling interval có giới hạn.
-* Dừng polling khi status là `completed` hoặc terminal error.
+* [x] Gọi `GET /api/v1/sessions/{sessionId}/metrics`.
+* [x] Dùng polling interval có giới hạn.
+* [x] Dừng polling khi status là `completed` hoặc terminal error.
 
 ### Step 4: Thêm visual analytics cơ bản
 
-* Hiển thị heatmap hoặc trajectory cho session hiện tại ở mức MVP.
-* Ưu tiên derived hoặc sampled data, không đưa mọi raw mousemove vào React state.
+* [ ] Hiển thị heatmap hoặc trajectory cho session hiện tại ở mức MVP. (Deferred to T4.3)
+* [ ] Ưu tiên derived hoặc sampled data, không đưa mọi raw mousemove vào React state.
 
 ---
 
@@ -79,11 +81,11 @@ Hiển thị kết quả session ngay từ frontend state trong khi backend metr
 
 ## 7. Acceptance criteria
 
-* [ ] Result page hiển thị score, accuracy, hits, misses, total events và batches.
-* [ ] Result page phân biệt client result và backend processed metrics.
-* [ ] Metrics polling xử lý `processing` và `completed`.
-* [ ] Play Again bắt đầu session sạch với `sessionId` mới.
-* [ ] Không lưu raw telemetry array lớn trong React state sống lâu.
+* [x] Result page hiển thị score, accuracy, hits, misses, total events và batches.
+* [x] Result page phân biệt client result và backend processed metrics.
+* [x] Metrics polling xử lý `processing` và `completed`.
+* [x] Play Again bắt đầu session sạch với `sessionId` mới.
+* [x] Không lưu raw telemetry array lớn trong React state sống lâu.
 
 ---
 

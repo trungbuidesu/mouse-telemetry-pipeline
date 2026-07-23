@@ -46,7 +46,12 @@ export type UseTelemetryApi = {
     canvasHeight: number;
   }) => void;
   recordClick: (input: RecordClickInput) => void;
-  endSession: (metrics: TelemetrySessionMetrics) => Promise<void>;
+  endSession: (metrics: TelemetrySessionMetrics) => Promise<{
+    eventCount: number;
+    sentBatchCount: number;
+    lastBatchEventCount: number;
+    droppedEventCount: number;
+  }>;
   resetTelemetry: () => void;
 };
 
@@ -231,7 +236,12 @@ export function useTelemetry(): UseTelemetryApi {
       stopFlushInterval();
       const sessionId = sessionIdRef.current;
       if (sessionId === null) {
-        return;
+        return {
+          eventCount: 0,
+          sentBatchCount: 0,
+          lastBatchEventCount: 0,
+          droppedEventCount: 0,
+        };
       }
 
       const endEvent = collectorRef.current.createSessionEnd({
@@ -247,9 +257,20 @@ export function useTelemetry(): UseTelemetryApi {
       if (remaining.length > 0) {
         await senderBoxRef.current.sender.enqueue(sessionId, remaining);
       }
-      syncCounters();
+
+      const counters = {
+        eventCount: emittedCountRef.current,
+        sentBatchCount: senderBoxRef.current.sender.sentBatchCount(),
+        lastBatchEventCount: senderBoxRef.current.sender.lastBatchEventCount(),
+        droppedEventCount: bufferRef.current.droppedEventCount() + droppedExtraRef.current,
+      };
+      setEventCount(counters.eventCount);
+      setSentBatchCount(counters.sentBatchCount);
+      setLastBatchEventCount(counters.lastBatchEventCount);
+      setDroppedEventCount(counters.droppedEventCount);
+      return counters;
     },
-    [appendEvent, flushDueBatches, stopFlushInterval, syncCounters],
+    [appendEvent, flushDueBatches, stopFlushInterval],
   );
 
   const resetTelemetry = useCallback(() => {

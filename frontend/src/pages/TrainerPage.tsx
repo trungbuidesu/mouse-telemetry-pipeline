@@ -1,13 +1,36 @@
-import type { ReactElement } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, type ReactElement } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { AimCanvas } from "@/components/AimCanvas";
 import { SessionHUD } from "@/components/SessionHUD";
 import { Button } from "@/components/ui/button";
 import { useAimTrainer } from "@/hooks/useAimTrainer";
 
+type PlayLocationState = {
+  autoStart?: boolean;
+};
+
 export function TrainerPage(): ReactElement {
   const trainer = useAimTrainer();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const autoStartHandledRef = useRef(false);
+  const startRef = useRef(trainer.start);
+
+  useEffect(() => {
+    startRef.current = trainer.start;
+  }, [trainer.start]);
+
+  useEffect(() => {
+    const state = location.state as PlayLocationState | null;
+    if (!state?.autoStart || autoStartHandledRef.current) {
+      return;
+    }
+
+    autoStartHandledRef.current = true;
+    navigate(".", { replace: true, state: {} });
+    startRef.current();
+  }, [location.state, navigate]);
 
   return (
     <main className="min-h-screen bg-background p-6 text-foreground">
