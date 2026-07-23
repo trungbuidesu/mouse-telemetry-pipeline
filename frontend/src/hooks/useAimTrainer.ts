@@ -204,21 +204,21 @@ export function useAimTrainer(): AimTrainerApi {
     });
   }, []);
 
-  const beginTelemetryForRunning = useCallback((runningSession: typeof session) => {
-    const canvas = canvasRef.current;
-    if (!runningSession.sessionId) {
-      return;
-    }
-    telemetryRef.current.beginSession({
-      sessionId: runningSession.sessionId,
-      durationSeconds: runningSession.durationSeconds,
-      canvasWidth: canvas?.clientWidth || 1,
-      canvasHeight: canvas?.clientHeight || 1,
-      viewportWidth: window.innerWidth,
-      viewportHeight: window.innerHeight,
-      devicePixelRatio: window.devicePixelRatio || 1,
-    });
-  }, []);
+  const beginTelemetryForRunning = useCallback(
+    (runningSession: { sessionId: string; durationSeconds: DurationSeconds }) => {
+      const canvas = canvasRef.current;
+      telemetryRef.current.beginSession({
+        sessionId: runningSession.sessionId,
+        durationSeconds: runningSession.durationSeconds,
+        canvasWidth: canvas?.clientWidth || 1,
+        canvasHeight: canvas?.clientHeight || 1,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio || 1,
+      });
+    },
+    [],
+  );
 
   const finishWithTelemetryFlush = useCallback(
     (current: typeof session) => {
@@ -318,6 +318,85 @@ export function useAimTrainer(): AimTrainerApi {
     };
   }, [clearTimers]);
 
+  // Countdown timer must live outside setState updaters (Strict Mode can double-invoke them).
+  useEffect(() => {
+    if (session.status !== "countdown" || !session.sessionId) {
+      return;
+    }
+
+    // Initial remaining is set in start(); effect only owns the interval subscription.
+    let remaining = DEFAULT_SESSION_SETTINGS.countdownSeconds;
+
+    const timerId = window.setInterval(() => {
+      remaining -= 1;
+      setCountdownRemaining(remaining);
+      if (remaining > 0) {
+        return;
+      }
+
+      window.clearInterval(timerId);
+      if (countdownTimerRef.current === timerId) {
+        countdownTimerRef.current = null;
+      }
+
+      const target = spawnTargetForCanvas();
+      setSession((countdownState) => {
+        if (countdownState.status !== "countdown") {
+          return countdownState;
+        }
+        const running = enterRunning(countdownState);
+        if (running.status !== "running") {
+          return countdownState;
+        }
+        const withTarget = target ? applyTarget(running, target) : running;
+        targetRef.current = withTarget.currentTarget;
+        return withTarget;
+      });
+    }, 1000);
+
+    countdownTimerRef.current = timerId;
+
+    return () => {
+      window.clearInterval(timerId);
+      if (countdownTimerRef.current === timerId) {
+        countdownTimerRef.current = null;
+      }
+    };
+  }, [session.status, session.sessionId, spawnTargetForCanvas]);
+
+  // Start session timer + telemetry once when entering running with a sessionId.
+  useEffect(() => {
+    if (session.status !== "running" || !session.sessionId) {
+      return;
+    }
+
+    const sessionId = session.sessionId;
+    const durationSeconds = session.durationSeconds;
+
+    // Defer so setState inside beginSessionTimer is not synchronous in the effect body.
+    const startId = window.setTimeout(() => {
+      beginTelemetryForRunning({
+        sessionId,
+        durationSeconds,
+      });
+      beginSessionTimer(durationSeconds);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(startId);
+      if (sessionTimerRef.current !== null) {
+        window.clearInterval(sessionTimerRef.current);
+        sessionTimerRef.current = null;
+      }
+    };
+  }, [
+    session.status,
+    session.sessionId,
+    session.durationSeconds,
+    beginTelemetryForRunning,
+    beginSessionTimer,
+  ]);
+
   const setDuration = useCallback((durationSeconds: DurationSeconds) => {
     setSession((current) => setDurationSeconds(current, durationSeconds));
   }, []);
@@ -325,44 +404,10 @@ export function useAimTrainer(): AimTrainerApi {
   const start = useCallback(() => {
     clearTimers();
     setTimeRemaining(0);
+    setCountdownRemaining(DEFAULT_SESSION_SETTINGS.countdownSeconds);
     pointerRef.current = null;
-    setSession((current) => {
-      const next = startCountdown(current, createSessionId);
-      if (next.status !== "countdown") {
-        return current;
-      }
-
-      let remaining = DEFAULT_SESSION_SETTINGS.countdownSeconds;
-      setCountdownRemaining(remaining);
-
-      countdownTimerRef.current = window.setInterval(() => {
-        remaining -= 1;
-        setCountdownRemaining(remaining);
-        if (remaining <= 0) {
-          if (countdownTimerRef.current !== null) {
-            window.clearInterval(countdownTimerRef.current);
-            countdownTimerRef.current = null;
-          }
-
-          setSession((countdownState) => {
-            const running = enterRunning(countdownState);
-            if (running.status !== "running") {
-              return countdownState;
-            }
-
-            const target = spawnTargetForCanvas();
-            const withTarget = target ? applyTarget(running, target) : running;
-            targetRef.current = withTarget.currentTarget;
-            beginTelemetryForRunning(withTarget);
-            beginSessionTimer(withTarget.durationSeconds);
-            return withTarget;
-          });
-        }
-      }, 1000);
-
-      return next;
-    });
-  }, [beginSessionTimer, beginTelemetryForRunning, clearTimers, spawnTargetForCanvas]);
+    setSession((current) => startCountdown(current, createSessionId));
+  }, [clearTimers]);
 
   const stop = useCallback(() => {
     clearTimers();
@@ -433,30 +478,37 @@ export function useAimTrainer(): AimTrainerApi {
       const point = readCanvasPoint(canvas, event);
       pointerRef.current = point;
 
+      const activeTarget = targetRef.current;
+      if (!activeTarget) {
+        return;
+      }
+
+      const hit = isHit(point.x, point.y, activeTarget);
+      // Spawn outside setState so Strict Mode double-updaters reuse one target.
+      const spawned = hit ? spawnTargetForCanvas() : null;
+
+      telemetryRef.current.recordClick({
+        x: point.x,
+        y: point.y,
+        canvasWidth: canvas.clientWidth,
+        canvasHeight: canvas.clientHeight,
+        targetId: activeTarget.id,
+        targetHit: hit,
+        targetCreatedAt: activeTarget.createdAt,
+      });
+
       setSession((current) => {
         if (current.status !== "running" || !current.currentTarget) {
           return current;
         }
-
-        const target = current.currentTarget;
-        const hit = isHit(point.x, point.y, target);
-        telemetryRef.current.recordClick({
-          x: point.x,
-          y: point.y,
-          canvasWidth: canvas.clientWidth,
-          canvasHeight: canvas.clientHeight,
-          targetId: target.id,
-          targetHit: hit,
-          targetCreatedAt: target.createdAt,
-        });
-
-        let next = registerClick(current, hit);
-
-        if (hit) {
-          const spawned = spawnTargetForCanvas();
-          next = spawned ? applyTarget(next, spawned) : next;
+        if (current.currentTarget.id !== activeTarget.id) {
+          return current;
         }
 
+        let next = registerClick(current, hit);
+        if (hit && spawned) {
+          next = applyTarget(next, spawned);
+        }
         targetRef.current = next.currentTarget;
         return next;
       });

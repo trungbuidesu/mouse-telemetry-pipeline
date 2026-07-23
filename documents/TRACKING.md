@@ -1,7 +1,7 @@
 # MOUSE TELEMETRY PIPELINE — TRACKING TIẾN ĐỘ
 
 > **Cập nhật lần cuối:** 24/07/2026
-> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (10/10); G1 PASSED; P2 in progress (1/8)
+> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (11/11); G1 PASSED; P2 in progress (1/8)
 > **Mục tiêu:** Real-time Mouse Tracking Pipeline dùng Aim Trainer làm nguồn sinh dữ liệu
 
 ---
@@ -12,14 +12,14 @@
 | Phase | Tên                           | Trạng thái    | Tiến độ     | Ngày bắt đầu | Ngày hoàn thành | Ghi chú                                       |
 | ----- | ----------------------------- | ------------- | ----------- | ------------ | --------------- | --------------------------------------------- |
 | P0    | Foundation and Contracts      | `DONE`        | 11/11 tasks | 22/07/2026   | 22/07/2026      | G0 PASSED; Docker Compose chuyển sang P3/T3.0 |
-| P1    | Frontend Telemetry MVP        | `DONE`        | 10/10 tasks | 23/07/2026   | 24/07/2026      | G1 PASSED; task: `documents/phases/phase1/task010-p1-gate-review.md` |
+| P1    | Frontend Telemetry MVP        | `DONE`        | 11/11 tasks | 23/07/2026   | 24/07/2026      | G1 PASSED; T1.11 Strict Mode follow-up |
 | P2    | Ingestion API                 | `IN_PROGRESS` | 1/8 tasks   | 24/07/2026   | —               | FastAPI nhận batch và produce Kafka; next T2.2 |
 | P3    | Stream Processing and Storage | `NOT_STARTED` | 0/9 tasks   | —            | —               | Docker Compose, Kafka, Spark, MinIO, InfluxDB |
 | P4    | Analytics and Demo            | `NOT_STARTED` | 0/7 tasks   | —            | —               | Dashboard, session analytics, load generator  |
 | P5    | Hardening and Delivery        | `NOT_STARTED` | 0/7 tasks   | —            | —               | Performance validation, runbook, final report |
 
 
-**Tổng:** 22/52 tasks hoàn thành
+**Tổng:** 23/52 tasks hoàn thành
 
 ---
 
@@ -66,6 +66,7 @@
 | T1.8  | Frontend unit tests                                | `DONE`     | 24/07/2026      | T1.2, T1.5 | task: `documents/phases/phase1/task008-frontend-unit-tests.md`         |
 | T1.9  | Frontend e2e smoke test                            | `DONE`     | 24/07/2026      | T1.7       | task: `documents/phases/phase1/task009-frontend-e2e-smoke-test.md`     |
 | T1.10 | P1 gate review package                             | `DONE`     | 24/07/2026      | T1.8, T1.9 | task: `documents/phases/phase1/task010-p1-gate-review.md`; G1 PASSED   |
+| T1.11 | Fix Strict Mode countdown and hit spawn            | `DONE`     | 24/07/2026      | T1.2       | task: `documents/phases/phase1/task011-fix-strict-mode-countdown-hit.md`; post-G1 follow-up |
 
 
 
