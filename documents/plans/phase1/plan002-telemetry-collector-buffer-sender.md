@@ -7,8 +7,10 @@
 | Plan ID | `phase1-plan002` |
 | Phase | [phase1](../../phases/phase1/README.md) |
 | Status | `PLANNED` |
-| Cập nhật lần cuối | `2026-07-22` |
+| Cập nhật lần cuối | `2026-07-24` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
+
+> Step 1 (telemetry types) hoàn thành trong `documents/phases/phase1/task003-telemetry-type-definitions.md`. Steps 2–5 (collector/buffer/sender) còn lại cho T1.4/T1.5.
 
 ---
 
@@ -48,9 +50,9 @@ Triển khai frontend telemetry path: capture input tần suất cao, normalize 
 
 ### Step 1: Định nghĩa telemetry types
 
-* Thêm discriminated event types cho `session_start`, `mousemove`, `click`, `session_end`.
-* Thêm `TelemetryBatch` với `sessionId`, `batchSequence`, `sentAt` và `events`.
-* Giữ type names khớp API contract.
+* [x] Thêm discriminated event types cho `session_start`, `mousemove`, `click`, `session_end`.
+* [x] Thêm `TelemetryBatch` với `sessionId`, `batchSequence`, `sentAt` và `events`.
+* [x] Giữ type names khớp API contract.
 
 ### Step 2: Triển khai collector
 
