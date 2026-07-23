@@ -56,10 +56,10 @@ Triển khai FastAPI làm HTTP ingestion boundary ổn định cho browser clien
 
 ### Step 2: Triển khai schema models
 
-* Định nghĩa base telemetry event model.
-* Định nghĩa event models cho `session_start`, `mousemove`, `click`, `session_end`.
-* Định nghĩa batch model và request size constraints.
-* Validate khoảng normalized coordinate khi được cung cấp.
+* [x] Định nghĩa base telemetry event model. (T2.2)
+* [x] Định nghĩa event models cho `session_start`, `mousemove`, `click`, `session_end`. (T2.2)
+* [x] Định nghĩa batch model và request size constraints. (T2.2; max 100 events)
+* [x] Validate khoảng normalized coordinate khi được cung cấp. (T2.2)
 
 ### Step 3: Triển khai endpoints
 
