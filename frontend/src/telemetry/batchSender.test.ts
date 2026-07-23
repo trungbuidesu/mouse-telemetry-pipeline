@@ -117,4 +117,26 @@ describe("createBatchSender", () => {
     expect(dropped).toBe(1);
     expect(statuses).toContain("error");
   });
+
+  it("tracks lastBatchEventCount on success and clears on reset", async () => {
+    const send = vi.fn().mockResolvedValue({
+      ok: true,
+      accepted: true,
+      batchSequence: 1,
+      eventCount: 2,
+    } satisfies BatchSendResult);
+
+    const sender = createBatchSender({ send, sleep: async () => undefined });
+    expect(sender.lastBatchEventCount()).toBe(0);
+
+    await sender.enqueue("session-1", [
+      sampleEvent,
+      { ...sampleEvent, eventId: "e2", sequence: 1 },
+    ]);
+
+    expect(sender.lastBatchEventCount()).toBe(2);
+
+    sender.reset();
+    expect(sender.lastBatchEventCount()).toBe(0);
+  });
 });

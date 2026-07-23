@@ -36,6 +36,7 @@ export type UseTelemetryApi = {
   streamStatus: StreamStatus;
   eventCount: number;
   sentBatchCount: number;
+  lastBatchEventCount: number;
   droppedEventCount: number;
   beginSession: (input: BeginSessionInput) => void;
   recordPointerMove: (input: {
@@ -77,6 +78,7 @@ export function useTelemetry(): UseTelemetryApi {
   const [streamStatus, setStreamStatus] = useState<StreamStatus>("idle");
   const [eventCount, setEventCount] = useState(0);
   const [sentBatchCount, setSentBatchCount] = useState(0);
+  const [lastBatchEventCount, setLastBatchEventCount] = useState(0);
   const [droppedEventCount, setDroppedEventCount] = useState(0);
 
   const collectorRef = useRef(createEventCollector());
@@ -106,6 +108,7 @@ export function useTelemetry(): UseTelemetryApi {
   const syncCounters = useCallback(() => {
     setEventCount(emittedCountRef.current);
     setSentBatchCount(senderBoxRef.current.sender.sentBatchCount());
+    setLastBatchEventCount(senderBoxRef.current.sender.lastBatchEventCount());
     setDroppedEventCount(bufferRef.current.droppedEventCount() + droppedExtraRef.current);
   }, []);
 
@@ -263,6 +266,7 @@ export function useTelemetry(): UseTelemetryApi {
     setStreamStatus("idle");
     setEventCount(0);
     setSentBatchCount(0);
+    setLastBatchEventCount(0);
     setDroppedEventCount(0);
   }, [stopFlushInterval]);
 
@@ -270,6 +274,7 @@ export function useTelemetry(): UseTelemetryApi {
     streamStatus,
     eventCount,
     sentBatchCount,
+    lastBatchEventCount,
     droppedEventCount,
     beginSession,
     recordPointerMove,

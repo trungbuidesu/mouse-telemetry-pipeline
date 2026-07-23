@@ -2,7 +2,8 @@ import type { ReactElement } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { StreamStatus } from "@/api/telemetryApi";
+import { StreamStatus } from "@/components/StreamStatus";
+import type { StreamStatus as StreamStatusValue } from "@/api/telemetryApi";
 import type { DurationSeconds, GameStatus } from "@/game/types";
 
 type SessionHUDProps = {
@@ -13,9 +14,10 @@ type SessionHUDProps = {
   score: number;
   accuracyLabel: string;
   sessionId: string | null;
-  streamStatus: StreamStatus;
+  streamStatus: StreamStatusValue;
   eventCount: number;
   sentBatchCount: number;
+  lastBatchEventCount: number;
   droppedEventCount: number;
   onDurationChange: (durationSeconds: DurationSeconds) => void;
   onStart: () => void;
@@ -63,6 +65,7 @@ export function SessionHUD({
   streamStatus,
   eventCount,
   sentBatchCount,
+  lastBatchEventCount,
   droppedEventCount,
   onDurationChange,
   onStart,
@@ -143,10 +146,15 @@ export function SessionHUD({
         ) : null}
       </div>
 
-      <p className="text-xs text-muted-foreground">
-        Session ID: {sessionId ?? "—"} · Stream: {streamStatus} · Events: {eventCount} · Batches:{" "}
-        {sentBatchCount} · Dropped: {droppedEventCount}
-      </p>
+      <p className="text-xs text-muted-foreground">Session ID: {sessionId ?? "—"}</p>
+
+      <StreamStatus
+        status={streamStatus}
+        eventCount={eventCount}
+        sentBatchCount={sentBatchCount}
+        lastBatchEventCount={lastBatchEventCount}
+        droppedEventCount={droppedEventCount}
+      />
     </section>
   );
 }

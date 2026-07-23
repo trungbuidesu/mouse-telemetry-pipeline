@@ -41,6 +41,7 @@ export type AimTrainerApi = {
   streamStatus: StreamStatus;
   eventCount: number;
   sentBatchCount: number;
+  lastBatchEventCount: number;
   droppedEventCount: number;
   canvasRef: RefObject<HTMLCanvasElement | null>;
   setDuration: (durationSeconds: DurationSeconds) => void;
@@ -451,6 +452,7 @@ export function useAimTrainer(): AimTrainerApi {
     streamStatus: telemetry.streamStatus,
     eventCount: telemetry.eventCount,
     sentBatchCount: telemetry.sentBatchCount,
+    lastBatchEventCount: telemetry.lastBatchEventCount,
     droppedEventCount: telemetry.droppedEventCount,
     canvasRef,
     setDuration,

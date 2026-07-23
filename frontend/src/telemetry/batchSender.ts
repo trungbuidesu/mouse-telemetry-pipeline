@@ -17,6 +17,7 @@ export type BatchSender = {
   isInFlight: () => boolean;
   batchSequence: () => number;
   sentBatchCount: () => number;
+  lastBatchEventCount: () => number;
   reset: () => void;
 };
 
@@ -37,6 +38,7 @@ export function createBatchSender(deps: BatchSenderDeps): BatchSender {
 
   let sequence = 0;
   let sent = 0;
+  let lastBatchSize = 0;
   let inFlight = false;
   let chain: Promise<void> = Promise.resolve();
 
@@ -61,6 +63,7 @@ export function createBatchSender(deps: BatchSenderDeps): BatchSender {
       const result = await send(batch);
       if (result.ok) {
         sent += 1;
+        lastBatchSize = events.length;
         onStatus?.("connected");
         inFlight = false;
         return;
@@ -115,9 +118,14 @@ export function createBatchSender(deps: BatchSenderDeps): BatchSender {
       return sent;
     },
 
+    lastBatchEventCount(): number {
+      return lastBatchSize;
+    },
+
     reset(): void {
       sequence = 0;
       sent = 0;
+      lastBatchSize = 0;
       inFlight = false;
       chain = Promise.resolve();
       onStatus?.("idle");

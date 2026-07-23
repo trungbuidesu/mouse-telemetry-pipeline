@@ -33,6 +33,7 @@ export function TrainerPage(): ReactElement {
           streamStatus={trainer.streamStatus}
           eventCount={trainer.eventCount}
           sentBatchCount={trainer.sentBatchCount}
+          lastBatchEventCount={trainer.lastBatchEventCount}
           droppedEventCount={trainer.droppedEventCount}
           onDurationChange={trainer.setDuration}
           onStart={trainer.start}
