@@ -1,7 +1,7 @@
 # MOUSE TELEMETRY PIPELINE — TRACKING TIẾN ĐỘ
 
 > **Cập nhật lần cuối:** 24/07/2026
-> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 in progress (9/10)
+> **Tổng tiến độ:** P0 complete (11/11); G0 PASSED; P1 complete (10/10); G1 PASSED; next P2
 > **Mục tiêu:** Real-time Mouse Tracking Pipeline dùng Aim Trainer làm nguồn sinh dữ liệu
 
 ---
@@ -12,14 +12,14 @@
 | Phase | Tên                           | Trạng thái    | Tiến độ     | Ngày bắt đầu | Ngày hoàn thành | Ghi chú                                       |
 | ----- | ----------------------------- | ------------- | ----------- | ------------ | --------------- | --------------------------------------------- |
 | P0    | Foundation and Contracts      | `DONE`        | 11/11 tasks | 22/07/2026   | 22/07/2026      | G0 PASSED; Docker Compose chuyển sang P3/T3.0 |
-| P1    | Frontend Telemetry MVP        | `IN_PROGRESS` | 9/10 tasks  | 23/07/2026   | —               | T1.1–T1.9 DONE; next T1.10 P1 gate review package |
+| P1    | Frontend Telemetry MVP        | `DONE`        | 10/10 tasks | 23/07/2026   | 24/07/2026      | G1 PASSED; task: `documents/phases/phase1/task010-p1-gate-review.md` |
 | P2    | Ingestion API                 | `NOT_STARTED` | 0/8 tasks   | —            | —               | FastAPI nhận batch và produce Kafka           |
 | P3    | Stream Processing and Storage | `NOT_STARTED` | 0/9 tasks   | —            | —               | Docker Compose, Kafka, Spark, MinIO, InfluxDB |
 | P4    | Analytics and Demo            | `NOT_STARTED` | 0/7 tasks   | —            | —               | Dashboard, session analytics, load generator  |
 | P5    | Hardening and Delivery        | `NOT_STARTED` | 0/7 tasks   | —            | —               | Performance validation, runbook, final report |
 
 
-**Tổng:** 20/52 tasks hoàn thành
+**Tổng:** 21/52 tasks hoàn thành
 
 ---
 
@@ -65,7 +65,7 @@
 | T1.7  | Result page và client metrics                      | `DONE`     | 24/07/2026      | T1.5       | task: `documents/phases/phase1/task007-session-result-client-metrics.md` |
 | T1.8  | Frontend unit tests                                | `DONE`     | 24/07/2026      | T1.2, T1.5 | task: `documents/phases/phase1/task008-frontend-unit-tests.md`         |
 | T1.9  | Frontend e2e smoke test                            | `DONE`     | 24/07/2026      | T1.7       | task: `documents/phases/phase1/task009-frontend-e2e-smoke-test.md`     |
-| T1.10 | P1 gate review package                             | `TODO`     | —               | T1.8, T1.9 | G1 pass/fail package                                                   |
+| T1.10 | P1 gate review package                             | `DONE`     | 24/07/2026      | T1.8, T1.9 | task: `documents/phases/phase1/task010-p1-gate-review.md`; G1 PASSED   |
 
 
 
@@ -147,7 +147,7 @@ Mỗi gate là binary pass/fail. Gate fail thì ưu tiên sửa foundation hoặ
 | Gate | Phase | Tiêu chí Pass                                                                                                                                                                                                  | Trạng thái   |
 | ---- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | G0   | P0    | Tracking exists, coding rules split, clean Vite/shadcn frontend validates, uv-managed API validates, shared schema contract files exist, API contract fixtures exist, env examples/review package are recorded | `PASSED`     |
-| G1   | P1    | Aim Trainer playable, no mousemove render storm, telemetry batches valid, final flush reliable                                                                                                                 | `NOT_PASSED` |
+| G1   | P1    | Aim Trainer playable, no mousemove render storm, telemetry batches valid, final flush reliable                                                                                                                 | `PASSED`     |
 | G2   | P2    | FastAPI accepts valid batches, rejects invalid payloads, produces Kafka messages, retryable failures explicit                                                                                                  | `NOT_PASSED` |
 | G3   | P3    | Docker Compose services start, Kafka -> Spark -> MinIO/InfluxDB works for one session, raw and aggregate storage separated                                                                                     | `NOT_PASSED` |
 | G4   | P4    | Dashboard/session analytics show real pipeline data and load generator affects throughput                                                                                                                      | `NOT_PASSED` |
@@ -183,7 +183,7 @@ Mỗi gate là binary pass/fail. Gate fail thì ưu tiên sửa foundation hoặ
 | Milestone                      | Target           | Trạng thái    | Deliverable                                                                     | Gate |
 | ------------------------------ | ---------------- | ------------- | ------------------------------------------------------------------------------- | ---- |
 | M1: Foundation ready           | Phase 0 complete | `REACHED`     | Tracking, rules, stack foundation, schema/contracts, env examples, gate package | G0   |
-| M2: Frontend data source ready | Phase 1 complete | `NOT_REACHED` | Playable Aim Trainer emits valid batches                                        | G1   |
+| M2: Frontend data source ready | Phase 1 complete | `REACHED`     | Playable Aim Trainer emits valid batches                                        | G1   |
 | M3: Ingestion ready            | Phase 2 complete | `NOT_REACHED` | FastAPI validates and produces telemetry                                        | G2   |
 | M4: Streaming storage ready    | Phase 3 complete | `NOT_REACHED` | Kafka/Spark writes raw and metrics                                              | G3   |
 | M5: Demo analytics ready       | Phase 4 complete | `NOT_REACHED` | Dashboard, session analytics, load generator                                    | G4   |
@@ -199,17 +199,17 @@ Mỗi gate là binary pass/fail. Gate fail thì ưu tiên sửa foundation hoặ
 
 | ID   | Rủi ro                                                     | P×I | Trạng thái | Mitigation                                                | Contingency                                                          |
 | ---- | ---------------------------------------------------------- | --- | ---------- | --------------------------------------------------------- | -------------------------------------------------------------------- |
-| R-01 | Frontend telemetry gây re-render quá nhiều                 | 5×5 | WATCHING   | DEC-003, frontend coding rules, performance validation    | Giảm UI counters, chuyển hot state sang refs                         |
-| R-02 | Batch policy tạo request storm hoặc mất event cuối phiên   | 4×5 | WATCHING   | DEC-002, DEC-007, final flush tests                       | Tăng batch size/interval, thêm sender queue guard                    |
+| R-01 | Frontend telemetry gây re-render quá nhiều                 | 5×5 | WATCHING   | DEC-003, T1.4–T1.6 refs/buffer; G1 cites design; T5.1 for probe | Giảm UI counters, chuyển hot state sang refs                         |
+| R-02 | Batch policy tạo request storm hoặc mất event cuối phiên   | 4×5 | WATCHING   | DEC-002, DEC-007, T1.5/T1.8/T1.9 flush evidence; G1 PASSED      | Tăng batch size/interval, thêm sender queue guard                    |
 | R-03 | Schema drift giữa frontend/API/Spark                       | 4×5 | WATCHING   | Shared fixtures, DEC-001, contract tests                  | Freeze schema v1, add migration decision                             |
 | R-04 | API xử lý analytics nặng trong request path                | 3×5 | WATCHING   | API coding rules, service boundary                        | Move work to Spark/async pipeline                                    |
 | R-05 | Kafka topic/key sai làm mất ordering theo session          | 3×4 | WATCHING   | DEC-005, topic bootstrap tests                            | Re-key by sessionId and replay local data                            |
 | R-06 | Raw telemetry bị ghi vào InfluxDB quá nhiều                | 4×4 | WATCHING   | DEC-006, aggregate-only metrics                           | Move raw writes to MinIO only                                        |
 | R-07 | Local Docker/runtime data bị commit nhầm                   | 3×5 | WATCHING   | `.gitignore`, git status review                           | Remove from index before commit                                      |
 | R-08 | Scope creep sang Spark/dashboard quá sớm                   | 4×3 | WATCHING   | Tracking marks Spark config as future work                | Defer to P3/P4 tasks                                                 |
-| R-09 | Playwright browser dependencies không có sẵn               | 3×3 | WATCHING   | Document lệnh cài đặt và giới hạn validation              | Chạy unit/lint/typecheck trước; cài browsers sau                     |
-| R-10 | Test tooling baseline quá rỗng, không bắt được regression  | 3×4 | WATCHING   | Thêm smoke tests hiện tại, domain tests tập trung ở P1/P2 | Mở rộng tests cùng gameplay/API tasks                                |
-| R-11 | shadcn UI bị dùng sai cho canvas/telemetry hot path        | 4×4 | WATCHING   | DEC-011, frontend coding rules                            | Giữ canvas renderer dạng imperative và telemetry trong refs/plain TS |
+| R-09 | Playwright browser dependencies không có sẵn               | 3×3 | WATCHING   | `test:e2e` installs chromium; verified in T1.9/T1.10          | Chạy unit/lint/typecheck trước; cài browsers sau                     |
+| R-10 | Test tooling baseline quá rỗng, không bắt được regression  | 3×4 | WATCHING   | T1.8 68 unit + T1.9 2 e2e; expand further in P2               | Mở rộng tests cùng gameplay/API tasks                                |
+| R-11 | shadcn UI bị dùng sai cho canvas/telemetry hot path        | 4×4 | WATCHING   | DEC-011; G1 confirms canvas/telemetry outside shadcn loop     | Giữ canvas renderer dạng imperative và telemetry trong refs/plain TS |
 | R-12 | API vô tình dùng Python hệ thống thay vì uv-managed Python | 3×5 | WATCHING   | DEC-012, `.python-version`, validation through `uv run`   | Fail gate until uv-managed command evidence exists                   |
 
 
