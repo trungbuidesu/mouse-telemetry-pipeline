@@ -6,11 +6,11 @@
 |---|---|
 | Plan ID | `phase1-plan001` |
 | Phase | [phase1](../../phases/phase1/README.md) |
-| Status | `IN_PROGRESS` |
+| Status | `DONE` |
 | Cập nhật lần cuối | `2026-07-23` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
 
-> T1.1 shell (routes/HUD/canvas/lifecycle) hoàn thành trong `documents/phases/phase1/task001-frontend-gameplay-shell.md`. Acceptance criteria về target/hit/score/timer còn lại thuộc T1.2.
+> T1.1 shell hoàn thành trong `task001-frontend-gameplay-shell.md`. T1.2 canvas gameplay (target/hit/score/timer) hoàn thành trong `task002-aim-trainer-canvas-gameplay.md`.
 
 ---
 
@@ -88,13 +88,13 @@ Xây playable Aim Trainer shell: routing, canvas play area, game state machine, 
 
 ## 7. Acceptance criteria
 
-* [ ] Người dùng chơi được session 30 hoặc 60 giây.
-* [ ] Target luôn nằm hoàn toàn trong canvas.
-* [ ] Score chỉ tăng khi hit.
-* [ ] Miss count tăng khi click ngoài target.
-* [ ] Accuracy dùng `hitCount / totalClickCount`.
-* [ ] Timer hết sẽ chuyển sang finishing/completed flow.
-* [ ] Unit tests cover hit detection, accuracy và target bounds.
+* [x] Người dùng chơi được session 30 hoặc 60 giây.
+* [x] Target luôn nằm hoàn toàn trong canvas.
+* [x] Score chỉ tăng khi hit.
+* [x] Miss count tăng khi click ngoài target.
+* [x] Accuracy dùng `hitCount / totalClickCount`.
+* [x] Timer hết sẽ chuyển sang finishing/completed flow.
+* [x] Unit tests cover hit detection, accuracy và target bounds.
 
 ---
 

@@ -15,7 +15,7 @@ export function TrainerPage(): ReactElement {
         <header className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Aim Trainer</p>
-            <h1 className="text-2xl font-semibold tracking-tight">Gameplay shell</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Gameplay</h1>
           </div>
           <Button asChild variant="outline">
             <Link to="/">Home</Link>
@@ -26,6 +26,9 @@ export function TrainerPage(): ReactElement {
           status={trainer.status}
           durationSeconds={trainer.durationSeconds}
           countdownRemaining={trainer.countdownRemaining}
+          timeRemaining={trainer.timeRemaining}
+          score={trainer.score}
+          accuracyLabel={trainer.accuracyLabel}
           sessionId={trainer.sessionId}
           onDurationChange={trainer.setDuration}
           onStart={trainer.start}
@@ -38,6 +41,7 @@ export function TrainerPage(): ReactElement {
           canvasRef={trainer.canvasRef}
           status={trainer.status}
           onPointerMove={trainer.onPointerMove}
+          onPointerDown={trainer.onPointerDown}
         />
       </section>
     </main>

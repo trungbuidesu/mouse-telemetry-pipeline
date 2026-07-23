@@ -8,6 +8,9 @@ type SessionHUDProps = {
   status: GameStatus;
   durationSeconds: DurationSeconds;
   countdownRemaining: number;
+  timeRemaining: number;
+  score: number;
+  accuracyLabel: string;
   sessionId: string | null;
   onDurationChange: (durationSeconds: DurationSeconds) => void;
   onStart: () => void;
@@ -31,10 +34,26 @@ function statusLabel(status: GameStatus): string {
   }
 }
 
+function formatTimeLeft(status: GameStatus, timeRemaining: number, durationSeconds: DurationSeconds): string {
+  if (status === "idle") {
+    return "—";
+  }
+  if (status === "countdown") {
+    return `${durationSeconds}s`;
+  }
+  if (status === "completed" || status === "finishing") {
+    return "0s";
+  }
+  return `${timeRemaining}s`;
+}
+
 export function SessionHUD({
   status,
   durationSeconds,
   countdownRemaining,
+  timeRemaining,
+  score,
+  accuracyLabel,
   sessionId,
   onDurationChange,
   onStart,
@@ -83,15 +102,17 @@ export function SessionHUD({
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-md border bg-muted/30 p-3">
           <p className="text-xs text-muted-foreground">Score</p>
-          <p className="text-lg font-semibold">0</p>
+          <p className="text-lg font-semibold">{score}</p>
         </div>
         <div className="rounded-md border bg-muted/30 p-3">
           <p className="text-xs text-muted-foreground">Accuracy</p>
-          <p className="text-lg font-semibold">—</p>
+          <p className="text-lg font-semibold">{accuracyLabel}</p>
         </div>
         <div className="rounded-md border bg-muted/30 p-3">
           <p className="text-xs text-muted-foreground">Time left</p>
-          <p className="text-lg font-semibold">—</p>
+          <p className="text-lg font-semibold">
+            {formatTimeLeft(status, timeRemaining, durationSeconds)}
+          </p>
         </div>
       </div>
 
@@ -113,9 +134,7 @@ export function SessionHUD({
         ) : null}
       </div>
 
-      <p className="text-xs text-muted-foreground">
-        Session ID: {sessionId ?? "—"} · Score/timer gameplay arrives in T1.2
-      </p>
+      <p className="text-xs text-muted-foreground">Session ID: {sessionId ?? "—"}</p>
     </section>
   );
 }

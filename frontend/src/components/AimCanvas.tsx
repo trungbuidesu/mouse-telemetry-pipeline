@@ -6,12 +6,14 @@ type AimCanvasProps = {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   status: GameStatus;
   onPointerMove: (event: PointerEvent<HTMLCanvasElement>) => void;
+  onPointerDown: (event: PointerEvent<HTMLCanvasElement>) => void;
 };
 
 export function AimCanvas({
   canvasRef,
   status,
   onPointerMove,
+  onPointerDown,
 }: AimCanvasProps): ReactElement {
   return (
     <div className="relative overflow-hidden rounded-md border bg-slate-950">
@@ -21,6 +23,7 @@ export function AimCanvas({
         className="block aspect-video w-full touch-none"
         aria-label="Aim trainer play area"
         onPointerMove={onPointerMove}
+        onPointerDown={onPointerDown}
       />
       {status === "countdown" ? (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40">
