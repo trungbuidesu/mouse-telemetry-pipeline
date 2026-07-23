@@ -6,9 +6,11 @@
 |---|---|
 | Plan ID | `phase1-plan001` |
 | Phase | [phase1](../../phases/phase1/README.md) |
-| Status | `PLANNED` |
-| Cập nhật lần cuối | `2026-07-22` |
+| Status | `IN_PROGRESS` |
+| Cập nhật lần cuối | `2026-07-23` |
 | Nguồn | [Kiến trúc Aim Trainer](../../aim_trainer_app_architecture.md) |
+
+> T1.1 shell (routes/HUD/canvas/lifecycle) hoàn thành trong `documents/phases/phase1/task001-frontend-gameplay-shell.md`. Acceptance criteria về target/hit/score/timer còn lại thuộc T1.2.
 
 ---
 
